@@ -2,13 +2,14 @@ import { SAHNELER } from './sahneler.js';
 import { METINLER, dilSec, hikayeUret } from './hikayeler.js';
 
 const $ = (id) => document.getElementById(id);
-const RENKLER = ['#e8574a','#f2a03d','#f5d547','#5aa469','#3d7ea6','#8e6bbf','#8a5a3b','#f4a9a0','#2c2a26'];
+// Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
+const RENKLER = ['#e8574a','#f2a03d','#f5d547','#8fcf7a','#5aa469','#8ec5e0','#3d7ea6','#8e6bbf','#8a5a3b','#f4a9a0','#fff6e0','#2c2a26'];
 
 let dil = dilSec(localStorage.getItem('masal:dil'));
 let hikaye = null;          // { baslik, sayfalar }
 let kimlik = null;          // { ad, yas, sehir, tema } — kayit anahtarinin parcasi
 let sayfaNo = 0;
-let renk = RENKLER[4];
+let renk = RENKLER[6];
 const gecmis = [];          // { anahtar, i, onceki } — geri al
 
 // ---------- dil ----------
