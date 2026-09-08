@@ -8,7 +8,8 @@ const RENKLER = ['#e8574a','#f2a03d','#f5d547','#8fcf7a','#5aa469','#8ec5e0','#3
 let dil = dilSec(localStorage.getItem('masal:dil'));
 let hikaye = null;          // { baslik, sayfalar }
 let kimlik = null;          // { ad, yas, sehir, tema } — kayit anahtarinin parcasi
-let sayfaNo = 0;
+let sayfaNo = 0;            // gorunur sayfalar icindeki sira (dala gore degisir)
+let dal = null;             // 'a' | 'b' | null — secim noktasinda belirlenir
 let renk = RENKLER[6];
 const gecmis = [];          // { anahtar, i, onceki } — geri al
 
@@ -67,9 +68,25 @@ function metinleriYaz() {
   }
 }
 
+// ---------- dallar ----------
+// Hikaye bir secim noktasi tasiyor. Dal sayfalari yalnizca secilen dalda gorunur;
+// gerisi herkese ortak. Boylece ayni temayi secen iki aile ayni seyi okumuyor.
+function aktifSayfalar() {
+  return hikaye.sayfalar.filter((s) => !s.dal || s.dal === dal);
+}
+
+/** Gosterilecek toplam sayfa: ortak sayfalar + bir dalin uzunlugu. Secim
+ *  yapilmamisken de dogru sayiyi gostermek icin 'a' dali olculuyor. */
+function toplamSayfa() {
+  const ortak = hikaye.sayfalar.filter((s) => !s.dal).length;
+  return ortak + hikaye.sayfalar.filter((s) => s.dal === 'a').length;
+}
+
 // ---------- boyama ----------
-function anahtar() {
-  return `masal:boya:${kimlik.ad}:${kimlik.tema}:${sayfaNo}`;
+// Anahtar gorunur sirayi degil sablondaki gercek sirayi kullanir: dal degisince
+// gorunur sira kayiyor, boyamanin baska sayfaya gecmemesi gerekiyor.
+function anahtar(sayfa = aktifSayfalar()[sayfaNo]) {
+  return `masal:boya:${kimlik.ad}:${kimlik.tema}:${hikaye.sayfalar.indexOf(sayfa)}`;
 }
 
 function paletiKur() {
@@ -212,14 +229,17 @@ function kitapligaKaydet() {
   if (!kimlik) return;
   const liste = kitapligiOku().filter((k) => !(k.ad === kimlik.ad && k.tema === kimlik.tema));
   // Dil bilerek saklanmiyor: kitaplik her zaman o an secili dilde gosterilir.
-  liste.unshift({ ...kimlik, sayfaNo, sayfaSayisi: hikaye.sayfalar.length, guncelleme: Date.now() });
+  // Dal saklaniyor: devam edince cocuk kendi sectigi yolda kalsin.
+  liste.unshift({ ...kimlik, sayfaNo, dal, sayfaSayisi: toplamSayfa(),
+                  hamSayfa: hikaye.sayfalar.length, guncelleme: Date.now() });
   kitapligaYaz(liste);
 }
 
-/** Bir kayittaki toplam boyali bolge sayisi. */
-function boyaliSayisi(k) {
+/** Bir kayittaki toplam boyali bolge sayisi. Anahtarlar sablondaki ham sirayi
+ *  kullandigi icin dal sayfalari dahil hepsi taraniyor. */
+function boyaliSayisi(k, hamSayfa) {
   let n = 0;
-  for (let i = 0; i < (k.sayfaSayisi || 6); i++) {
+  for (let i = 0; i < (hamSayfa || k.hamSayfa || 12); i++) {
     try {
       const d = JSON.parse(localStorage.getItem(`masal:boya:${k.ad}:${k.tema}:${i}`) || '{}');
       n += Object.keys(d).length;
@@ -238,10 +258,12 @@ function kitapligiCiz() {
 
   for (const k of liste) {
     // dil sonra yayiliyor: eski kayitlarda saklanmis bir dil alani secili dili ezmesin
-    const baslik = hikayeUret({ ...k, dil }).baslik;
-    const bitti = k.sayfaNo >= (k.sayfaSayisi || 6) - 1;
-    const boyali = boyaliSayisi(k);
-    const yuzde = Math.round(((k.sayfaNo + 1) / (k.sayfaSayisi || 6)) * 100);
+    const h = hikayeUret({ ...k, dil });
+    const baslik = h.baslik;
+    const toplam = k.sayfaSayisi || 6;
+    const bitti = k.sayfaNo >= toplam - 1;
+    const boyali = boyaliSayisi(k, h.sayfalar.length);
+    const yuzde = Math.round(((k.sayfaNo + 1) / toplam) * 100);
 
     const li = document.createElement('li');
 
@@ -251,7 +273,7 @@ function kitapligiCiz() {
     ad.className = 'kitap-ad'; ad.textContent = baslik;
     const alt = document.createElement('div');
     alt.className = 'kitap-alt';
-    const durum = bitti ? t.bitti : `${t.sayfa} ${k.sayfaNo + 1}/${k.sayfaSayisi || 6}`;
+    const durum = bitti ? t.bitti : `${t.sayfa} ${k.sayfaNo + 1}/${toplam}`;
     alt.textContent = boyali
       ? `${durum} · ${boyali} ${t.bolgeBoyandi}`
       : durum;
@@ -276,23 +298,41 @@ function kitapligiCiz() {
 function kitaptanAc(k) {
   kimlik = { ad: k.ad, yas: k.yas, sehir: k.sehir, tema: k.tema };
   hikaye = hikayeUret({ ...kimlik, dil });
-  sayfaNo = Math.min(k.sayfaNo || 0, hikaye.sayfalar.length - 1);
+  dal = k.dal || null;                                // cocuk kendi sectigi yolda devam etsin
+  sayfaNo = Math.min(k.sayfaNo || 0, aktifSayfalar().length - 1);
   okuyucuyaGec();
 }
 
 function kitaptanSil(k) {
   if (!confirm(ui().silOnay)) return;                 // boyamalar da gidiyor: once sor
   kitapligaYaz(kitapligiOku().filter((x) => !(x.ad === k.ad && x.tema === k.tema)));
-  for (let i = 0; i < (k.sayfaSayisi || 6); i++) {
+  for (let i = 0; i < (k.hamSayfa || 12); i++) {
     localStorage.removeItem(`masal:boya:${k.ad}:${k.tema}:${i}`);
   }
   kitapligiCiz();
 }
 
 // ---------- okuyucu ----------
+function secimCiz(s) {
+  const kutu = $('secim');
+  if (!s.secim) { kutu.hidden = true; return; }
+  kutu.hidden = false;
+  const doldur = (x) => x.replaceAll('{ad}', kimlik.ad);
+  $('secimSoru').textContent = doldur(s.secim.soru || '');
+  for (const [harf, dugme] of [['a', $('secimA')], ['b', $('secimB')]]) {
+    dugme.textContent = s.secim[harf];
+    dugme.setAttribute('aria-pressed', String(dal === harf));
+    dugme.onclick = () => {
+      dal = harf;
+      sayfaCiz();                     // secim degisince sonraki sayfalar yenilenir
+    };
+  }
+}
+
 function sayfaCiz() {
   sesiDurdur();                       // sayfa degisince okuma devam etmesin
-  const s = hikaye.sayfalar[sayfaNo];
+  const sayfalar = aktifSayfalar();
+  const s = sayfalar[sayfaNo];
   const t = ui();
 
   $('hBaslik').textContent = hikaye.baslik;
@@ -323,14 +363,17 @@ function sayfaCiz() {
     kutu.hidden = true;
   }
 
+  secimCiz(s);
+
   // gezinti
-  const son = hikaye.sayfalar.length - 1;
+  const toplam = toplamSayfa();
+  // Dal secilmeden ileri kilitli oldugu icin son sayfaya ancak dal secilince varilir.
+  const son = sayfaNo === sayfalar.length - 1;
+  const secimBekliyor = Boolean(s.secim) && !dal;
   $('geri').disabled = sayfaNo === 0;
-  $('ileri').disabled = sayfaNo === son;
-  $('sayfaBilgi').textContent = sayfaNo === son
-    ? t.son
-    : `${t.sayfa} ${sayfaNo + 1} / ${hikaye.sayfalar.length}`;
-  $('noktalar').innerHTML = hikaye.sayfalar
+  $('ileri').disabled = son || secimBekliyor;
+  $('sayfaBilgi').textContent = son ? t.son : `${t.sayfa} ${sayfaNo + 1} / ${toplam}`;
+  $('noktalar').innerHTML = Array.from({ length: toplam })
     .map((_, i) => `<span class="nokta${i === sayfaNo ? ' aktif' : ''}"></span>`).join('');
   $('ustBilgi').textContent = `${kimlik.ad} · ${kimlik.yas} · ${kimlik.sehir || '—'}`;
   araclariAdlandir();
@@ -354,13 +397,17 @@ $('form').addEventListener('submit', (e) => {
   $('hata').textContent = '';
   kimlik = { ad, yas: $('yas').value, sehir: $('sehir').value.trim(), tema: $('tema').value };
   localStorage.setItem('masal:son', JSON.stringify(kimlik));
-  hikaye = hikayeUret({ dil, ...kimlik });
+  hikaye = hikayeUret({ ...kimlik, dil });
+  dal = null;                         // yeni masal: secim bastan yapilacak
   sayfaNo = 0;
   okuyucuyaGec();
 });
 
 $('geri').onclick = () => { if (sayfaNo > 0) { sayfaNo--; sayfaCiz(); } };
-$('ileri').onclick = () => { if (sayfaNo < hikaye.sayfalar.length - 1) { sayfaNo++; sayfaCiz(); } };
+$('ileri').onclick = () => {
+  if ($('ileri').disabled) return;                    // secim bekliyor olabilir
+  if (sayfaNo < aktifSayfalar().length - 1) { sayfaNo++; sayfaCiz(); }
+};
 $('yeniden').onclick = () => {
   sesiDurdur();                       // okuyucudan cikarken ses arkada devam etmesin
   $('okuyucuEkran').hidden = true;

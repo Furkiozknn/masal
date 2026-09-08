@@ -88,6 +88,14 @@
              font-size:.74rem; cursor:pointer; padding:.35rem .6rem; border-radius:8px;
              font-family:inherit}
 
+  /* --- secim noktasi --- */
+  .secim{border:2px dashed var(--kenar); border-radius:13px; padding:.9rem; background:#fff}
+  .secim-soru{margin:0 0 .7rem; text-align:center; font-size:.9rem; color:var(--soluk)}
+  .secim-dugmeler{display:flex; gap:.6rem; flex-wrap:wrap; justify-content:center}
+  .secim-dugmeler .dugme{flex:1 1 190px; font-size:.92rem}
+  .secim-dugmeler .dugme[aria-pressed="true"]{background:var(--vurgu); color:#fff;
+                                              border-color:var(--vurgu); font-weight:600}
+
   /* --- boyama bitince kutlama --- */
   .kutlama{text-align:center; font-size:.88rem; font-weight:600; color:var(--vurgu);
            animation:belir .45s ease}
@@ -162,6 +170,15 @@
     <!-- Sesli okuma: tarayicinin kendi konusma motoru. O dilde ses yuklu degilse
          (ornegin Turkce sesi olmayan bir Windows) dugme hic gorunmez. -->
     <div><button class="dugme sade sesli" id="sesli" type="button" hidden></button></div>
+
+    <!-- Secim noktasi: cocuk hikayeyi yonlendirir. Secilmeden ileri gidilemez. -->
+    <div class="secim" id="secim" hidden>
+      <p class="secim-soru" id="secimSoru"></p>
+      <div class="secim-dugmeler">
+        <button class="dugme sade" id="secimA" type="button"></button>
+        <button class="dugme sade" id="secimB" type="button"></button>
+      </div>
+    </div>
 
     <figure class="boyama" id="boyamaKutu" hidden>
       <figcaption id="boyaIpucu"></figcaption>
