@@ -11,8 +11,8 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 |---|---|
 | Hikaye üretimi | Şablon motoru — **API anahtarı gerektirmez**, maliyeti sıfır |
 | Diller | Türkçe, İngilizce. Açılışta tarayıcı dilinden seçilir, üstten değiştirilebilir |
-| Temalar | Deniz, Orman, Yıldızlar. Her biri 6 sayfa |
-| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılıyor; üç tema × iki yol = altı okuma |
+| Temalar | Deniz, Orman, Yıldızlar, Kar. Her biri 6 sayfa |
+| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılıyor; dört tema × iki yol = sekiz okuma |
 | Kitaplık | Okunan masallar birikiyor, kaldığı sayfadan devam ediliyor |
 | Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe |
 | Kapanış | Masal bitince aynı çocuk için okunmamış temalar öneriliyor |
@@ -47,9 +47,10 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `index.html` | İki ekran: form ve okuyucu |
 | `app.js` | Durum, sayfa geçişi, dallar, boyama, kitaplık, sesli okuma, dil |
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
-| `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay |
+| `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay, kış |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
-| `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, çözülmemiş yer tutucu |
+| `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
+| `LICENSE` | MIT |
 
 ### Şablonlarda Türkçe ek
 
@@ -69,7 +70,7 @@ koda gömülü ve testli.
 
 1. **LLM katmanı** — şablon yerine özgün hikaye. Anahtar sunucuda kalmalı,
    tarayıcıya konmaz. Şablon motoru yedek olarak kalır: API düşerse ürün çalışır.
-2. **Sahne kütüphanesini büyütmek** — şu an 4 sahne. Hikaye çeşitliliği
+2. **Sahne kütüphanesini büyütmek** — şu an 5 sahne. Hikaye çeşitliliği
    sahne sayısına bağlı.
 3. **Ücretlendirme** — Türkiye'den tahsilat için Polar.sh / Lemon Squeezy
    (Stripe ve PayPal Türkiye'de yok).

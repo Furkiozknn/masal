@@ -28,7 +28,7 @@ export const METINLER = {
       baskaMasal: '{ad} için başka masallar',
       adGerekli: 'Lütfen çocuğun adını yaz.',
     },
-    temalar: { deniz: 'Deniz', orman: 'Orman', yildizlar: 'Yıldızlar' },
+    temalar: { deniz: 'Deniz', orman: 'Orman', yildizlar: 'Yıldızlar', kar: 'Kar' },
     hikayeler: {
       deniz: {
         baslik: '{ad} ve Denizin Fısıltısı',
@@ -72,6 +72,20 @@ export const METINLER = {
           { sahne: 'oda', boya: true, metin: 'Roket geri döndüğünde sabah olmak üzereydi. {ad} yatağına girdi. Yastığının üstünde hâlâ bir tutam yıldız tozu vardı.' },
         ],
       },
+      kar: {
+        baslik: '{ad} ve İlk Kar',
+        sayfalar: [
+          { sahne: 'oda', metin: '{sehir:de} o sabah her yer bembeyazdı. {ad} pencereye koştu. Gece boyunca sessizce kar yağmıştı.' },
+          { sahne: 'kis', boya: true, metin: 'Bahçeye çıktı. Kar, ayaklarının altında usulca çıtırdadı. Çıplak bir dalın üstünde minik bir kuş titriyordu.' },
+          { metin: 'Kuş {ad:e} baktı. Üşüdüğü her hâlinden belliydi ama uçup gitmedi.',
+            secim: { soru: '{ad} ne yapsın?', a: 'Kuşa yem ver', b: 'Kardan adam yap' } },
+          { dal: 'a', metin: '{ad} eve koştu ve avucunda bir tutam ekmek kırıntısıyla döndü. Kırıntıları ağacın altına, karın üstüne serpti.' },
+          { dal: 'a', metin: 'Kuş usulca aşağı indi. Birkaç kırıntı topladı, sonra başını kaldırıp öttü. Sanki teşekkür ediyordu.' },
+          { dal: 'b', metin: '{ad} karı avuçlayıp yuvarlamaya başladı. Küçük top gitgide büyüdü. Üstüne bir tane daha koydu.' },
+          { dal: 'b', metin: 'Gözlerine iki taş, burnuna bir havuç yerleştirdi. Kuş gelip kardan adamın omzuna kondu. İkisi birlikte baktılar.' },
+          { sahne: 'oda', boya: true, metin: 'İçeri girdiğinde yanakları kıpkırmızıydı. {ad} yatağına girdi. Dışarıda kar hâlâ usul usul yağıyordu.' },
+        ],
+      },
     },
   },
 
@@ -94,7 +108,7 @@ export const METINLER = {
       baskaMasal: 'More stories for {ad}',
       adGerekli: 'Please enter the child\'s name.',
     },
-    temalar: { deniz: 'The sea', orman: 'The forest', yildizlar: 'The stars' },
+    temalar: { deniz: 'The sea', orman: 'The forest', yildizlar: 'The stars', kar: 'The snow' },
     hikayeler: {
       deniz: {
         baslik: '{ad} and the Whisper of the Sea',
@@ -136,6 +150,20 @@ export const METINLER = {
           { dal: 'b', metin: 'The rocket slipped in among the stars. Their lights drifted slowly past the glass.' },
           { dal: 'b', metin: 'One star was brighter than the rest, and seemed to wink. {ad} waved. The star flashed back.' },
           { sahne: 'oda', boya: true, metin: 'It was almost morning when the rocket came back. {ad} climbed into bed. A little stardust was still there on the pillow.' },
+        ],
+      },
+      kar: {
+        baslik: '{ad} and the First Snow',
+        sayfalar: [
+          { sahne: 'oda', metin: 'Everything was white in {sehir} that morning. {ad} ran to the window. Snow had been falling quietly all night.' },
+          { sahne: 'kis', boya: true, metin: 'Out in the garden the snow crunched softly underfoot. On a bare branch, a tiny bird was shivering.' },
+          { metin: 'The bird looked at {ad}. It was clearly cold, and yet it did not fly away.',
+            secim: { soru: 'What should {ad} do?', a: 'Feed the bird', b: 'Build a snowman' } },
+          { dal: 'a', metin: '{ad} ran inside and came back with a handful of breadcrumbs, then scattered them on the snow under the tree.' },
+          { dal: 'a', metin: 'The bird came down quietly, gathered a few crumbs, then lifted its head and sang. It sounded like thank you.' },
+          { dal: 'b', metin: '{ad} scooped up the snow and began to roll it. The small ball grew and grew, and another one went on top.' },
+          { dal: 'b', metin: 'Two stones for eyes, a carrot for a nose. The bird flew over and landed on the snowman\'s shoulder. They both looked on.' },
+          { sahne: 'oda', boya: true, metin: 'Back inside, two cheeks were bright red from the cold. {ad} climbed into bed. Outside, the snow was still falling softly.' },
         ],
       },
     },

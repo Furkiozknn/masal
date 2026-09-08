@@ -80,6 +80,33 @@ export const SAHNELER = {
     <circle class="b" data-ad="pencere" cx="250" cy="118" r="14"/>
     <path class="b" data-ad="tepeler" d="M0 214 Q62 188 124 213 Q186 236 252 209 Q322 186 400 211 L400 260 L0 260 Z"/>
   `,
+
+  // --- Kar: ciplak agac, kus, kardan adam ---
+  kis: `
+    <!-- gok, kar egrisinin altina uzatildi ki arada beyaz serit kalmasin -->
+    <rect class="b" data-ad="gökyüzü" x="0" y="0" width="400" height="200"/>
+    <path class="b" data-ad="kar" d="M0 176 Q100 164 200 174 Q300 184 400 170 L400 260 L0 260 Z"/>
+    <rect class="b" data-ad="ağaç gövdesi" x="60" y="116" width="24" height="62" rx="3"/>
+    <path class="c" d="M72 128 L46 100 M72 116 L56 90 M72 122 L92 96 M72 152 L50 136"/>
+    <!-- egimli uzun dal: kus bunun ustunde oturuyor, govdenin altindan geciyor -->
+    <path class="c" d="M76 140 Q108 134 150 140"/>
+    <path class="b" data-ad="kuş kuyruğu" d="M126 120 L100 111 L103 131 Z"/>
+    <ellipse class="b" data-ad="kuş" cx="142" cy="120" rx="17" ry="13"/>
+    <circle class="b" data-ad="kuş başı" cx="158" cy="110" r="10"/>
+    <path class="b" data-ad="gaga" d="M167 105 L182 111 L167 116 Z"/>
+    <circle class="c" cx="161" cy="107" r="2.5" fill="#2c2a26" stroke="none"/>
+    <circle class="b" data-ad="alt gövde" cx="285" cy="216" r="36"/>
+    <circle class="b" data-ad="üst gövde" cx="285" cy="168" r="25"/>
+    <path class="c" d="M252 200 L214 178 M318 200 L356 180"/>
+    <path class="b" data-ad="burun" d="M283 164 L314 174 L283 184 Z"/>
+    <rect class="b" data-ad="şapka" x="266" y="118" width="38" height="26" rx="3"/>
+    <path class="c" d="M251 144 h68"/>
+    <circle class="c" cx="276" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
+    <circle class="c" cx="294" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
+    <path class="c" d="M34 46 v16 M26 50 l16 8 M42 50 l-16 8
+                       M356 70 v14 M349 74 l14 6 M363 74 l-14 6
+                       M232 44 v12 M226 47 l12 6 M238 47 l-12 6"/>
+  `,
 };
 
 // Sahnenin varsayilan (bos) hali disinda ilk acilista bazi bolgeler dolu gelsin

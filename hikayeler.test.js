@@ -2,6 +2,7 @@
 // Sablonlarin yapisal tutarliligi. Yeni tema/dil eklenince ilk bunu calistir.
 import assert from 'node:assert/strict';
 import { METINLER, hikayeUret, dilSec } from './hikayeler.js';
+import { SAHNELER } from './sahneler.js';
 
 const diller = Object.keys(METINLER);
 assert.ok(diller.length >= 2, 'en az iki dil olmali');
@@ -64,8 +65,29 @@ assert.ok(trDeniz.sayfalar[0].metin.startsWith("Sinop'ta"), 'sert unsuz benzesme
 const trSehirsiz = hikayeUret({ dil: 'tr', tema: 'orman', ad: 'Ömer', yas: 4, sehir: '' });
 assert.ok(trSehirsiz.sayfalar[0].metin.startsWith('Kasabanın'), 'sehirsiz durumda cins isim + buyuk harf bekleniyordu');
 
+// Her sayfanin sahnesi tanimli olmali: eksik sahne sessizce bos cizilir,
+// hata vermez. Kullanilmayan sahne de olu agirliktir.
+const kullanilanSahne = new Set();
+for (const d of diller) {
+  for (const t of temalar) {
+    for (const s of METINLER[d].hikayeler[t].sayfalar) {
+      if (!s.sahne) continue;
+      assert.ok(SAHNELER[s.sahne], `${d}/${t}: tanimsiz sahne "${s.sahne}"`);
+      kullanilanSahne.add(s.sahne);
+      // Boyanabilir sayfada gercekten boyanacak bolge bulunmali.
+      if (s.boya) {
+        const bolge = (SAHNELER[s.sahne].match(/class="b"/g) || []).length;
+        assert.ok(bolge >= 5, `${d}/${t}: "${s.sahne}" sahnesinde yalnizca ${bolge} bolge var`);
+      }
+    }
+  }
+}
+for (const ad of Object.keys(SAHNELER)) {
+  assert.ok(kullanilanSahne.has(ad), `"${ad}" sahnesi hicbir hikayede kullanilmiyor`);
+}
+
 // Bilinmeyen dil ve tema cokmemeli.
 assert.equal(dilSec('de'), 'en');
 assert.ok(hikayeUret({ dil: 'tr', tema: 'yokboyle', ad: 'Ada', yas: 5, sehir: '' }).sayfalar.length > 0);
 
-console.log(`tamam: ${diller.length} dil x ${temalar.length} tema dogrulandi`);
+console.log(`tamam: ${diller.length} dil x ${temalar.length} tema, ${Object.keys(SAHNELER).length} sahne dogrulandi`);
