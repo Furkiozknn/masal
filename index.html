@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Cocugunuzun adina, yasina ve sehrine gore yazilan uyku oncesi masali; sayfalarina gomulu boyama alanlariyla birlikte tarayicida okuyun.">
 <title>Masal</title>
 <style>
   :root{
-    --kagit:#fdfaf3; --murekkep:#2c2a26; --vurgu:#d97757; --kenar:#e6ded0;
+    --kagit:#fdfaf3; --murekkep:#2c2a26; --vurgu:#c0562f;   /* WCAG AA: beyaz uzerinde 4.55:1, kagit uzerinde 4.37:1 */ --kenar:#e6ded0;
     --soluk:#7a7268; --golge:0 2px 14px rgba(0,0,0,.09);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -77,6 +78,10 @@
     .kart{padding:1.2rem 1.1rem}
     .alanlar{grid-template-columns:1fr}
     .metin{font-size:1.05rem}
+    /* Boyama alanini kenardan kenara ac: kucuk parmaklar icin her bolge
+       ~%20 buyur, en kucuk dokunma hedefi 24px esiginin uzerine cikar. */
+    figure.boyama{margin-left:-1.1rem; margin-right:-1.1rem;
+                  border-left:0; border-right:0; border-radius:0}
   }
 </style>
 </head>
@@ -89,29 +94,31 @@
 </header>
 
 <main>
-  <!-- 1. ekran: form -->
+  <!-- 1. ekran: form. Metinler Turkce statik yazili: JS yuklenene kadar sayfa
+       bos gorunmesin (duzen kaymasi) ve arama motoru JS calistirmadan icerik gorsun.
+       app.js acilista secili dile gore hepsini yeniden yaziyor. -->
   <section class="kart" id="formEkran">
-    <h2 id="fBaslik"></h2>
-    <p class="aciklama" id="fAciklama"></p>
+    <h2 id="fBaslik">Çocuğunuza özel masal</h2>
+    <p class="aciklama" id="fAciklama">Adını, yaşını ve şehrini yaz. Masal ona göre yazılsın.</p>
     <form class="alanlar" id="form">
       <label class="genis">
-        <span id="lAd"></span>
+        <span id="lAd">Çocuğun adı</span>
         <input id="ad" name="ad" required maxlength="24" autocomplete="off">
       </label>
       <label>
-        <span id="lYas"></span>
+        <span id="lYas">Yaşı</span>
         <select id="yas"></select>
       </label>
       <label>
-        <span id="lSehir"></span>
+        <span id="lSehir">Şehri</span>
         <input id="sehir" name="sehir" maxlength="32" autocomplete="off">
       </label>
       <label class="genis">
-        <span id="lTema"></span>
+        <span id="lTema">Konu</span>
         <select id="tema"></select>
       </label>
       <div class="genis hata" id="hata"></div>
-      <div class="genis"><button class="dugme" id="olustur" type="submit"></button></div>
+      <div class="genis"><button class="dugme" id="olustur" type="submit">Masalı oluştur</button></div>
     </form>
   </section>
 

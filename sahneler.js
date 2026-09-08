@@ -4,6 +4,9 @@
 //   class="c"  -> sadece kontur/dekor, tiklanamaz (pointer-events yok).
 // LLM'e SVG cizdirmek yerine elle cizilmis sablon kullaniyoruz: kalite tutarli,
 // gorsel uretim maliyeti sifir.
+// Dokunma kurali: boyanabilir hicbir sekil en dar yerinde ~20 viewBox biriminden
+// ince olmasin. Mobilde sahne ~341px genislikte cizildigi icin bu ~17 CSS px eder;
+// altina inen sekilleri kucuk parmaklar isabet ettiremiyor.
 // ponytail: sabit sahne listesi. Sahne sayisi artarsa ayri JSON'a tasinir.
 
 export const SAHNELER = {
@@ -17,7 +20,7 @@ export const SAHNELER = {
     <path class="c" d="M272 102 l3.5 7 7 3.5 -7 3.5 -3.5 7 -3.5 -7 -7 -3.5 7 -3.5 Z"/>
     <path class="c" d="M322 106 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5 Z"/>
     <path class="c" d="M248 38 h104 v86 h-104 Z M300 38 v86 M248 81 h104"/>
-    <rect class="b" data-ad="baş tahtası" x="34" y="138" width="18" height="76" rx="4"/>
+    <rect class="b" data-ad="baş tahtası" x="28" y="136" width="26" height="78" rx="5"/>
     <rect class="b" data-ad="yatak"  x="46" y="174" width="176" height="40" rx="6"/>
     <rect class="b" data-ad="yorgan" x="112" y="162" width="110" height="34" rx="8"/>
     <rect class="b" data-ad="yastık" x="58" y="152" width="48" height="26" rx="11"/>
@@ -51,12 +54,12 @@ export const SAHNELER = {
     <path class="b" data-ad="tilki-kuyruk" d="M182 206 C132 186 104 230 144 241 C160 245 174 226 182 216 Z"/>
     <ellipse class="b" data-ad="tilki-gövde" cx="196" cy="212" rx="46" ry="25"/>
     <circle class="b" data-ad="tilki-kafa" cx="250" cy="196" r="24"/>
-    <path class="b" data-ad="tilki-kulak-1" d="M234 178 L230 156 L248 170 Z"/>
-    <path class="b" data-ad="tilki-kulak-2" d="M262 172 L274 154 L272 180 Z"/>
-    <path class="b" data-ad="tilki-burun" d="M268 200 L286 205 L268 212 Z"/>
+    <path class="b" data-ad="tilki-kulak-1" d="M236 180 L226 154 L250 168 Z"/>
+    <path class="b" data-ad="tilki-kulak-2" d="M258 174 L280 150 L276 182 Z"/>
+    <path class="b" data-ad="tilki-burun" d="M266 196 L294 205 L266 215 Z"/>
     <circle class="c" cx="256" cy="192" r="3" fill="#2c2a26" stroke="none"/>
-    <rect class="b" data-ad="bacak-1" x="172" y="230" width="14" height="18" rx="4"/>
-    <rect class="b" data-ad="bacak-2" x="212" y="230" width="14" height="18" rx="4"/>
+    <rect class="b" data-ad="bacak-1" x="168" y="228" width="22" height="22" rx="5"/>
+    <rect class="b" data-ad="bacak-2" x="208" y="228" width="22" height="22" rx="5"/>
     <path class="c" d="M0 204 q10 -8 20 0 M40 206 q10 -8 20 0 M380 204 q10 -8 20 0" fill="none"/>
   `,
 
@@ -66,10 +69,10 @@ export const SAHNELER = {
          egri ile dikdortgen arasinda boyanmayan beyaz serit kaliyor -->
     <rect class="b" data-ad="gece göğü" x="0" y="0" width="400" height="245"/>
     <circle class="b" data-ad="ay" cx="62" cy="52" r="27"/>
-    <path class="b" data-ad="yıldız-1" d="M130 50 l3.5 6.5 6.5 3.5 -6.5 3.5 -3.5 6.5 -3.5 -6.5 -6.5 -3.5 6.5 -3.5 Z"/>
+    <path class="b" data-ad="yıldız-1" d="M129 48 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
     <path class="b" data-ad="yıldız-2" d="M330 34 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
-    <path class="b" data-ad="yıldız-3" d="M352 116 l2.8 5.2 5.2 2.8 -5.2 2.8 -2.8 5.2 -2.8 -5.2 -5.2 -2.8 5.2 -2.8 Z"/>
-    <path class="b" data-ad="yıldız-4" d="M112 136 l2.8 5.2 5.2 2.8 -5.2 2.8 -2.8 5.2 -2.8 -5.2 -5.2 -2.8 5.2 -2.8 Z"/>
+    <path class="b" data-ad="yıldız-3" d="M350 110 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
+    <path class="b" data-ad="yıldız-4" d="M110 130 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
     <path class="b" data-ad="alev" d="M234 178 Q250 220 266 178 Z"/>
     <path class="b" data-ad="kanat-1" d="M228 138 L204 184 L228 178 Z"/>
     <path class="b" data-ad="kanat-2" d="M272 138 L296 184 L272 178 Z"/>
