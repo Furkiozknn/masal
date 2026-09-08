@@ -22,7 +22,7 @@ export const METINLER = {
       son: 'Masal bitti. İyi geceler!',
       adGerekli: 'Lütfen çocuğun adını yaz.',
     },
-    temalar: { deniz: 'Deniz', orman: 'Orman' },
+    temalar: { deniz: 'Deniz', orman: 'Orman', yildizlar: 'Yıldızlar' },
     hikayeler: {
       deniz: {
         baslik: '{ad} ve Denizin Fısıltısı',
@@ -46,6 +46,17 @@ export const METINLER = {
           { sahne: 'oda', boya: true, metin: 'Eve dönerken {ad} arkasına baktı. Tilki patikanın başında durmuş onu uğurluyordu. O gece rüyasında ormanın yeşilini gördü.' },
         ],
       },
+      yildizlar: {
+        baslik: '{ad} ve Gece Yolculuğu',
+        sayfalar: [
+          { sahne: 'oda', metin: '{sehir:de} gökyüzü o gece çok açıktı. {ad} yatağından kalkıp pencereye gitti. Yıldızlar hiç bu kadar yakın görünmemişti.' },
+          { sahne: 'uzay', boya: true, metin: 'Pencerenin hemen altında küçük bir roket duruyordu. Kapısı açıktı. İçeride tek bir koltuk vardı, tam {ad:e} göre.' },
+          { metin: 'Roket hiç ses çıkarmadan havalandı. Aşağıda evler küçüldü, sonra {sehir} bir avuç ışığa dönüştü.' },
+          { metin: 'Ay\'ın yanından geçerken bir ses duydu: "Yavaş git, acelen olmasın. Buradan her şey daha güzel görünür."' },
+          { metin: '{ad} camdan dışarı baktı. Yıldızların arasında usulca süzülüyorlardı. Hiç korkmuyordu.' },
+          { sahne: 'oda', boya: true, metin: 'Roket geri döndüğünde sabah olmak üzereydi. {ad} yatağına girdi. Yastığının üstünde hâlâ bir tutam yıldız tozu vardı.' },
+        ],
+      },
     },
   },
 
@@ -62,7 +73,7 @@ export const METINLER = {
       son: 'The end. Sleep well!',
       adGerekli: 'Please enter the child\'s name.',
     },
-    temalar: { deniz: 'The sea', orman: 'The forest' },
+    temalar: { deniz: 'The sea', orman: 'The forest', yildizlar: 'The stars' },
     hikayeler: {
       deniz: {
         baslik: '{ad} and the Whisper of the Sea',
@@ -84,6 +95,17 @@ export const METINLER = {
           { metin: 'They walked together. The fox stopped {ad} in front of a mossy stone. At its foot lay a very small pool of water.' },
           { metin: 'The sky was in the water. {ad} leaned over and found a face there. The fox sat down alongside. Both stayed quiet for a long while.' },
           { sahne: 'oda', boya: true, metin: 'On the way home {ad} looked back. The fox stood at the head of the path, seeing them off. That night the green of the forest came in a dream.' },
+        ],
+      },
+      yildizlar: {
+        baslik: '{ad} and the Journey by Night',
+        sayfalar: [
+          { sahne: 'oda', metin: 'The sky above {sehir} was very clear that night. {ad} got out of bed and went to the window. The stars had never looked so close.' },
+          { sahne: 'uzay', boya: true, metin: 'A small rocket stood just below the window. Its door was open. Inside there was a single seat, exactly the right size for {ad}.' },
+          { metin: 'The rocket lifted without a sound. Below, the houses grew small, and then {sehir} was only a handful of light.' },
+          { metin: 'Passing close to the Moon, a voice came: "Go slowly, there is no hurry. Everything looks better from up here."' },
+          { metin: '{ad} looked out through the glass. They were drifting gently between the stars. There was nothing at all to be afraid of.' },
+          { sahne: 'oda', boya: true, metin: 'It was almost morning when the rocket came back. {ad} climbed into bed. A little stardust was still there on the pillow.' },
         ],
       },
     },

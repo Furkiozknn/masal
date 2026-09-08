@@ -11,7 +11,7 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 |---|---|
 | Hikaye üretimi | Şablon motoru — **API anahtarı gerektirmez**, maliyeti sıfır |
 | Diller | Türkçe, İngilizce. Açılışta tarayıcı dilinden seçilir, üstten değiştirilebilir |
-| Temalar | Deniz, Orman. Her biri 6 sayfa |
+| Temalar | Deniz, Orman, Yıldızlar. Her biri 6 sayfa |
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
@@ -41,7 +41,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `index.html` | İki ekran: form ve okuyucu |
 | `app.js` | Durum, sayfa geçişi, boyama, dil |
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
-| `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman |
+| `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
 
 ### Şablonlarda Türkçe ek
@@ -62,7 +62,7 @@ koda gömülü ve testli.
 
 1. **LLM katmanı** — şablon yerine özgün hikaye. Anahtar sunucuda kalmalı,
    tarayıcıya konmaz. Şablon motoru yedek olarak kalır: API düşerse ürün çalışır.
-2. **Sahne kütüphanesini büyütmek** — şu an 3 sahne. Hikaye çeşitliliği
+2. **Sahne kütüphanesini büyütmek** — şu an 4 sahne. Hikaye çeşitliliği
    sahne sayısına bağlı.
 3. **Ücretlendirme** — Türkiye'den tahsilat için Polar.sh / Lemon Squeezy
    (Stripe ve PayPal Türkiye'de yok).

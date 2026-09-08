@@ -59,6 +59,24 @@ export const SAHNELER = {
     <rect class="b" data-ad="bacak-2" x="212" y="230" width="14" height="18" rx="4"/>
     <path class="c" d="M0 204 q10 -8 20 0 M40 206 q10 -8 20 0 M380 204 q10 -8 20 0" fill="none"/>
   `,
+
+  // --- Gece gokyuzu: ay, yildizlar, tepeler, roket ---
+  uzay: `
+    <!-- gok, tepe egrisinin en alcak noktasindan (y~225) asagi uzatildi: aksi halde
+         egri ile dikdortgen arasinda boyanmayan beyaz serit kaliyor -->
+    <rect class="b" data-ad="gece göğü" x="0" y="0" width="400" height="245"/>
+    <circle class="b" data-ad="ay" cx="62" cy="52" r="27"/>
+    <path class="b" data-ad="yıldız-1" d="M130 50 l3.5 6.5 6.5 3.5 -6.5 3.5 -3.5 6.5 -3.5 -6.5 -6.5 -3.5 6.5 -3.5 Z"/>
+    <path class="b" data-ad="yıldız-2" d="M330 34 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
+    <path class="b" data-ad="yıldız-3" d="M352 116 l2.8 5.2 5.2 2.8 -5.2 2.8 -2.8 5.2 -2.8 -5.2 -5.2 -2.8 5.2 -2.8 Z"/>
+    <path class="b" data-ad="yıldız-4" d="M112 136 l2.8 5.2 5.2 2.8 -5.2 2.8 -2.8 5.2 -2.8 -5.2 -5.2 -2.8 5.2 -2.8 Z"/>
+    <path class="b" data-ad="alev" d="M234 178 Q250 220 266 178 Z"/>
+    <path class="b" data-ad="kanat-1" d="M228 138 L204 184 L228 178 Z"/>
+    <path class="b" data-ad="kanat-2" d="M272 138 L296 184 L272 178 Z"/>
+    <path class="b" data-ad="roket" d="M250 60 C267 82 273 106 273 132 L273 178 L227 178 L227 132 C227 106 233 82 250 60 Z"/>
+    <circle class="b" data-ad="pencere" cx="250" cy="118" r="14"/>
+    <path class="b" data-ad="tepeler" d="M0 214 Q62 188 124 213 Q186 236 252 209 Q322 186 400 211 L400 260 L0 260 Z"/>
+  `,
 };
 
 // Sahnenin varsayilan (bos) hali disinda ilk acilista bazi bolgeler dolu gelsin
