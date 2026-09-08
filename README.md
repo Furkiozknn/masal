@@ -14,6 +14,8 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 | Temalar | Deniz, Orman, Yıldızlar. Her biri 6 sayfa |
 | Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılıyor; üç tema × iki yol = altı okuma |
 | Kitaplık | Okunan masallar birikiyor, kaldığı sayfadan devam ediliyor |
+| Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe |
+| Kapanış | Masal bitince aynı çocuk için okunmamış temalar öneriliyor |
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
@@ -43,7 +45,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | Dosya | İş |
 |---|---|
 | `index.html` | İki ekran: form ve okuyucu |
-| `app.js` | Durum, sayfa geçişi, boyama, dil |
+| `app.js` | Durum, sayfa geçişi, dallar, boyama, kitaplık, sesli okuma, dil |
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |

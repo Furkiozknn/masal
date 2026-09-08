@@ -343,6 +343,34 @@ function secimCiz(s) {
   }
 }
 
+/** Masal bitince ayni cocuk icin okunmamis temalari onerir. */
+function oneriCiz(sonSayfada) {
+  const kutu = $('oneri');
+  if (!sonSayfada) { kutu.hidden = true; return; }
+
+  const okunan = new Set(kitapligiOku().filter((k) => k.ad === kimlik.ad).map((k) => k.tema));
+  const kalan = Object.keys(METINLER[dil].temalar).filter((t) => !okunan.has(t));
+  kutu.hidden = kalan.length === 0;
+  if (!kalan.length) return;
+
+  $('oneriBaslik').textContent = ui().baskaMasal.replaceAll('{ad}', kimlik.ad);
+  const kaplar = $('oneriDugmeler');
+  kaplar.innerHTML = '';
+  for (const t of kalan) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'dugme sade';
+    b.textContent = METINLER[dil].temalar[t];
+    b.onclick = () => {
+      kimlik = { ...kimlik, tema: t };
+      hikaye = hikayeUret({ ...kimlik, dil });
+      dal = null;
+      sayfaNo = 0;
+      sayfaCiz();
+    };
+    kaplar.appendChild(b);
+  }
+}
+
 function sayfaCiz() {
   sesiDurdur();                       // sayfa degisince okuma devam etmesin
   const sayfalar = aktifSayfalar();
@@ -393,6 +421,7 @@ function sayfaCiz() {
   araclariAdlandir();
   sesDugmesiniTazele();
   kitapligaKaydet();                  // kaldigi sayfa her gecisde guncellensin
+  oneriCiz(son);                      // kitapliga yazildiktan sonra: bu tema okunmus sayilsin
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
