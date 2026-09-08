@@ -15,6 +15,8 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
+| Sesli okuma | Tarayıcının konuşma motoru; cihazda o dilde ses yoksa düğme görünmez |
+| Erişilebilirlik | Lighthouse mobil: erişilebilirlik, en iyi uygulamalar, SEO ve agentic browsing dördü de 100 |
 
 ## Çalıştırma
 
@@ -74,3 +76,5 @@ koda gömülü ve testli.
 - Şablon hikayeler LLM kadar çeşitli değil: aynı tema hep aynı olayları anlatır.
 - Ek motoru "saat'te / kalp'e" gibi ince okunan kalın yazımları bilmez.
 - Boyama sadece o tarayıcıda durur; cihaz değişince gider.
+- Sesli okuma cihazın yüklü seslerine bağlı: Türkçe sesi olmayan bir masaüstünde
+  düğme hiç çıkmaz. Telefon ve tablette Türkçe ses standart.
