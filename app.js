@@ -28,6 +28,7 @@ function dilleriKur() {
     localStorage.setItem('masal:dil', dil);
     document.documentElement.lang = dil;
     metinleriYaz();
+    sesiDurdur();
     if (hikaye) { hikaye = hikayeUret({ dil, ...kimlik }); sayfaCiz(); }
   };
 }
@@ -138,8 +139,53 @@ function temizle() {
   $('durum').textContent = '';
 }
 
+// ---------- sesli okuma ----------
+// Tarayicinin kendi konusma motoru: sunucu yok, maliyet yok, anahtar yok.
+// Ses listesi asenkron gelir ve cihaza gore degisir; o dilde ses yoksa
+// dugmeyi hic gostermiyoruz (Turkce sesi olmayan Windows'ta oldugu gibi).
+const konusmaVar = 'speechSynthesis' in window;
+
+function dilinSesi() {
+  if (!konusmaVar) return null;
+  const hedef = dil === 'tr' ? 'tr' : 'en';
+  return speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith(hedef)) || null;
+}
+
+function sesDugmesiniTazele() {
+  const d = $('sesli');
+  const ses = dilinSesi();
+  d.hidden = !ses;
+  if (ses) d.textContent = speechSynthesis.speaking ? ui().durdur : ui().dinle;
+  d.setAttribute('aria-pressed', String(Boolean(konusmaVar && speechSynthesis.speaking)));
+}
+
+function sesiDurdur() {
+  if (konusmaVar) speechSynthesis.cancel();
+  sesDugmesiniTazele();
+}
+
+function seslendir() {
+  const ses = dilinSesi();
+  if (!ses) return;
+  if (speechSynthesis.speaking) { sesiDurdur(); return; }
+  const s = new SpeechSynthesisUtterance($('hMetin').textContent);
+  s.voice = ses;
+  s.lang = ses.lang;
+  s.rate = 0.9;                       // cocuk icin biraz yavas
+  s.onend = sesDugmesiniTazele;
+  s.onerror = sesDugmesiniTazele;
+  speechSynthesis.speak(s);
+  sesDugmesiniTazele();
+}
+
+if (konusmaVar) {
+  speechSynthesis.addEventListener('voiceschanged', sesDugmesiniTazele);
+  $('sesli').onclick = seslendir;
+}
+
 // ---------- okuyucu ----------
 function sayfaCiz() {
+  sesiDurdur();                       // sayfa degisince okuma devam etmesin
   const s = hikaye.sayfalar[sayfaNo];
   const t = ui();
 
@@ -182,6 +228,7 @@ function sayfaCiz() {
     .map((_, i) => `<span class="nokta${i === sayfaNo ? ' aktif' : ''}"></span>`).join('');
   $('ustBilgi').textContent = `${kimlik.ad} · ${kimlik.yas} · ${kimlik.sehir || '—'}`;
   araclariAdlandir();
+  sesDugmesiniTazele();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -208,6 +255,7 @@ $('form').addEventListener('submit', (e) => {
 $('geri').onclick = () => { if (sayfaNo > 0) { sayfaNo--; sayfaCiz(); } };
 $('ileri').onclick = () => { if (sayfaNo < hikaye.sayfalar.length - 1) { sayfaNo++; sayfaCiz(); } };
 $('yeniden').onclick = () => {
+  sesiDurdur();                       // okuyucudan cikarken ses arkada devam etmesin
   $('okuyucuEkran').hidden = true;
   $('formEkran').hidden = false;
   $('ustBilgi').textContent = '';

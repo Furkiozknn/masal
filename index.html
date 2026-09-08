@@ -67,6 +67,8 @@
   .arac{padding:.32rem .7rem; border:1px solid var(--kenar); background:#fff;
         border-radius:8px; font-size:.78rem; cursor:pointer; font-family:inherit; color:inherit}
   .durum{font-size:.75rem; color:var(--soluk); text-align:center; min-height:1.1em}
+  .sesli{font-size:.85rem; padding:.4rem .9rem}
+  .sesli[aria-pressed="true"]{background:var(--vurgu); color:#fff; border-color:var(--vurgu)}
 
   .gezinti{display:flex; align-items:center; gap:.6rem; justify-content:space-between}
   .gezinti .orta{font-size:.8rem; color:var(--soluk)}
@@ -126,6 +128,9 @@
   <section class="kart" id="okuyucuEkran" hidden>
     <h2 id="hBaslik"></h2>
     <p class="metin" id="hMetin"></p>
+    <!-- Sesli okuma: tarayicinin kendi konusma motoru. O dilde ses yuklu degilse
+         (ornegin Turkce sesi olmayan bir Windows) dugme hic gorunmez. -->
+    <div><button class="dugme sade sesli" id="sesli" type="button" hidden></button></div>
 
     <figure class="boyama" id="boyamaKutu" hidden>
       <figcaption id="boyaIpucu"></figcaption>
