@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Masal</title>
+<style>
+  :root{
+    --kagit:#fdfaf3; --murekkep:#2c2a26; --vurgu:#d97757; --kenar:#e6ded0;
+    --soluk:#7a7268; --golge:0 2px 14px rgba(0,0,0,.09);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0; background:#f0ebe1; color:var(--murekkep);
+       font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+       min-height:100vh; display:flex; flex-direction:column}
+  [hidden]{display:none!important}
+
+  header{padding:.7rem 1rem; background:var(--kagit); border-bottom:1px solid var(--kenar);
+         display:flex; align-items:center; gap:.8rem; flex-wrap:wrap}
+  header h1{font-size:1rem; margin:0; font-weight:600}
+  .kucuk{font-size:.78rem; color:var(--soluk)}
+  select#dilSec{margin-left:auto; font-size:.8rem; padding:.25rem .4rem;
+                border:1px solid var(--kenar); border-radius:7px; background:#fff; color:inherit}
+
+  main{flex:1; display:flex; justify-content:center; padding:1rem}
+  .kart{background:var(--kagit); max-width:720px; width:100%; border-radius:16px;
+        box-shadow:var(--golge); padding:1.7rem 1.8rem 1.3rem;
+        display:flex; flex-direction:column; gap:1rem}
+
+  /* --- form --- */
+  .kart h2{margin:0; font-size:1.45rem; font-family:Georgia,serif; font-weight:normal}
+  .kart p.aciklama{margin:0; color:var(--soluk); font-size:.92rem; line-height:1.55}
+  .alanlar{display:grid; grid-template-columns:1fr 1fr; gap:.9rem}
+  label{display:flex; flex-direction:column; gap:.3rem; font-size:.82rem; color:var(--soluk)}
+  input,select{padding:.6rem .7rem; border:1px solid var(--kenar); border-radius:9px;
+               font-size:1rem; font-family:inherit; background:#fff; color:var(--murekkep)}
+  input:focus,select:focus{outline:2px solid var(--vurgu); outline-offset:1px}
+  .genis{grid-column:1 / -1}
+  .dugme{padding:.75rem 1.3rem; border:0; border-radius:11px; background:var(--vurgu);
+         color:#fff; font-size:1rem; font-weight:600; cursor:pointer; font-family:inherit}
+  .dugme:hover{filter:brightness(1.06)}
+  .dugme.sade{background:#fff; color:var(--murekkep); border:1px solid var(--kenar); font-weight:500}
+  .dugme:disabled{opacity:.4; cursor:default; filter:none}
+  .hata{color:#b3402f; font-size:.85rem; min-height:1.1em}
+
+  /* --- okuyucu --- */
+  .metin{font-size:1.15rem; line-height:1.8; font-family:Georgia,serif; margin:0}
+  .metin b{color:var(--vurgu); font-weight:600}
+  figure.boyama{margin:0; border:2px dashed var(--kenar); border-radius:13px;
+                padding:.55rem; background:#fff}
+  figure.boyama figcaption{font-size:.75rem; color:#8a8178; text-align:center; margin-bottom:.35rem}
+  svg.sahne{display:block; width:100%; height:auto; touch-action:manipulation}
+  svg.sahne .b{fill:#fff; stroke:var(--murekkep); stroke-width:2.5; stroke-linejoin:round;
+               cursor:pointer; transition:fill .12s}
+  svg.sahne .b:hover{fill:#f4efe4}
+  svg.sahne .c{fill:none; stroke:var(--murekkep); stroke-width:2.5;
+               stroke-linecap:round; pointer-events:none}
+  /* sahne sadece resim olarak gosteriliyorsa (boyanamaz sayfa) */
+  svg.sahne.donuk .b{cursor:default} svg.sahne.donuk .b:hover{fill:#fff}
+
+  .palet{display:flex; gap:.45rem; flex-wrap:wrap; align-items:center;
+         justify-content:center; margin-top:.55rem}
+  .renk{width:32px; height:32px; border-radius:50%; border:2px solid #fff;
+        box-shadow:0 0 0 1px var(--kenar); cursor:pointer; padding:0}
+  .renk[aria-pressed="true"]{box-shadow:0 0 0 3px var(--murekkep); transform:scale(1.12)}
+  .arac{padding:.32rem .7rem; border:1px solid var(--kenar); background:#fff;
+        border-radius:8px; font-size:.78rem; cursor:pointer; font-family:inherit; color:inherit}
+  .durum{font-size:.75rem; color:var(--soluk); text-align:center; min-height:1.1em}
+
+  .gezinti{display:flex; align-items:center; gap:.6rem; justify-content:space-between}
+  .gezinti .orta{font-size:.8rem; color:var(--soluk)}
+  .noktalar{display:flex; gap:.3rem; justify-content:center}
+  .nokta{width:7px; height:7px; border-radius:50%; background:var(--kenar)}
+  .nokta.aktif{background:var(--vurgu)}
+
+  @media (max-width:520px){
+    .kart{padding:1.2rem 1.1rem}
+    .alanlar{grid-template-columns:1fr}
+    .metin{font-size:1.05rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="ustBaslik">Masal</h1>
+  <span class="kucuk" id="ustBilgi"></span>
+  <select id="dilSec" aria-label="dil"></select>
+</header>
+
+<main>
+  <!-- 1. ekran: form -->
+  <section class="kart" id="formEkran">
+    <h2 id="fBaslik"></h2>
+    <p class="aciklama" id="fAciklama"></p>
+    <form class="alanlar" id="form">
+      <label class="genis">
+        <span id="lAd"></span>
+        <input id="ad" name="ad" required maxlength="24" autocomplete="off">
+      </label>
+      <label>
+        <span id="lYas"></span>
+        <select id="yas"></select>
+      </label>
+      <label>
+        <span id="lSehir"></span>
+        <input id="sehir" name="sehir" maxlength="32" autocomplete="off">
+      </label>
+      <label class="genis">
+        <span id="lTema"></span>
+        <select id="tema"></select>
+      </label>
+      <div class="genis hata" id="hata"></div>
+      <div class="genis"><button class="dugme" id="olustur" type="submit"></button></div>
+    </form>
+  </section>
+
+  <!-- 2. ekran: okuyucu -->
+  <section class="kart" id="okuyucuEkran" hidden>
+    <h2 id="hBaslik"></h2>
+    <p class="metin" id="hMetin"></p>
+
+    <figure class="boyama" id="boyamaKutu" hidden>
+      <figcaption id="boyaIpucu"></figcaption>
+      <svg class="sahne" id="sahne" viewBox="0 0 400 260" role="img"></svg>
+      <div class="palet" id="palet"></div>
+      <div class="durum" id="durum"></div>
+    </figure>
+
+    <div class="noktalar" id="noktalar"></div>
+    <div class="gezinti">
+      <button class="dugme sade" id="geri"></button>
+      <span class="orta" id="sayfaBilgi"></span>
+      <button class="dugme" id="ileri"></button>
+    </div>
+    <div style="text-align:center"><button class="dugme sade" id="yeniden"></button></div>
+  </section>
+</main>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
