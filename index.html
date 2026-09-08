@@ -45,7 +45,8 @@
   .hata{color:#b3402f; font-size:.85rem; min-height:1.1em}
 
   /* --- okuyucu --- */
-  .metin{font-size:1.15rem; line-height:1.8; font-family:Georgia,serif; margin:0}
+  /* Punto yasa gore ayarlaniyor (app.js): kucuk cocuk harfleri daha kolay takip etsin. */
+  .metin{font-size:var(--metin-boy,1.15rem); line-height:1.8; font-family:Georgia,serif; margin:0}
   .metin b{color:var(--vurgu); font-weight:600}
   figure.boyama{margin:0; border:2px dashed var(--kenar); border-radius:13px;
                 padding:.55rem; background:#fff}
@@ -111,7 +112,7 @@
   @media (max-width:520px){
     .kart{padding:1.2rem 1.1rem}
     .alanlar{grid-template-columns:1fr}
-    .metin{font-size:1.05rem}
+    .metin{font-size:calc(var(--metin-boy,1.15rem) * .92)}
     /* Boyama alanini kenardan kenara ac: kucuk parmaklar icin her bolge
        ~%20 buyur, en kucuk dokunma hedefi 24px esiginin uzerine cikar. */
     figure.boyama{margin-left:-1.1rem; margin-right:-1.1rem;

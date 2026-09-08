@@ -12,6 +12,8 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 | Hikaye üretimi | Şablon motoru — **API anahtarı gerektirmez**, maliyeti sıfır |
 | Diller | Türkçe, İngilizce. Açılışta tarayıcı dilinden seçilir, üstten değiştirilebilir |
 | Temalar | Deniz, Orman, Yıldızlar. Her biri 6 sayfa |
+| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılıyor; üç tema × iki yol = altı okuma |
+| Kitaplık | Okunan masallar birikiyor, kaldığı sayfadan devam ediliyor |
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
@@ -25,7 +27,7 @@ python -m http.server 8790
 ```
 Sonra `http://127.0.0.1:8790/`. Derleme adımı yok, bağımlılık yok.
 
-Test: `node turkce.test.js`
+Test: `node turkce.test.js` ve `node hikayeler.test.js`
 
 ## Neden vektör (SVG) boyama
 
@@ -45,6 +47,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
+| `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, çözülmemiş yer tutucu |
 
 ### Şablonlarda Türkçe ek
 
@@ -73,7 +76,8 @@ koda gömülü ve testli.
 
 ## Bilinen sınırlar
 
-- Şablon hikayeler LLM kadar çeşitli değil: aynı tema hep aynı olayları anlatır.
+- Şablon hikayeler LLM kadar çeşitli değil. Seçim noktası tema başına iki yol
+  veriyor ama olay örgüsü yine sabit.
 - Ek motoru "saat'te / kalp'e" gibi ince okunan kalın yazımları bilmez.
 - Boyama sadece o tarayıcıda durur; cihaz değişince gider.
 - Sesli okuma cihazın yüklü seslerine bağlı: Türkçe sesi olmayan bir masaüstünde

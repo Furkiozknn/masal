@@ -164,6 +164,20 @@ function temizle() {
   $('durum').textContent = '';
 }
 
+// ---------- yasa gore okuma ----------
+// Form yasi soruyor; karsiligi gorunur olmali. Kucuk cocukta punto buyuk ve
+// ses yavas, buyukte tersi. Metin puntosu CSS degiskeniyle ayarlaniyor.
+function yasKademesi() {
+  const y = Number(kimlik?.yas) || 5;
+  if (y <= 4) return { boy: '1.32rem', hiz: 0.8 };
+  if (y <= 6) return { boy: '1.15rem', hiz: 0.9 };
+  return { boy: '1.04rem', hiz: 1.0 };
+}
+
+function puntoyuAyarla() {
+  document.documentElement.style.setProperty('--metin-boy', yasKademesi().boy);
+}
+
 // ---------- sesli okuma ----------
 // Tarayicinin kendi konusma motoru: sunucu yok, maliyet yok, anahtar yok.
 // Ses listesi asenkron gelir ve cihaza gore degisir; o dilde ses yoksa
@@ -196,7 +210,7 @@ function seslendir() {
   const s = new SpeechSynthesisUtterance($('hMetin').textContent);
   s.voice = ses;
   s.lang = ses.lang;
-  s.rate = 0.9;                       // cocuk icin biraz yavas
+  s.rate = yasKademesi().hiz;         // kucuk cocuk icin daha yavas
   s.onend = sesDugmesiniTazele;
   s.onerror = sesDugmesiniTazele;
   speechSynthesis.speak(s);
@@ -386,6 +400,7 @@ function okuyucuyaGec() {
   $('formEkran').hidden = true;
   $('okuyucuEkran').hidden = false;
   paletiKur();
+  puntoyuAyarla();
   sayfaCiz();
 }
 
