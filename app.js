@@ -29,6 +29,7 @@ function dilleriKur() {
     document.documentElement.lang = dil;
     metinleriYaz();
     sesiDurdur();
+    kitapligiCiz();                   // basliklar da yeni dilde uretilsin
     if (hikaye) { hikaye = hikayeUret({ dil, ...kimlik }); sayfaCiz(); }
   };
 }
@@ -102,14 +103,22 @@ function araclariAdlandir() {
 
 function bolgeler() { return [...$('sahne').querySelectorAll('.b')]; }
 
+/** Durum satiri: bos, "kaydedildi n/m" ya da resim bitince kutlama. */
+function durumYaz(n, toplam) {
+  const el = $('durum');
+  const bitti = toplam > 0 && n === toplam;
+  el.classList.toggle('kutlama', bitti);
+  el.textContent = bitti ? `${ui().kutlama} 🎉`
+                 : n ? `${ui().kaydedildi} · ${n}/${toplam}` : '';
+}
+
 function boyaKaydet() {
+  const bs = bolgeler();
   const d = {};
-  bolgeler().forEach((el, i) => { if (el.style.fill) d[i] = el.style.fill; });
-  try {
-    localStorage.setItem(anahtar(), JSON.stringify(d));
-    const n = Object.keys(d).length;
-    $('durum').textContent = n ? `${ui().kaydedildi} · ${n}/${bolgeler().length}` : '';
-  } catch { $('durum').textContent = ''; }   // kota dolu / gizli sekme: boyama yine calisir
+  bs.forEach((el, i) => { if (el.style.fill) d[i] = el.style.fill; });
+  // kota dolu / gizli sekme olabilir: kayit basarisiz olsa da boyama calismaya devam eder
+  try { localStorage.setItem(anahtar(), JSON.stringify(d)); } catch {}
+  durumYaz(Object.keys(d).length, bs.length);
 }
 
 function boyaYukle() {
@@ -117,8 +126,7 @@ function boyaYukle() {
   try { d = JSON.parse(localStorage.getItem(anahtar()) || '{}'); } catch {}
   const bs = bolgeler();
   Object.entries(d).forEach(([i, c]) => { if (bs[i]) bs[i].style.fill = c; });
-  const n = Object.keys(d).length;
-  $('durum').textContent = n ? `${ui().kaydedildi} · ${n}/${bs.length}` : '';
+  durumYaz(Object.keys(d).length, bs.length);
 }
 
 function geriAl() {
@@ -183,6 +191,104 @@ if (konusmaVar) {
   $('sesli').onclick = seslendir;
 }
 
+// ---------- kitaplik ----------
+// Okunan masallar birikir ve kaldigi sayfadan devam edilir: geri donmek icin
+// sebep olur. Kayit tarayicida durur, sunucu yok.
+const KITAPLIK = 'masal:kitaplik';
+
+function kitapligiOku() {
+  try {
+    const v = JSON.parse(localStorage.getItem(KITAPLIK) || '[]');
+    return Array.isArray(v) ? v : [];
+  } catch { return []; }
+}
+
+function kitapligaYaz(liste) {
+  try { localStorage.setItem(KITAPLIK, JSON.stringify(liste.slice(0, 12))); } catch {}
+}
+
+/** Ayni cocuk + ayni tema tek kayit: ilerleme uzerine yazilir. */
+function kitapligaKaydet() {
+  if (!kimlik) return;
+  const liste = kitapligiOku().filter((k) => !(k.ad === kimlik.ad && k.tema === kimlik.tema));
+  // Dil bilerek saklanmiyor: kitaplik her zaman o an secili dilde gosterilir.
+  liste.unshift({ ...kimlik, sayfaNo, sayfaSayisi: hikaye.sayfalar.length, guncelleme: Date.now() });
+  kitapligaYaz(liste);
+}
+
+/** Bir kayittaki toplam boyali bolge sayisi. */
+function boyaliSayisi(k) {
+  let n = 0;
+  for (let i = 0; i < (k.sayfaSayisi || 6); i++) {
+    try {
+      const d = JSON.parse(localStorage.getItem(`masal:boya:${k.ad}:${k.tema}:${i}`) || '{}');
+      n += Object.keys(d).length;
+    } catch {}
+  }
+  return n;
+}
+
+function kitapligiCiz() {
+  const liste = kitapligiOku();
+  const t = ui();
+  $('kitaplikBaslik').textContent = t.kitaplik;
+  $('kitaplikBolum').hidden = liste.length === 0;
+  const ul = $('kitaplik');
+  ul.innerHTML = '';
+
+  for (const k of liste) {
+    // dil sonra yayiliyor: eski kayitlarda saklanmis bir dil alani secili dili ezmesin
+    const baslik = hikayeUret({ ...k, dil }).baslik;
+    const bitti = k.sayfaNo >= (k.sayfaSayisi || 6) - 1;
+    const boyali = boyaliSayisi(k);
+    const yuzde = Math.round(((k.sayfaNo + 1) / (k.sayfaSayisi || 6)) * 100);
+
+    const li = document.createElement('li');
+
+    const ac = document.createElement('button');
+    ac.type = 'button'; ac.className = 'kitap-ac';
+    const ad = document.createElement('div');
+    ad.className = 'kitap-ad'; ad.textContent = baslik;
+    const alt = document.createElement('div');
+    alt.className = 'kitap-alt';
+    const durum = bitti ? t.bitti : `${t.sayfa} ${k.sayfaNo + 1}/${k.sayfaSayisi || 6}`;
+    alt.textContent = boyali
+      ? `${durum} · ${boyali} ${t.bolgeBoyandi}`
+      : durum;
+    const cubuk = document.createElement('div');
+    cubuk.className = 'kitap-ilerleme';
+    cubuk.innerHTML = `<i style="width:${yuzde}%"></i>`;
+    ac.append(ad, alt, cubuk);
+    // aria-label yok: dugmenin kendi metni (baslik + kalinan sayfa) zaten okunuyor.
+    // Ayri bir etiket koymak gorunen metinle uyusmuyor ve ekran okuyucuda sorun cikariyor.
+    ac.onclick = () => kitaptanAc(k);
+
+    const sil = document.createElement('button');
+    sil.type = 'button'; sil.className = 'kitap-sil'; sil.textContent = t.sil;
+    sil.setAttribute('aria-label', `${baslik} — ${t.sil}`);
+    sil.onclick = () => kitaptanSil(k);
+
+    li.append(ac, sil);
+    ul.appendChild(li);
+  }
+}
+
+function kitaptanAc(k) {
+  kimlik = { ad: k.ad, yas: k.yas, sehir: k.sehir, tema: k.tema };
+  hikaye = hikayeUret({ ...kimlik, dil });
+  sayfaNo = Math.min(k.sayfaNo || 0, hikaye.sayfalar.length - 1);
+  okuyucuyaGec();
+}
+
+function kitaptanSil(k) {
+  if (!confirm(ui().silOnay)) return;                 // boyamalar da gidiyor: once sor
+  kitapligaYaz(kitapligiOku().filter((x) => !(x.ad === k.ad && x.tema === k.tema)));
+  for (let i = 0; i < (k.sayfaSayisi || 6); i++) {
+    localStorage.removeItem(`masal:boya:${k.ad}:${k.tema}:${i}`);
+  }
+  kitapligiCiz();
+}
+
 // ---------- okuyucu ----------
 function sayfaCiz() {
   sesiDurdur();                       // sayfa degisince okuma devam etmesin
@@ -229,6 +335,7 @@ function sayfaCiz() {
   $('ustBilgi').textContent = `${kimlik.ad} · ${kimlik.yas} · ${kimlik.sehir || '—'}`;
   araclariAdlandir();
   sesDugmesiniTazele();
+  kitapligaKaydet();                  // kaldigi sayfa her gecisde guncellensin
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -259,6 +366,7 @@ $('yeniden').onclick = () => {
   $('okuyucuEkran').hidden = true;
   $('formEkran').hidden = false;
   $('ustBilgi').textContent = '';
+  kitapligiCiz();
 };
 document.addEventListener('keydown', (e) => {
   if ($('okuyucuEkran').hidden) return;
@@ -273,3 +381,4 @@ try {
   const son = JSON.parse(localStorage.getItem('masal:son') || 'null');
   if (son) { $('ad').value = son.ad; $('yas').value = son.yas; $('sehir').value = son.sehir; $('tema').value = son.tema; }
 } catch {}
+kitapligiCiz();

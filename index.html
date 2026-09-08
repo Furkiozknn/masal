@@ -70,6 +70,30 @@
   .sesli{font-size:.85rem; padding:.4rem .9rem}
   .sesli[aria-pressed="true"]{background:var(--vurgu); color:#fff; border-color:var(--vurgu)}
 
+  /* --- kitaplik --- */
+  #kitaplikBolum{border-top:1px solid var(--kenar); padding-top:1.1rem}
+  #kitaplikBaslik{margin:0 0 .7rem; font-size:.95rem; color:var(--soluk)}
+  .kitaplik{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.5rem}
+  .kitaplik li{display:flex; align-items:center; gap:.6rem; background:#fff;
+               border:1px solid var(--kenar); border-radius:11px; padding:.55rem .7rem}
+  .kitap-ac{flex:1; min-width:0; text-align:left; border:0; background:none;
+            cursor:pointer; font-family:inherit; color:inherit; padding:.1rem}
+  .kitap-ad{font-family:Georgia,serif; font-size:.98rem;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .kitap-alt{font-size:.74rem; color:var(--soluk); margin-top:.15rem}
+  .kitap-ilerleme{height:4px; background:var(--kenar); border-radius:2px;
+                  margin-top:.45rem; overflow:hidden}
+  .kitap-ilerleme i{display:block; height:100%; background:var(--vurgu)}
+  .kitap-sil{border:1px solid var(--kenar); background:#fff; color:var(--soluk);
+             font-size:.74rem; cursor:pointer; padding:.35rem .6rem; border-radius:8px;
+             font-family:inherit}
+
+  /* --- boyama bitince kutlama --- */
+  .kutlama{text-align:center; font-size:.88rem; font-weight:600; color:var(--vurgu);
+           animation:belir .45s ease}
+  @keyframes belir{from{opacity:0; transform:translateY(7px)} to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion:reduce){ .kutlama{animation:none} }
+
   .gezinti{display:flex; align-items:center; gap:.6rem; justify-content:space-between}
   .gezinti .orta{font-size:.8rem; color:var(--soluk)}
   .noktalar{display:flex; gap:.3rem; justify-content:center}
@@ -122,6 +146,13 @@
       <div class="genis hata" id="hata"></div>
       <div class="genis"><button class="dugme" id="olustur" type="submit">Masalı oluştur</button></div>
     </form>
+
+    <!-- Kitaplik: okunan masallar birikir, kaldigi sayfadan devam edilir.
+         Bos oldugunda bolum hic gorunmez. -->
+    <section id="kitaplikBolum" hidden>
+      <h3 id="kitaplikBaslik">Kitaplık</h3>
+      <ul class="kitaplik" id="kitaplik"></ul>
+    </section>
   </section>
 
   <!-- 2. ekran: okuyucu -->
