@@ -1,6 +1,7 @@
 import { SAHNELER } from './sahneler.js';
 import { METINLER, dilSec, hikayeUret } from './hikayeler.js';
 import { olay, yasGrubu } from './olcum.js';
+import { karakterSVG, varsayilanGorunum, TEN_RENKLERI, SAC_RENKLERI, SAC_TIPLERI } from './karakter.js';
 
 const $ = (id) => document.getElementById(id);
 // Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
@@ -12,6 +13,7 @@ let kimlik = null;          // { ad, yas, sehir, tema } — kayit anahtarinin pa
 let sayfaNo = 0;            // gorunur sayfalar icindeki sira (dala gore degisir)
 let dal = null;             // 'a' | 'b' | null — secim noktasinda belirlenir
 let renk = RENKLER[6];
+let gorunum = varsayilanGorunum();   // acilista kayittan okunuyor (bkz. en alt)
 const gecmis = [];          // { anahtar, i, onceki } — geri al
 
 // ---------- dil ----------
@@ -32,6 +34,7 @@ function dilleriKur() {
     metinleriYaz();
     sesiDurdur();
     kitapligiCiz();                   // basliklar da yeni dilde uretilsin
+    gorunumSecimiKur();               // ten/sac etiketleri de cevrilsin
     if (hikaye) { hikaye = hikayeUret({ dil, ...kimlik }); sayfaCiz(); }
   };
 }
@@ -97,7 +100,9 @@ function paletiKur() {
   RENKLER.forEach((c, i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'renk'; b.style.background = c;
-    b.setAttribute('aria-label', c);
+    // ekran okuyucuya renk kodu degil renk adi: "#e8574a" okunmaz bir sey
+    b.dataset.renkNo = i;
+    b.setAttribute('aria-label', ui().renkAdlari?.[i] || `renk ${i + 1}`);
     b.setAttribute('aria-pressed', String(c === renk));
     b.onclick = () => {
       renk = c;
@@ -117,6 +122,11 @@ function paletiKur() {
 function araclariAdlandir() {
   const t = ui();
   document.querySelectorAll('.arac').forEach((b) => { b.textContent = t[b.dataset.rol]; });
+  // palet dil degisince de dogru adlansin
+  document.querySelectorAll('.renk').forEach((b) => {
+    const i = Number(b.dataset.renkNo);
+    b.setAttribute('aria-label', t.renkAdlari?.[i] || `renk ${i + 1}`);
+  });
 }
 
 function bolgeler() { return [...$('sahne').querySelectorAll('.b')]; }
@@ -378,6 +388,75 @@ function oneriCiz(sonSayfada) {
   }
 }
 
+// ---------- kahramanin gorunumu ----------
+const GORUNUM_ANAHTAR = 'masal:gorunum';
+
+function gorunumuOku() {
+  try {
+    const v = JSON.parse(localStorage.getItem(GORUNUM_ANAHTAR) || 'null');
+    // kayitli deger gecerli mi: liste degisirse eski secim sessizce bozulmasin
+    if (v && TEN_RENKLERI.includes(v.ten) && SAC_RENKLERI.includes(v.sac)
+        && SAC_TIPLERI.includes(v.sacTipi)) return v;
+  } catch {}
+  return varsayilanGorunum();
+}
+
+function onizlemeyiTazele() {
+  $('kahramanOnizleme').innerHTML = karakterSVG(gorunum);
+}
+
+function gorunumSecimiKur() {
+  const t = ui();
+  $('gorunumBaslik').textContent = t.gorunumBaslik;
+
+  const nokta = (kap, degerler, alan, etiket) => {
+    kap.innerHTML = '';
+    kap.setAttribute('aria-label', etiket);
+    degerler.forEach((d, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'gorunum-nokta'; b.style.background = d;
+      // renk kodu yerine sira: ekran okuyucuda "#6f452a" anlamsiz
+      b.setAttribute('aria-label', `${etiket} ${i + 1}`);
+      b.setAttribute('aria-pressed', String(gorunum[alan] === d));
+      b.onclick = () => {
+        gorunum = { ...gorunum, [alan]: d };
+        localStorage.setItem(GORUNUM_ANAHTAR, JSON.stringify(gorunum));
+        kap.querySelectorAll('.gorunum-nokta').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+        b.setAttribute('aria-pressed', 'true');
+        onizlemeyiTazele();
+      };
+      kap.appendChild(b);
+    });
+  };
+  nokta($('tenSecim'), TEN_RENKLERI, 'ten', t.tenSec);
+  nokta($('sacSecim'), SAC_RENKLERI, 'sac', t.sacSec);
+
+  const tipAdi = { kisa: t.sacKisa, uzun: t.sacUzun, kivircik: t.sacKivircik };
+  const kap = $('sacTipiSecim');
+  kap.innerHTML = '';
+  for (const tip of SAC_TIPLERI) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'sac-tipi'; b.textContent = tipAdi[tip];
+    b.setAttribute('aria-pressed', String(gorunum.sacTipi === tip));
+    b.onclick = () => {
+      gorunum = { ...gorunum, sacTipi: tip };
+      localStorage.setItem(GORUNUM_ANAHTAR, JSON.stringify(gorunum));
+      kap.querySelectorAll('.sac-tipi').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      onizlemeyiTazele();
+    };
+    kap.appendChild(b);
+  }
+  onizlemeyiTazele();
+}
+
+/** Sahnedeki <!--KARAKTER:x,y,olcek--> yer tutucusunu kahramanla degistirir.
+ *  Konumlar sahne basina elle secildi: mevcut ogelerle cakismiyor. */
+function kahramaniYerlestir(sahne) {
+  return sahne.replace(/<!--KARAKTER:([\d.]+),([\d.]+),([\d.]+)-->/g, (_, x, y, o) =>
+    `<g class="kahraman" transform="translate(${x},${y}) scale(${o})">${karakterSVG(gorunum)}</g>`);
+}
+
 /** Metin ve resmi yumusakca yeniden girdirir. Sinif kaldirilip reflow
  *  tetiklenmeden yeniden eklenirse animasyon ikinci sayfada calismaz. */
 function gecisAnimasyonu() {
@@ -405,7 +484,7 @@ function sayfaCiz() {
   const svg = $('sahne');
   if (s.sahne) {
     kutu.hidden = false;
-    svg.innerHTML = SAHNELER[s.sahne] || '';
+    svg.innerHTML = kahramaniYerlestir(SAHNELER[s.sahne] || '');
     svg.classList.toggle('donuk', !s.boya);
     $('palet').hidden = !s.boya;
     $('durum').textContent = '';
@@ -502,4 +581,6 @@ try {
   const son = JSON.parse(localStorage.getItem('masal:son') || 'null');
   if (son) { $('ad').value = son.ad; $('yas').value = son.yas; $('sehir').value = son.sehir; $('tema').value = son.tema; }
 } catch {}
+gorunum = gorunumuOku();            // kahramanin gorunumu son secimden gelir
+gorunumSecimiKur();
 kitapligiCiz();

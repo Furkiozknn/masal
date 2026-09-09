@@ -44,6 +44,24 @@
   .dugme:disabled{opacity:.4; cursor:default; filter:none}
   .hata{color:#b3402f; font-size:.85rem; min-height:1.1em}
 
+  /* --- kahramanin gorunumu --- */
+  .gorunum{border:1px solid var(--kenar); border-radius:11px; padding:.7rem .8rem;
+           display:flex; gap:.9rem; align-items:center; background:#fff}
+  .gorunum-secimler{flex:1; display:flex; flex-direction:column; gap:.45rem; min-width:0}
+  .gorunum-baslik{font-size:.82rem; color:var(--soluk)}
+  .gorunum-satir{display:flex; gap:.35rem; flex-wrap:wrap}
+  .gorunum-nokta{width:27px; height:27px; border-radius:50%; border:2px solid #fff;
+                 box-shadow:0 0 0 1px var(--kenar); cursor:pointer; padding:0}
+  .gorunum-nokta[aria-pressed="true"]{box-shadow:0 0 0 3px var(--murekkep); transform:scale(1.1)}
+  .sac-tipi{padding:.3rem .65rem; font-size:.76rem; border:1px solid var(--kenar);
+            background:#fff; border-radius:7px; cursor:pointer; font-family:inherit; color:inherit}
+  .sac-tipi[aria-pressed="true"]{background:var(--murekkep); color:#fff; border-color:var(--murekkep)}
+  .onizleme{width:66px; height:auto; flex:none}
+  .onizleme .kisisel{stroke:var(--murekkep); stroke-width:2.5; stroke-linejoin:round}
+  .onizleme .b{fill:#fff; stroke:var(--murekkep); stroke-width:2.5; stroke-linejoin:round}
+  .onizleme .goz{fill:var(--murekkep); stroke:none}
+  .onizleme .agiz{fill:none; stroke:var(--murekkep); stroke-width:2; stroke-linecap:round}
+
   /* --- okuyucu --- */
   /* Punto yasa gore ayarlaniyor (app.js): kucuk cocuk harfleri daha kolay takip etsin. */
   .metin{font-size:var(--metin-boy,1.15rem); line-height:1.8; font-family:Georgia,serif; margin:0}
@@ -59,6 +77,14 @@
                stroke-linecap:round; pointer-events:none}
   /* sahne sadece resim olarak gosteriliyorsa (boyanamaz sayfa) */
   svg.sahne.donuk .b{cursor:default} svg.sahne.donuk .b:hover{fill:#fff}
+
+  /* Kahraman. Ten ve sac rengi kisisellestirmeden geliyor ve fill ozniteligiyle
+     yaziliyor; bu yuzden .c sinifi kullanilamaz (o fill:none dayatiyor). */
+  svg.sahne .kisisel{stroke:var(--murekkep); stroke-width:2.5;
+                     stroke-linejoin:round; pointer-events:none}
+  svg.sahne .goz{fill:var(--murekkep); stroke:none; pointer-events:none}
+  svg.sahne .agiz{fill:none; stroke:var(--murekkep); stroke-width:2;
+                  stroke-linecap:round; pointer-events:none}
 
   .palet{display:flex; gap:.45rem; flex-wrap:wrap; align-items:center;
          justify-content:center; margin-top:.55rem}
@@ -194,6 +220,18 @@
         <span id="lTema">Konu</span>
         <select id="tema"></select>
       </label>
+      <!-- Kahramanin gorunumu. Fotograf istenmiyor: secim elle yapiliyor,
+           hicbir gorsel cihazdan cikmiyor. -->
+      <div class="genis gorunum">
+        <div class="gorunum-secimler">
+          <span class="gorunum-baslik" id="gorunumBaslik">Kahramanın görünümü</span>
+          <div class="gorunum-satir" id="tenSecim" role="group" aria-label="ten rengi"></div>
+          <div class="gorunum-satir" id="sacSecim" role="group" aria-label="saç rengi"></div>
+          <div class="gorunum-satir" id="sacTipiSecim" role="group" aria-label="saç"></div>
+        </div>
+        <svg class="onizleme" id="kahramanOnizleme" viewBox="-32 -92 64 98" aria-hidden="true"></svg>
+      </div>
+
       <div class="genis hata" id="hata"></div>
       <div class="genis"><button class="dugme" id="olustur" type="submit">Masalı oluştur</button></div>
     </form>

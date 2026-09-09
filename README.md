@@ -16,6 +16,7 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 | Kitaplık | Okunan masallar birikiyor, kaldığı sayfadan devam ediliyor |
 | Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe |
 | Kapanış | Masal bitince aynı çocuk için okunmamış temalar öneriliyor |
+| Kahraman | Çocuk figürü her sahnede görünüyor; ten, saç rengi ve saç tipi seçilebiliyor. Kıyafeti boyanabilir |
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
 | Hareket | Kar yağıyor, yaprak düşüyor, yıldız parıldıyor, dalga kıpırdıyor — CSS ile, sıfır maliyet. Boyanabilir bölgeler sabit |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
@@ -50,6 +51,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay, kış |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
+| `karakter.js` | Kahraman SVG üreteci: ten/saç seçenekleri, saç tipleri |
 | `olcum.js` | Ölçüm noktaları + gizlilik süzgeci (`olcum.test.js`) |
 | `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
 | `LICENSE` | MIT |
@@ -86,6 +88,8 @@ koda gömülü ve testli.
 - Şablon hikayeler LLM kadar çeşitli değil. Seçim noktası tema başına iki yol
   veriyor ama olay örgüsü yine sabit.
 - Ek motoru "saat'te / kalp'e" gibi ince okunan kalın yazımları bilmez.
-- Boyama sadece o tarayıcıda durur; cihaz değişince gider.
+- Boyama ve kahramanın görünümü sadece o tarayıcıda durur; cihaz değişince gider.
+- Kahramanın görünümü elle seçiliyor. **Fotoğraf yüklenmiyor**: hiçbir görsel
+  cihazdan çıkmıyor, saklanmıyor, taranmıyor.
 - Sesli okuma cihazın yüklü seslerine bağlı: Türkçe sesi olmayan bir masaüstünde
   düğme hiç çıkmaz. Telefon ve tablette Türkçe ses standart.

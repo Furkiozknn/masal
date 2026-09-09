@@ -24,6 +24,7 @@ export const SAHNELER = {
     <rect class="b" data-ad="yatak"  x="46" y="174" width="176" height="40" rx="6"/>
     <rect class="b" data-ad="yorgan" x="112" y="162" width="110" height="34" rx="8"/>
     <rect class="b" data-ad="yastık" x="58" y="152" width="48" height="26" rx="11"/>
+    <!--KARAKTER:310,242,0.9-->
     <path class="c" d="M62 214 v18 M208 214 v18"/>
   `,
 
@@ -41,6 +42,7 @@ export const SAHNELER = {
     <path class="b" data-ad="kabuk-5" d="M200 248 L242.1 217.4 A52 52 0 0 1 252 248 Z"/>
     <path class="b canlanir-salla" data-ad="deniz yıldızı" d="M75 210 L80.3 224.7 L95.9 225.2 L83.6 234.8 L87.9 249.8 L75 241 L62.1 249.8 L66.4 234.8 L54.1 225.2 L69.7 224.7 Z"/>
     <path class="c dalga" style="--gecikme:0s"   d="M18 170 q11 -7 22 0 t22 0 M262 168 q11 -7 22 0 t22 0" fill="none"/>
+    <!--KARAKTER:330,250,0.9-->
     <path class="c dalga" style="--gecikme:1.8s" d="M120 182 q11 -7 22 0 t22 0 M330 186 q11 -7 22 0 t22 0" fill="none"/>
   `,
 
@@ -62,6 +64,7 @@ export const SAHNELER = {
     <rect class="b" data-ad="bacak-1" x="168" y="228" width="22" height="22" rx="5"/>
     <rect class="b" data-ad="bacak-2" x="208" y="228" width="22" height="22" rx="5"/>
     <path class="c" d="M0 204 q10 -8 20 0 M40 206 q10 -8 20 0 M380 204 q10 -8 20 0" fill="none"/>
+    <!--KARAKTER:318,252,0.85-->
     <!-- dekoratif dusen yapraklar: boyanmaz, sadece agir agir suzulur -->
     <path class="c dusen-yaprak" style="--gecikme:0s"   d="M150 40 q7 -9 14 0 q-7 9 -14 0 Z"/>
     <path class="c dusen-yaprak" style="--gecikme:5s"   d="M290 30 q6 -8 12 0 q-6 8 -12 0 Z"/>
@@ -84,6 +87,7 @@ export const SAHNELER = {
     <path class="b canlanir-suzul" data-ad="roket" d="M250 60 C267 82 273 106 273 132 L273 178 L227 178 L227 132 C227 106 233 82 250 60 Z"/>
     <circle class="b canlanir-suzul" data-ad="pencere" cx="250" cy="118" r="14"/>
     <path class="b" data-ad="tepeler" d="M0 214 Q62 188 124 213 Q186 236 252 209 Q322 186 400 211 L400 260 L0 260 Z"/>
+    <!--KARAKTER:90,244,0.8-->
     <!-- kucuk dekoratif yildizlar: bunlar boyanmaz, sadece parildar -->
     <path class="c parilti" style="--gecikme:0s"   d="M196 62 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
     <path class="c parilti" style="--gecikme:1.1s" d="M96 84 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
@@ -114,6 +118,7 @@ export const SAHNELER = {
     <circle class="c" cx="276" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
     <circle class="c" cx="294" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
     <!-- kar taneleri ayri ayri: farkli gecikmelerle dussunler -->
+    <!--KARAKTER:225,252,0.85-->
     <path class="c kar-tanesi" style="--gecikme:0s"   d="M34 46 v16 M26 50 l16 8 M42 50 l-16 8"/>
     <path class="c kar-tanesi" style="--gecikme:3s"   d="M356 60 v14 M349 64 l14 6 M363 64 l-14 6"/>
     <path class="c kar-tanesi" style="--gecikme:6s"   d="M232 40 v12 M226 43 l12 6 M238 43 l-12 6"/>
