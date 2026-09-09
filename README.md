@@ -30,7 +30,7 @@ python -m http.server 8790
 ```
 Sonra `http://127.0.0.1:8790/`. Derleme adımı yok, bağımlılık yok.
 
-Test: `node turkce.test.js` ve `node hikayeler.test.js`
+Test: `node turkce.test.js`, `node hikayeler.test.js`, `node olcum.test.js`
 
 ## Neden vektör (SVG) boyama
 
@@ -50,6 +50,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay, kış |
 | `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
+| `olcum.js` | Ölçüm noktaları + gizlilik süzgeci (`olcum.test.js`) |
 | `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
 | `LICENSE` | MIT |
 
@@ -75,8 +76,10 @@ koda gömülü ve testli.
    sahne sayısına bağlı.
 3. **Ücretlendirme** — Türkiye'den tahsilat için Polar.sh / Lemon Squeezy
    (Stripe ve PayPal Türkiye'de yok).
-4. **Ölçüm** — kaç ziyaretçi hikaye üretiyor, kaçı boyuyor, kaçı son sayfaya
-   varıyor. Karar bu üç sayıya bakarak verilecek.
+4. **Ölçüm** — noktalar yerleştirildi (`olcum.js`): masal-uretildi,
+   secim-yapildi, boyama-basladi, masal-bitti, kitapliktan-devam. Gönderim ucu
+   şu an kapalı, hiçbir istek gitmiyor; yayın çözülünce tek adres yazılacak.
+   Çocuğa ait hiçbir bilgi (ad, şehir, boyama) gönderilmiyor, süzgeç testli.
 
 ## Bilinen sınırlar
 

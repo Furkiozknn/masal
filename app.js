@@ -1,5 +1,6 @@
 import { SAHNELER } from './sahneler.js';
 import { METINLER, dilSec, hikayeUret } from './hikayeler.js';
+import { olay, yasGrubu } from './olcum.js';
 
 const $ = (id) => document.getElementById(id);
 // Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
@@ -314,6 +315,8 @@ function kitaptanAc(k) {
   hikaye = hikayeUret({ ...kimlik, dil });
   dal = k.dal || null;                                // cocuk kendi sectigi yolda devam etsin
   sayfaNo = Math.min(k.sayfaNo || 0, aktifSayfalar().length - 1);
+  sayfaCiz.sonBildirildi = false;
+  olay('kitapliktan-devam', { tema: k.tema, sayfa: sayfaNo });   // geri donus olcumu
   okuyucuyaGec();
 }
 
@@ -337,7 +340,9 @@ function secimCiz(s) {
     dugme.textContent = s.secim[harf];
     dugme.setAttribute('aria-pressed', String(dal === harf));
     dugme.onclick = () => {
+      const ilkSecim = !dal;
       dal = harf;
+      if (ilkSecim) olay('secim-yapildi', { tema: kimlik.tema, dal: harf });
       sayfaCiz();                     // secim degisince sonraki sayfalar yenilenir
     };
   }
@@ -392,10 +397,14 @@ function sayfaCiz() {
     $('palet').hidden = !s.boya;
     $('durum').textContent = '';
     if (s.boya) {
+      let ilkDokunus = true;
       bolgeler().forEach((el, i) => {
         el.addEventListener('click', () => {
           gecmis.push({ anahtar: anahtar(), i, onceki: el.style.fill || '' });
           el.style.fill = renk;
+          // sayfa basina yalnizca ilk dokunus sayilir: "kac kisi boyuyor" sorusu
+          // toplam dokunus sayisiyla degil, boyamaya baslayan kisiyle olculur
+          if (ilkDokunus) { ilkDokunus = false; olay('boyama-basladi', { tema: kimlik.tema, sayfa: sayfaNo }); }
           boyaKaydet();
         });
       });
@@ -411,6 +420,10 @@ function sayfaCiz() {
   const toplam = toplamSayfa();
   // Dal secilmeden ileri kilitli oldugu icin son sayfaya ancak dal secilince varilir.
   const son = sayfaNo === sayfalar.length - 1;
+  if (son && !sayfaCiz.sonBildirildi) {
+    sayfaCiz.sonBildirildi = true;    // ayni masalda bir kez
+    olay('masal-bitti', { tema: kimlik.tema, dal, toplamSayfa: toplam, dil });
+  }
   const secimBekliyor = Boolean(s.secim) && !dal;
   $('geri').disabled = sayfaNo === 0;
   $('ileri').disabled = son || secimBekliyor;
@@ -444,6 +457,9 @@ $('form').addEventListener('submit', (e) => {
   hikaye = hikayeUret({ ...kimlik, dil });
   dal = null;                         // yeni masal: secim bastan yapilacak
   sayfaNo = 0;
+  sayfaCiz.sonBildirildi = false;
+  // ad ve sehir gonderilmiyor, yalnizca tema/yas grubu/dil
+  olay('masal-uretildi', { tema: kimlik.tema, yasKademesi: yasGrubu(kimlik.yas), dil });
   okuyucuyaGec();
 });
 
