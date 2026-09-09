@@ -125,7 +125,3 @@ export const SAHNELER = {
     <path class="c kar-tanesi" style="--gecikme:1.5s" d="M150 52 v10 M145 55 l10 5 M155 55 l-10 5"/>
   `,
 };
-
-// Sahnenin varsayilan (bos) hali disinda ilk acilista bazi bolgeler dolu gelsin
-// istemiyoruz: bos boyama kitabi mantigi. Renk secimi tamamen cocugun.
-export const SAHNE_ADLARI = Object.keys(SAHNELER);
