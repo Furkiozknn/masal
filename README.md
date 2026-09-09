@@ -17,6 +17,7 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 | Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe |
 | Kapanış | Masal bitince aynı çocuk için okunmamış temalar öneriliyor |
 | Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
+| Hareket | Kar yağıyor, yaprak düşüyor, yıldız parıldıyor, dalga kıpırdıyor — CSS ile, sıfır maliyet. Boyanabilir bölgeler sabit |
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
 | Sesli okuma | Tarayıcının konuşma motoru; cihazda o dilde ses yoksa düğme görünmez |

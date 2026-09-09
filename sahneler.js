@@ -17,8 +17,8 @@ export const SAHNELER = {
     <rect class="b" data-ad="zemin" x="0" y="205" width="400" height="55"/>
     <rect class="b" data-ad="gece göğü" x="248" y="38" width="104" height="86" rx="4"/>
     <circle class="b" data-ad="ay" cx="322" cy="62" r="14"/>
-    <path class="c" d="M272 102 l3.5 7 7 3.5 -7 3.5 -3.5 7 -3.5 -7 -7 -3.5 7 -3.5 Z"/>
-    <path class="c" d="M322 106 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5 Z"/>
+    <path class="c parilti" style="--gecikme:0s"   d="M272 102 l3.5 7 7 3.5 -7 3.5 -3.5 7 -3.5 -7 -7 -3.5 7 -3.5 Z"/>
+    <path class="c parilti" style="--gecikme:1.4s" d="M322 106 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5 Z"/>
     <path class="c" d="M248 38 h104 v86 h-104 Z M300 38 v86 M248 81 h104"/>
     <rect class="b" data-ad="baş tahtası" x="28" y="136" width="26" height="78" rx="5"/>
     <rect class="b" data-ad="yatak"  x="46" y="174" width="176" height="40" rx="6"/>
@@ -40,7 +40,8 @@ export const SAHNELER = {
     <path class="b" data-ad="kabuk-4" d="M200 248 L216.1 198.5 A52 52 0 0 1 242.1 217.4 Z"/>
     <path class="b" data-ad="kabuk-5" d="M200 248 L242.1 217.4 A52 52 0 0 1 252 248 Z"/>
     <path class="b" data-ad="deniz yıldızı" d="M75 210 L80.3 224.7 L95.9 225.2 L83.6 234.8 L87.9 249.8 L75 241 L62.1 249.8 L66.4 234.8 L54.1 225.2 L69.7 224.7 Z"/>
-    <path class="c" d="M18 170 q11 -7 22 0 t22 0 M120 182 q11 -7 22 0 t22 0 M262 168 q11 -7 22 0 t22 0 M330 186 q11 -7 22 0 t22 0" fill="none"/>
+    <path class="c dalga" style="--gecikme:0s"   d="M18 170 q11 -7 22 0 t22 0 M262 168 q11 -7 22 0 t22 0" fill="none"/>
+    <path class="c dalga" style="--gecikme:1.8s" d="M120 182 q11 -7 22 0 t22 0 M330 186 q11 -7 22 0 t22 0" fill="none"/>
   `,
 
   // --- Orman: gokyuzu, cimen, iki agac, tilki yavrusu ---
@@ -61,6 +62,10 @@ export const SAHNELER = {
     <rect class="b" data-ad="bacak-1" x="168" y="228" width="22" height="22" rx="5"/>
     <rect class="b" data-ad="bacak-2" x="208" y="228" width="22" height="22" rx="5"/>
     <path class="c" d="M0 204 q10 -8 20 0 M40 206 q10 -8 20 0 M380 204 q10 -8 20 0" fill="none"/>
+    <!-- dekoratif dusen yapraklar: boyanmaz, sadece agir agir suzulur -->
+    <path class="c dusen-yaprak" style="--gecikme:0s"   d="M150 40 q7 -9 14 0 q-7 9 -14 0 Z"/>
+    <path class="c dusen-yaprak" style="--gecikme:5s"   d="M290 30 q6 -8 12 0 q-6 8 -12 0 Z"/>
+    <path class="c dusen-yaprak" style="--gecikme:9.5s" d="M216 52 q6 -8 12 0 q-6 8 -12 0 Z"/>
   `,
 
   // --- Gece gokyuzu: ay, yildizlar, tepeler, roket ---
@@ -79,6 +84,11 @@ export const SAHNELER = {
     <path class="b" data-ad="roket" d="M250 60 C267 82 273 106 273 132 L273 178 L227 178 L227 132 C227 106 233 82 250 60 Z"/>
     <circle class="b" data-ad="pencere" cx="250" cy="118" r="14"/>
     <path class="b" data-ad="tepeler" d="M0 214 Q62 188 124 213 Q186 236 252 209 Q322 186 400 211 L400 260 L0 260 Z"/>
+    <!-- kucuk dekoratif yildizlar: bunlar boyanmaz, sadece parildar -->
+    <path class="c parilti" style="--gecikme:0s"   d="M196 62 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
+    <path class="c parilti" style="--gecikme:1.1s" d="M96 84 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
+    <path class="c parilti" style="--gecikme:2.2s" d="M300 148 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
+    <path class="c parilti" style="--gecikme:1.7s" d="M162 118 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
   `,
 
   // --- Kar: ciplak agac, kus, kardan adam ---
@@ -103,9 +113,11 @@ export const SAHNELER = {
     <path class="c" d="M251 144 h68"/>
     <circle class="c" cx="276" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
     <circle class="c" cx="294" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
-    <path class="c" d="M34 46 v16 M26 50 l16 8 M42 50 l-16 8
-                       M356 70 v14 M349 74 l14 6 M363 74 l-14 6
-                       M232 44 v12 M226 47 l12 6 M238 47 l-12 6"/>
+    <!-- kar taneleri ayri ayri: farkli gecikmelerle dussunler -->
+    <path class="c kar-tanesi" style="--gecikme:0s"   d="M34 46 v16 M26 50 l16 8 M42 50 l-16 8"/>
+    <path class="c kar-tanesi" style="--gecikme:3s"   d="M356 60 v14 M349 64 l14 6 M363 64 l-14 6"/>
+    <path class="c kar-tanesi" style="--gecikme:6s"   d="M232 40 v12 M226 43 l12 6 M238 43 l-12 6"/>
+    <path class="c kar-tanesi" style="--gecikme:1.5s" d="M150 52 v10 M145 55 l10 5 M155 55 l-10 5"/>
   `,
 };
 
