@@ -39,7 +39,7 @@ export const SAHNELER = {
     <path class="b" data-ad="kabuk-3" d="M200 248 L183.9 198.5 A52 52 0 0 1 216.1 198.5 Z"/>
     <path class="b" data-ad="kabuk-4" d="M200 248 L216.1 198.5 A52 52 0 0 1 242.1 217.4 Z"/>
     <path class="b" data-ad="kabuk-5" d="M200 248 L242.1 217.4 A52 52 0 0 1 252 248 Z"/>
-    <path class="b" data-ad="deniz yıldızı" d="M75 210 L80.3 224.7 L95.9 225.2 L83.6 234.8 L87.9 249.8 L75 241 L62.1 249.8 L66.4 234.8 L54.1 225.2 L69.7 224.7 Z"/>
+    <path class="b canlanir-salla" data-ad="deniz yıldızı" d="M75 210 L80.3 224.7 L95.9 225.2 L83.6 234.8 L87.9 249.8 L75 241 L62.1 249.8 L66.4 234.8 L54.1 225.2 L69.7 224.7 Z"/>
     <path class="c dalga" style="--gecikme:0s"   d="M18 170 q11 -7 22 0 t22 0 M262 168 q11 -7 22 0 t22 0" fill="none"/>
     <path class="c dalga" style="--gecikme:1.8s" d="M120 182 q11 -7 22 0 t22 0 M330 186 q11 -7 22 0 t22 0" fill="none"/>
   `,
@@ -52,7 +52,7 @@ export const SAHNELER = {
     <path class="b" data-ad="yaprak-1" d="M71 24 L118 92 L94 92 L128 140 L14 140 L48 92 L24 92 Z"/>
     <rect class="b" data-ad="gövde-2" x="330" y="140" width="20" height="60" rx="3"/>
     <path class="b" data-ad="yaprak-2" d="M340 62 L378 120 L358 120 L384 156 L296 156 L322 120 L302 120 Z"/>
-    <path class="b" data-ad="tilki-kuyruk" d="M182 206 C132 186 104 230 144 241 C160 245 174 226 182 216 Z"/>
+    <path class="b canlanir-salla" data-ad="tilki-kuyruk" d="M182 206 C132 186 104 230 144 241 C160 245 174 226 182 216 Z"/>
     <ellipse class="b" data-ad="tilki-gövde" cx="196" cy="212" rx="46" ry="25"/>
     <circle class="b" data-ad="tilki-kafa" cx="250" cy="196" r="24"/>
     <path class="b" data-ad="tilki-kulak-1" d="M236 180 L226 154 L250 168 Z"/>
@@ -78,11 +78,11 @@ export const SAHNELER = {
     <path class="b" data-ad="yıldız-2" d="M330 34 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
     <path class="b" data-ad="yıldız-3" d="M350 110 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
     <path class="b" data-ad="yıldız-4" d="M110 130 l4 7.5 7.5 4 -7.5 4 -4 7.5 -4 -7.5 -7.5 -4 7.5 -4 Z"/>
-    <path class="b" data-ad="alev" d="M234 178 Q250 220 266 178 Z"/>
-    <path class="b" data-ad="kanat-1" d="M228 138 L204 184 L228 178 Z"/>
-    <path class="b" data-ad="kanat-2" d="M272 138 L296 184 L272 178 Z"/>
-    <path class="b" data-ad="roket" d="M250 60 C267 82 273 106 273 132 L273 178 L227 178 L227 132 C227 106 233 82 250 60 Z"/>
-    <circle class="b" data-ad="pencere" cx="250" cy="118" r="14"/>
+    <path class="b canlanir-suzul" data-ad="alev" d="M234 178 Q250 220 266 178 Z"/>
+    <path class="b canlanir-suzul" data-ad="kanat-1" d="M228 138 L204 184 L228 178 Z"/>
+    <path class="b canlanir-suzul" data-ad="kanat-2" d="M272 138 L296 184 L272 178 Z"/>
+    <path class="b canlanir-suzul" data-ad="roket" d="M250 60 C267 82 273 106 273 132 L273 178 L227 178 L227 132 C227 106 233 82 250 60 Z"/>
+    <circle class="b canlanir-suzul" data-ad="pencere" cx="250" cy="118" r="14"/>
     <path class="b" data-ad="tepeler" d="M0 214 Q62 188 124 213 Q186 236 252 209 Q322 186 400 211 L400 260 L0 260 Z"/>
     <!-- kucuk dekoratif yildizlar: bunlar boyanmaz, sadece parildar -->
     <path class="c parilti" style="--gecikme:0s"   d="M196 62 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
@@ -100,16 +100,16 @@ export const SAHNELER = {
     <path class="c" d="M72 128 L46 100 M72 116 L56 90 M72 122 L92 96 M72 152 L50 136"/>
     <!-- egimli uzun dal: kus bunun ustunde oturuyor, govdenin altindan geciyor -->
     <path class="c" d="M76 140 Q108 134 150 140"/>
-    <path class="b" data-ad="kuş kuyruğu" d="M126 120 L100 111 L103 131 Z"/>
-    <ellipse class="b" data-ad="kuş" cx="142" cy="120" rx="17" ry="13"/>
-    <circle class="b" data-ad="kuş başı" cx="158" cy="110" r="10"/>
-    <path class="b" data-ad="gaga" d="M167 105 L182 111 L167 116 Z"/>
+    <path class="b canlanir-suzul" data-ad="kuş kuyruğu" d="M126 120 L100 111 L103 131 Z"/>
+    <ellipse class="b canlanir-suzul" data-ad="kuş" cx="142" cy="120" rx="17" ry="13"/>
+    <circle class="b canlanir-suzul" data-ad="kuş başı" cx="158" cy="110" r="10"/>
+    <path class="b canlanir-suzul" data-ad="gaga" d="M167 105 L182 111 L167 116 Z"/>
     <circle class="c" cx="161" cy="107" r="2.5" fill="#2c2a26" stroke="none"/>
     <circle class="b" data-ad="alt gövde" cx="285" cy="216" r="36"/>
     <circle class="b" data-ad="üst gövde" cx="285" cy="168" r="25"/>
     <path class="c" d="M252 200 L214 178 M318 200 L356 180"/>
     <path class="b" data-ad="burun" d="M283 164 L314 174 L283 184 Z"/>
-    <rect class="b" data-ad="şapka" x="266" y="118" width="38" height="26" rx="3"/>
+    <rect class="b canlanir-salla" data-ad="şapka" x="266" y="118" width="38" height="26" rx="3"/>
     <path class="c" d="M251 144 h68"/>
     <circle class="c" cx="276" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>
     <circle class="c" cx="294" cy="162" r="2.5" fill="#2c2a26" stroke="none"/>

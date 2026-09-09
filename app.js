@@ -121,11 +121,13 @@ function araclariAdlandir() {
 
 function bolgeler() { return [...$('sahne').querySelectorAll('.b')]; }
 
-/** Durum satiri: bos, "kaydedildi n/m" ya da resim bitince kutlama. */
+/** Durum satiri: bos, "kaydedildi n/m" ya da resim bitince kutlama.
+ *  Resim bitince sahne de canlanir (kimildayan ogeler icin bkz. index.html). */
 function durumYaz(n, toplam) {
   const el = $('durum');
   const bitti = toplam > 0 && n === toplam;
   el.classList.toggle('kutlama', bitti);
+  $('sahne').classList.toggle('canli', bitti);
   el.textContent = bitti ? `${ui().kutlama} 🎉`
                  : n ? `${ui().kaydedildi} · ${n}/${toplam}` : '';
 }
@@ -376,8 +378,19 @@ function oneriCiz(sonSayfada) {
   }
 }
 
+/** Metin ve resmi yumusakca yeniden girdirir. Sinif kaldirilip reflow
+ *  tetiklenmeden yeniden eklenirse animasyon ikinci sayfada calismaz. */
+function gecisAnimasyonu() {
+  for (const el of [$('hMetin'), $('boyamaKutu')]) {
+    el.classList.remove('sayfa-gecis');
+    void el.offsetWidth;
+    el.classList.add('sayfa-gecis');
+  }
+}
+
 function sayfaCiz() {
   sesiDurdur();                       // sayfa degisince okuma devam etmesin
+  $('sahne').classList.remove('canli');  // canlanma her sayfada bastan kazanilir
   const sayfalar = aktifSayfalar();
   const s = sayfalar[sayfaNo];
   const t = ui();
@@ -435,6 +448,7 @@ function sayfaCiz() {
   sesDugmesiniTazele();
   kitapligaKaydet();                  // kaldigi sayfa her gecisde guncellensin
   oneriCiz(son);                      // kitapliga yazildiktan sonra: bu tema okunmus sayilsin
+  gecisAnimasyonu();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

@@ -114,9 +114,23 @@
   svg.sahne .parilti     {animation:parilti 3.4s ease-in-out infinite var(--gecikme,0s)}
   svg.sahne .dalga       {animation:dalga-kay 5.5s ease-in-out infinite var(--gecikme,0s)}
 
+  /* Resim tamamlaninca sahne canlanir: hareket odul olarak geliyor. Cocuk
+     boyarken sekiller sabit duruyor, bitirince kimildamaya basliyorlar. */
+  @keyframes suzul{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  @keyframes salla{ 0%,100%{transform:rotate(0)} 50%{transform:rotate(5deg)} }
+  svg.sahne.canli .canlanir-suzul{animation:suzul 3s ease-in-out infinite}
+  svg.sahne.canli .canlanir-salla{animation:salla 2.4s ease-in-out infinite;
+                                  transform-box:fill-box; transform-origin:center}
+
+  /* Sayfa gecisi: metin ve resim yumusak girsin */
+  @keyframes sayfa-gir{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+  .sayfa-gecis{animation:sayfa-gir .34s ease}
+
   @media (prefers-reduced-motion:reduce){
     svg.sahne .kar-tanesi, svg.sahne .dusen-yaprak,
-    svg.sahne .parilti, svg.sahne .dalga{animation:none}
+    svg.sahne .parilti, svg.sahne .dalga,
+    svg.sahne.canli .canlanir-suzul, svg.sahne.canli .canlanir-salla,
+    .sayfa-gecis{animation:none}
   }
 
   /* --- bitince tema onerisi --- */
