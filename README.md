@@ -5,6 +5,8 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 
 İndirme yok, PDF yok: hikaye de boyama da uygulamanın içinde kalır.
 
+![Üretilmiş bir masal sayfası: kişiselleştirilmiş metin ve içine gömülü SVG boyama alanı](assets/ekran-goruntusu.png)
+
 ## Ne çalışıyor (8 Eylül 2026)
 
 | | |
