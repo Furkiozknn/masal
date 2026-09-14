@@ -25,6 +25,17 @@ jobs:
       - name: Testler
         run: node --test
 
+      # app.js ve karakter.js hicbir testin import etmedigi iki dosya:
+      # testler onlara dokunmadigi icin bozuk bir sozdizimi yesil kosudan
+      # gecebiliyordu. node --check hepsini ayri ayri ayristiriyor.
+      - name: Sozdizimi denetimi
+        run: |
+          set -e
+          for f in app.js karakter.js hikayeler.js olcum.js sahneler.js turkce.js; do
+            node --check "$f"
+          done
+          echo "alti modulun sozdizimi saglam"
+
   # Uygulama tek bir index.html ve yaninda birkac modul; build adimi yok.
   # Bu is, dosyalarin gercekten yuklenebildigini ve sayfanin bos gelmedigini
   # dogruluyor - test takimi saf mantigi sinar, sayfanin acildigini sinamaz.
