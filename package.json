@@ -1,0 +1,20 @@
+{
+  "name": "masal",
+  "version": "1.0.0",
+  "description": "Cocugun adina, yasina ve sehrine gore yazilan masal; sayfaya gomulu vektor boyama alanlariyla.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://furkiozknn.github.io/masal/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Furkiozknn/masal.git"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "python sunucu.py"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
