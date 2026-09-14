@@ -1,0 +1,20 @@
+{
+  "name": "Masal",
+  "short_name": "Masal",
+  "description": "Cocugunuzun adina, yasina ve sehrine gore yazilan uyku oncesi masali.",
+  "lang": "tr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0ebe1",
+  "theme_color": "#fdfaf3",
+  "icons": [
+    {
+      "src": "assets/og-onizleme.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
