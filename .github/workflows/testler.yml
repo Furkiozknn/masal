@@ -1,0 +1,31 @@
+name: testler
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Bagimlilik yok: npm install adimi bilerek eklenmedi.
+      - name: Testleri kos
+        run: node --test
+
+      # Sozdizimi denetimi: tarayici dosyalari test kosumuna girmiyor,
+      # bozuk bir app.js testlerden kacabilir.
+      - name: Tarayici dosyalarini denetle
+        run: |
+          for f in app.js karakter.js sahneler.js hikayeler.js olcum.js turkce.js; do
+            node --check "$f"
+          done
