@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Bagimlilik yok: uygulama da testler de duz ESM, node:test ile kosuyor.
+      # `npm ci` adimi bilerek yok - kuracak bir sey olmadigi icin eklenirse
+      # her kosuda "no package-lock.json" ile duser.
+      - name: Testler
+        run: node --test
+
+  # Uygulama tek bir index.html ve yaninda birkac modul; build adimi yok.
+  # Bu is, dosyalarin gercekten yuklenebildigini ve sayfanin bos gelmedigini
+  # dogruluyor - test takimi saf mantigi sinar, sayfanin acildigini sinamaz.
+  sayfa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sayfa yerelde aciliyor ve bos degil
+        run: |
+          set -e
+          python3 -m http.server 8123 --bind 127.0.0.1 &
+          sunucu=$!
+          trap 'kill $sunucu' EXIT
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://127.0.0.1:8123/index.html && break
+            sleep 1
+          done
+          govde=$(curl -sf http://127.0.0.1:8123/index.html)
+          test -n "$govde" || { echo "index.html bos dondu"; exit 1; }
+          # Modullerin hepsi gercekten sunuluyor mu: birinin adi degisirse
+          # sayfa sessizce yarim acilir, konsola bakan olmaz.
+          for f in app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; do
+            curl -sf -o /dev/null "http://127.0.0.1:8123/$f" || { echo "eksik modul: $f"; exit 1; }
+          done
+          echo "sayfa ve alti modul sunuluyor"
+
+  # "Indirme yok" bu urunun bir vaadi, suslemesi degil: cocugun cizimi
+  # cihazdan cikmamali. Iki ayri kontrol, cunku iki ayri yol var.
+  #
+  # Ilk taslak tek bir grep'ti ve `fetch(` ile `sendBeacon`i da yakaliyordu -
+  # yani olcum.js yuzunden her kosuda kirmizi yanardi. Ama vaat "hic ag
+  # olmasin" degil: olcum.js anonim olcum yolluyor ve gizlilik suzgeci kendi
+  # testleriyle kilitli (boyamaGorseli dahil kisisel alanlarin hepsi dusuyor).
+  # Dogru kural: gorsel disari cikaran yol HIC olmamali, ag cagrisi ise
+  # YALNIZCA olcum.js icinde olmali.
+  indirme-yok:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cizimi dosyaya cevirip indiren bir yol yok
+        run: |
+          set -e
+          if grep -nE 'download=|toDataURL|toBlob|createObjectURL|showSaveFilePicker' \
+               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; then
+            echo
+            echo "Yukaridaki satir cizimi bir dosyaya cevirip cihazdan cikarabilir."
+            echo "Bilerek eklendiyse bu kontrolu guncelle; kazayla eklendiyse geri al."
+            exit 1
+          fi
+          echo "gorseli disari cikaran yol yok"
+
+      - name: Ag cagrisi yalnizca olcum.js icinde
+        run: |
+          set -e
+          if grep -nE 'fetch\(|XMLHttpRequest|sendBeacon|new WebSocket|EventSource' \
+               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js; then
+            echo
+            echo "olcum.js disinda bir ag cagrisi belirdi. Gizlilik suzgeci yalnizca"
+            echo "olcum.js'ten gecen veriyi temizliyor; baska bir dosyadan cikan istek"
+            echo "o suzgecten gecmez."
+            exit 1
+          fi
+          echo "ag cagrisi yalnizca olcum.js icinde"

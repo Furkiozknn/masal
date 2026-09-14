@@ -1,4 +1,5 @@
-// Calistir: node turkce.test.js
+// Calistir: node --test
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ekle } from './turkce.js';
 
@@ -39,12 +40,15 @@ const dogru = [
   ['kasaba', 'in', 'kasabanın', false],
 ];
 
+// Her durum ayri bir test: biri kirilinca hangi kelime/ek ciftinin bozuldugu
+// kosu ciktisinda gorunuyor, tek satirlik "28 durum gecti" yerine.
 for (const [kelime, tip, beklenen, ozel = true] of dogru) {
-  const c = ekle(kelime, tip, ozel);
-  assert.equal(c, beklenen, `${kelime} + ${tip} => ${c}, beklenen ${beklenen}`);
+  test(`${kelime} + ${tip} -> ${beklenen}`, () => {
+    const c = ekle(kelime, tip, ozel);
+    assert.equal(c, beklenen, `${kelime} + ${tip} => ${c}, beklenen ${beklenen}`);
+  });
 }
 
-// bos girdi cokmemeli
-assert.equal(ekle('', 'de'), '');
-
-console.log(`tamam: ${dogru.length + 1} durum gecti`);
+test('bos girdi cokmuyor', () => {
+  assert.equal(ekle('', 'de'), '');
+});
