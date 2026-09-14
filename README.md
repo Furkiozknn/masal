@@ -39,7 +39,13 @@ Sonra `http://127.0.0.1:8790/`. Derleme adımı yok, bağımlılık yok.
 önbelleğe alıyor, dosyayı değiştirip yenileyince eski sürüm çalışıyor ve test
 sonuçları yanlış çıkıyor. `sunucu.py` önbelleği kapatıyor.
 
-Test: `node turkce.test.js`, `node hikayeler.test.js`, `node olcum.test.js`
+Test:
+
+```
+node --test
+```
+
+Üç test dosyasını birden koşar (77 test). Ayrı ayrı çalıştırmaya gerek yok.
 
 ## Neden vektör (SVG) boyama
 
