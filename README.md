@@ -29,9 +29,13 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 ## Çalıştırma
 
 ```
-python -m http.server 8790
+python sunucu.py
 ```
 Sonra `http://127.0.0.1:8790/`. Derleme adımı yok, bağımlılık yok.
+
+`python -m http.server` de çalışır ama **önerilmez**: tarayıcı ES modüllerini
+önbelleğe alıyor, dosyayı değiştirip yenileyince eski sürüm çalışıyor ve test
+sonuçları yanlış çıkıyor. `sunucu.py` önbelleği kapatıyor.
 
 Test: `node turkce.test.js`, `node hikayeler.test.js`, `node olcum.test.js`
 
@@ -56,6 +60,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `karakter.js` | Kahraman SVG üreteci: ten/saç seçenekleri, saç tipleri |
 | `olcum.js` | Ölçüm noktaları + gizlilik süzgeci (`olcum.test.js`) |
 | `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
+| `sunucu.py` | Geliştirme sunucusu, önbellek kapalı |
 | `LICENSE` | MIT |
 
 ### Şablonlarda Türkçe ek

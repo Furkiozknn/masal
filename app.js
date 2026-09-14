@@ -366,7 +366,8 @@ function oneriCiz(sonSayfada) {
   if (!sonSayfada) { kutu.hidden = true; return; }
 
   const okunan = new Set(kitapligiOku().filter((k) => k.ad === kimlik.ad).map((k) => k.tema));
-  const kalan = Object.keys(METINLER[dil].temalar).filter((t) => !okunan.has(t));
+  // Tema sayisi arttikca kapanis kalabaliklasiyor; uyku oncesi icin en fazla uc oneri.
+  const kalan = Object.keys(METINLER[dil].temalar).filter((t) => !okunan.has(t)).slice(0, 3);
   kutu.hidden = kalan.length === 0;
   if (!kalan.length) return;
 
