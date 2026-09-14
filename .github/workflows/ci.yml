@@ -38,10 +38,10 @@ jobs:
       - name: Sozdizimi denetimi
         run: |
           set -e
-          for f in app.js karakter.js hikayeler.js olcum.js sahneler.js turkce.js; do
+          for f in app.js karakter.js depo.js hikayeler.js olcum.js sahneler.js turkce.js; do
             node --check "$f"
           done
-          echo "alti modulun sozdizimi saglam"
+          echo "yedi modulun sozdizimi saglam"
 
   # Uygulama tek bir index.html ve yaninda birkac modul; build adimi yok.
   # Bu is, dosyalarin gercekten yuklenebildigini ve sayfanin bos gelmedigini
@@ -99,6 +99,29 @@ jobs:
             exit 1
           fi
           echo "gorseli disari cikaran yol yok"
+
+      - name: Depoya yalnizca depo.js'ten erisiliyor
+        run: |
+          set -e
+          # `localStorage` site verisini reddeden bir tarayicida null DONDURMUYOR,
+          # firlatiyor - Safari gizli sekme, "tum cerezleri engelle". app.js dil
+          # tercihini modul seviyesinde korumasiz okuyordu: o cagri firladiginda
+          # betik ilk satirinda oluyor ve cocuga bos sayfa aciliyordu. Daha
+          # kotusu, "masal olustur" dugmesi de korumasizdi; gizli sekmede cocuk
+          # masalini hic alamiyordu.
+          #
+          # Dosyadaki cagrilarin bir kismi zaten try/catch icindeydi, bir kismi
+          # degildi. Sorun tek satir degil tutarsizlikti, o yuzden duzeltme de
+          # tek satir degil: butun erisim depo.js'ten geciyor ve bu kontrol
+          # baska bir dosyaya korumasiz cagri geri eklenmesini engelliyor.
+          if grep -n 'localStorage' index.html app.js hikayeler.js sahneler.js                turkce.js karakter.js olcum.js; then
+            echo
+            echo "depo.js disinda localStorage erisimi belirdi. Bunlar gizli"
+            echo "sekmede firlatir ve sayfayi oldurur. depo.js'teki oku/yaz/sil/"
+            echo "okuJSON/yazJSON fonksiyonlarini kullan."
+            exit 1
+          fi
+          echo "depoya yalnizca depo.js'ten erisiliyor"
 
       - name: Ag cagrisi yalnizca olcum.js icinde
         run: |

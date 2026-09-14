@@ -2,12 +2,13 @@ import { SAHNELER } from './sahneler.js';
 import { METINLER, dilSec, hikayeUret } from './hikayeler.js';
 import { olay, yasGrubu } from './olcum.js';
 import { karakterSVG, varsayilanGorunum, TEN_RENKLERI, SAC_RENKLERI, SAC_TIPLERI } from './karakter.js';
+import { oku, yaz, sil, okuJSON, yazJSON } from './depo.js';
 
 const $ = (id) => document.getElementById(id);
 // Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
 const RENKLER = ['#e8574a','#f2a03d','#f5d547','#8fcf7a','#5aa469','#8ec5e0','#3d7ea6','#8e6bbf','#8a5a3b','#f4a9a0','#fff6e0','#2c2a26'];
 
-let dil = dilSec(localStorage.getItem('masal:dil'));
+let dil = dilSec(oku('masal:dil'));
 let hikaye = null;          // { baslik, sayfalar }
 let kimlik = null;          // { ad, yas, sehir, tema } — kayit anahtarinin parcasi
 let sayfaNo = 0;            // gorunur sayfalar icindeki sira (dala gore degisir)
@@ -29,7 +30,7 @@ function dilleriKur() {
   }
   s.onchange = () => {
     dil = s.value;
-    localStorage.setItem('masal:dil', dil);
+    yaz('masal:dil', dil);
     document.documentElement.lang = dil;
     metinleriYaz();
     sesiDurdur();
@@ -147,13 +148,12 @@ function boyaKaydet() {
   const d = {};
   bs.forEach((el, i) => { if (el.style.fill) d[i] = el.style.fill; });
   // kota dolu / gizli sekme olabilir: kayit basarisiz olsa da boyama calismaya devam eder
-  try { localStorage.setItem(anahtar(), JSON.stringify(d)); } catch {}
+  yazJSON(anahtar(), d);
   durumYaz(Object.keys(d).length, bs.length);
 }
 
 function boyaYukle() {
-  let d = {};
-  try { d = JSON.parse(localStorage.getItem(anahtar()) || '{}'); } catch {}
+  const d = okuJSON(anahtar(), {});
   const bs = bolgeler();
   Object.entries(d).forEach(([i, c]) => { if (bs[i]) bs[i].style.fill = c; });
   durumYaz(Object.keys(d).length, bs.length);
@@ -173,7 +173,7 @@ function geriAl() {
 
 function temizle() {
   bolgeler().forEach((el) => { el.style.fill = ''; });
-  localStorage.removeItem(anahtar());
+  sil(anahtar());
   $('durum').textContent = '';
 }
 
@@ -242,13 +242,13 @@ const KITAPLIK = 'masal:kitaplik';
 
 function kitapligiOku() {
   try {
-    const v = JSON.parse(localStorage.getItem(KITAPLIK) || '[]');
+    const v = okuJSON(KITAPLIK, []);
     return Array.isArray(v) ? v : [];
   } catch { return []; }
 }
 
 function kitapligaYaz(liste) {
-  try { localStorage.setItem(KITAPLIK, JSON.stringify(liste.slice(0, 12))); } catch {}
+  yazJSON(KITAPLIK, liste.slice(0, 12));
 }
 
 /** Ayni cocuk + ayni tema tek kayit: ilerleme uzerine yazilir. */
@@ -268,7 +268,7 @@ function boyaliSayisi(k, hamSayfa) {
   let n = 0;
   for (let i = 0; i < (hamSayfa || k.hamSayfa || 12); i++) {
     try {
-      const d = JSON.parse(localStorage.getItem(`masal:boya:${k.ad}:${k.tema}:${i}`) || '{}');
+      const d = okuJSON(`masal:boya:${k.ad}:${k.tema}:${i}`, {});
       n += Object.keys(d).length;
     } catch {}
   }
@@ -336,7 +336,7 @@ function kitaptanSil(k) {
   if (!confirm(ui().silOnay)) return;                 // boyamalar da gidiyor: once sor
   kitapligaYaz(kitapligiOku().filter((x) => !(x.ad === k.ad && x.tema === k.tema)));
   for (let i = 0; i < (k.hamSayfa || 12); i++) {
-    localStorage.removeItem(`masal:boya:${k.ad}:${k.tema}:${i}`);
+    sil(`masal:boya:${k.ad}:${k.tema}:${i}`);
   }
   kitapligiCiz();
 }
@@ -394,7 +394,7 @@ const GORUNUM_ANAHTAR = 'masal:gorunum';
 
 function gorunumuOku() {
   try {
-    const v = JSON.parse(localStorage.getItem(GORUNUM_ANAHTAR) || 'null');
+    const v = okuJSON(GORUNUM_ANAHTAR, null);
     // kayitli deger gecerli mi: liste degisirse eski secim sessizce bozulmasin
     if (v && TEN_RENKLERI.includes(v.ten) && SAC_RENKLERI.includes(v.sac)
         && SAC_TIPLERI.includes(v.sacTipi)) return v;
@@ -421,7 +421,7 @@ function gorunumSecimiKur() {
       b.setAttribute('aria-pressed', String(gorunum[alan] === d));
       b.onclick = () => {
         gorunum = { ...gorunum, [alan]: d };
-        localStorage.setItem(GORUNUM_ANAHTAR, JSON.stringify(gorunum));
+        yazJSON(GORUNUM_ANAHTAR, gorunum);
         kap.querySelectorAll('.gorunum-nokta').forEach((x) => x.setAttribute('aria-pressed', 'false'));
         b.setAttribute('aria-pressed', 'true');
         onizlemeyiTazele();
@@ -441,7 +441,7 @@ function gorunumSecimiKur() {
     b.setAttribute('aria-pressed', String(gorunum.sacTipi === tip));
     b.onclick = () => {
       gorunum = { ...gorunum, sacTipi: tip };
-      localStorage.setItem(GORUNUM_ANAHTAR, JSON.stringify(gorunum));
+      yazJSON(GORUNUM_ANAHTAR, gorunum);
       kap.querySelectorAll('.sac-tipi').forEach((x) => x.setAttribute('aria-pressed', 'false'));
       b.setAttribute('aria-pressed', 'true');
       onizlemeyiTazele();
@@ -547,7 +547,7 @@ $('form').addEventListener('submit', (e) => {
   if (!ad) { $('hata').textContent = ui().adGerekli; $('ad').focus(); return; }
   $('hata').textContent = '';
   kimlik = { ad, yas: $('yas').value, sehir: $('sehir').value.trim(), tema: $('tema').value };
-  localStorage.setItem('masal:son', JSON.stringify(kimlik));
+  yazJSON('masal:son', kimlik);
   hikaye = hikayeUret({ ...kimlik, dil });
   dal = null;                         // yeni masal: secim bastan yapilacak
   sayfaNo = 0;
@@ -578,10 +578,8 @@ document.addEventListener('keydown', (e) => {
 // ---------- acilis ----------
 dilleriKur();
 metinleriYaz();
-try {
-  const son = JSON.parse(localStorage.getItem('masal:son') || 'null');
-  if (son) { $('ad').value = son.ad; $('yas').value = son.yas; $('sehir').value = son.sehir; $('tema').value = son.tema; }
-} catch {}
+const son = okuJSON('masal:son', null);
+if (son) { $('ad').value = son.ad; $('yas').value = son.yas; $('sehir').value = son.sehir; $('tema').value = son.tema; }
 gorunum = gorunumuOku();            // kahramanin gorunumu son secimden gelir
 gorunumSecimiKur();
 kitapligiCiz();
