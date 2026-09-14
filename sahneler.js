@@ -124,4 +124,44 @@ export const SAHNELER = {
     <path class="c kar-tanesi" style="--gecikme:6s"   d="M232 40 v12 M226 43 l12 6 M238 43 l-12 6"/>
     <path class="c kar-tanesi" style="--gecikme:1.5s" d="M150 52 v10 M145 55 l10 5 M155 55 l-10 5"/>
   `,
+
+  // --- Yagmur sonrasi: gokkusagi, bulutlar, su birikintisi ---
+  yagmur: `
+    <rect class="b" data-ad="gökyüzü" x="0" y="0" width="400" height="210"/>
+    <!-- gokkusagi: ic ice uc serit, hepsi ayri boyaniyor -->
+    <path class="b" data-ad="kuşak-dış"  d="M64 208 A136 136 0 0 1 336 208 L316 208 A116 116 0 0 0 84 208 Z"/>
+    <path class="b" data-ad="kuşak-orta" d="M84 208 A116 116 0 0 1 316 208 L296 208 A96 96 0 0 0 104 208 Z"/>
+    <path class="b" data-ad="kuşak-iç"   d="M104 208 A96 96 0 0 1 296 208 L276 208 A76 76 0 0 0 124 208 Z"/>
+    <path class="b" data-ad="bulut-1" d="M36 74 A17 17 0 0 1 53 57 A21 21 0 0 1 89 61 A15 15 0 0 1 97 74 Z"/>
+    <path class="b" data-ad="bulut-2" d="M300 52 A15 15 0 0 1 315 37 A19 19 0 0 1 347 41 A13 13 0 0 1 354 52 Z"/>
+    <rect class="b" data-ad="çimen" x="0" y="208" width="400" height="52"/>
+    <ellipse class="b" data-ad="su birikintisi" cx="196" cy="232" rx="74" ry="21"/>
+    <path class="c" d="M158 230 q12 -5 24 0 M212 236 q12 -5 24 0" fill="none"/>
+    <!--KARAKTER:346,250,0.72-->
+    <!-- dekoratif damlalar: kar-dus animasyonunu paylasiyorlar -->
+    <path class="c kar-tanesi" style="--gecikme:0s"   d="M120 30 q4 8 0 11 q-4 -3 0 -11 Z"/>
+    <path class="c kar-tanesi" style="--gecikme:2.5s" d="M250 22 q4 8 0 11 q-4 -3 0 -11 Z"/>
+    <path class="c kar-tanesi" style="--gecikme:5s"   d="M180 44 q4 8 0 11 q-4 -3 0 -11 Z"/>
+  `,
+
+  // --- Bahce: laleler ve kelebek ---
+  bahce: `
+    <rect class="b" data-ad="gökyüzü" x="0" y="0" width="400" height="192"/>
+    <circle class="b" data-ad="güneş" cx="338" cy="44" r="25"/>
+    <rect class="b" data-ad="çimen" x="0" y="192" width="400" height="68"/>
+    <path class="c" d="M62 238 L62 196 M150 240 L150 198 M258 240 L258 198"/>
+    <path class="b" data-ad="yaprak-1" d="M62 222 Q40 216 32 232 Q48 238 62 228 Z"/>
+    <path class="b" data-ad="lale-1" d="M45 198 Q44 172 54 162 Q62 172 70 162 Q80 172 79 198 Q62 208 45 198 Z"/>
+    <path class="b" data-ad="yaprak-2" d="M150 226 Q172 220 180 236 Q164 242 150 232 Z"/>
+    <path class="b" data-ad="lale-2" d="M133 200 Q132 174 142 164 Q150 174 158 164 Q168 174 167 200 Q150 210 133 200 Z"/>
+    <path class="b" data-ad="yaprak-3" d="M258 228 Q236 222 228 238 Q244 244 258 234 Z"/>
+    <path class="b" data-ad="lale-3" d="M241 200 Q240 174 250 164 Q258 174 266 164 Q276 174 275 200 Q258 210 241 200 Z"/>
+    <path class="b canlanir-suzul" data-ad="kelebek-sol"  d="M196 128 Q168 106 164 130 Q166 152 196 140 Z"/>
+    <path class="b canlanir-suzul" data-ad="kelebek-sağ"  d="M200 128 Q228 106 232 130 Q230 152 200 140 Z"/>
+    <ellipse class="b canlanir-suzul" data-ad="kelebek gövdesi" cx="198" cy="134" rx="6" ry="15"/>
+    <path class="c canlanir-suzul" d="M195 120 L188 108 M201 120 L208 108" fill="none"/>
+    <!--KARAKTER:344,248,0.74-->
+    <path class="c parilti" style="--gecikme:0s"   d="M96 62 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
+    <path class="c parilti" style="--gecikme:1.6s" d="M292 96 l2 4 4 2 -4 2 -2 4 -2 -4 -4 -2 4 -2 Z"/>
+  `,
 };
