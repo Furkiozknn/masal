@@ -45,7 +45,7 @@ Test:
 node --test
 ```
 
-Üç test dosyasını birden koşar (77 test). Ayrı ayrı çalıştırmaya gerek yok.
+Dört test dosyasını birden koşar (92 test). Ayrı ayrı çalıştırmaya gerek yok.
 
 ## Neden vektör (SVG) boyama
 
