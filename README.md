@@ -1,3 +1,5 @@
+![Üç temanın boyanmış sahnesi yan yana: deniz kıyısı, lalelerle bir bahçe ve roketli bir gece göğü](assets/sahneler.png)
+
 # Masal
 
 Çocuğun adına, yaşına ve şehrine göre yazılan uyku öncesi masalı, **içine
@@ -7,7 +9,11 @@ gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
 
 **Canlı:** <https://furkiozknn.github.io/masal/>
 
-![Üretilmiş bir masal sayfası: kişiselleştirilmiş metin ve içine gömülü SVG boyama alanı](assets/ekran-goruntusu.png)
+![Üretilmiş bir masal sayfası: Elif için yazılmış metin, altında boyanmış deniz sahnesi, palet ve "Resmi bitirdin!" kutlaması](assets/ekran-goruntusu.png)
+
+<sub><i>Buradaki iki görsel de elle düzenlenmedi: `arac/ekran-yakala.mjs` uygulamayı
+açıyor, formu dolduruyor, sayfayı çeviriyor ve on iki bölgeyi paletten renk seçip
+tek tek tıklayarak boyuyor — çocuğun yaptığının aynısı. Ekranda ne varsa o.</i></sub>
 
 ## Ne çalışıyor (8 Eylül 2026)
 
