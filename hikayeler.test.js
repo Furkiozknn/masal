@@ -106,3 +106,46 @@ test('bilinmeyen dil ve tema cokmuyor', () => {
   assert.equal(dilSec('de'), 'en');
   assert.ok(hikayeUret({ dil: 'tr', tema: 'yokboyle', ad: 'Ada', yas: 5, sehir: '' }).sayfalar.length > 0);
 });
+
+// Ad vurgusu: yalnizca {ad} yer tutucusundan gelen gecisler kalinlasmali.
+// Eskiden vurgu app.js'te "metinde adi ara ve sar" diye konuyordu; Turkcede
+// ekler ada dogrudan yapistigi ve kisa adlar baska kelimelerin icinde gectigi
+// icin bu yaklasim yanlis yerleri vuruyordu.
+test('kisa ad baska kelimenin icinde vurgulanmiyor: "Su"', () => {
+  const h = hikayeUret({ dil: 'tr', tema: 'orman', ad: 'Su', yas: 5, sehir: 'Rize' });
+  const tumu = h.sayfalar.map((s) => s.metinHtml).join('\n');
+
+  // "Suda gökyüzü görünüyordu." sablonun kendi kelimesi, cocugun adi degil.
+  assert.ok(/Suda gökyüzü/.test(tumu), 'sablon metni degismis, test guncellenmeli');
+  assert.ok(!/<b>Su<\/b>da/.test(tumu), '"Suda" kelimesinin ici vurgulanmis');
+  assert.ok(!/<b>Su<\/b>\w/u.test(tumu), 'vurgu bir kelimenin ortasinda kapanmis');
+
+  // Ad gercekten gectigi yerlerde vurgulaniyor, hal eki vurgunun disinda kaliyor.
+  assert.ok(/<b>Su<\/b> o sabah/.test(tumu), 'ad hic vurgulanmamis');
+  assert.ok(/<b>Su<\/b>'ya baktı/.test(tumu), "hal eki vurgunun disinda beklenirdi: <b>Su</b>'ya");
+});
+
+test('ad sablondaki ozel isimle cakisinca vurgulanmiyor: "Ay"', () => {
+  const h = hikayeUret({ dil: 'tr', tema: 'yildizlar', ad: 'Ay', yas: 5, sehir: 'Rize' });
+  const tumu = h.sayfalar.map((s) => s.metinHtml).join('\n');
+
+  // Sablonda gokteki Ay'dan soz eden cumleler var; onlar cocugun adi degil.
+  assert.ok(/Roket Ay'a doğru döndü/.test(tumu), 'sablon metni degismis, test guncellenmeli');
+  assert.ok(!/<b>Ay<\/b>'a doğru döndü/.test(tumu), 'gokteki Ay cocugun adi sanilmis');
+  assert.ok(!/<b>Ay<\/b>'ın yanından/.test(tumu), "\"Ay'ın\" sablon kelimesi vurgulanmis");
+  assert.ok(!/<b>Ay<\/b>aklarına/.test(tumu), '"Ayaklarına" kelimesinin ici vurgulanmis');
+
+  // Cocugun adi gectigi yerde vurgulu.
+  assert.ok(/<b>Ay<\/b> yatağından kalkıp/.test(tumu), 'ad hic vurgulanmamis');
+});
+
+test('metinHtml kullanici girdisini kaciriyor, metin duz kaliyor', () => {
+  const h = hikayeUret({ dil: 'tr', tema: 'deniz', ad: '<Ada>', yas: 5, sehir: 'Rize' });
+  const tumu = h.sayfalar.map((s) => s.metinHtml).join('\n');
+  assert.ok(tumu.includes('<b>&lt;Ada&gt;</b>'), 'ad HTML olarak kacilmamis');
+  assert.ok(!/<b><Ada>/.test(tumu), 'ham < > metinHtml icine sizmis');
+  // Seslendirme ve kitaplik duz metni okur: orada etiket olmamali.
+  for (const s of h.sayfalar) {
+    assert.ok(!/<b>|<\/b>|&lt;/.test(s.metin), `duz metne isaret sizmis: ${s.metin}`);
+  }
+});

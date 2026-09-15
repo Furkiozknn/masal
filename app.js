@@ -476,10 +476,10 @@ function sayfaCiz() {
   const t = ui();
 
   $('hBaslik').textContent = hikaye.baslik;
-  // cocugun adini metin icinde vurgula. Ad kullanici girdisi: once kacir, sonra ara.
-  const kacir = (x) => x.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const adGuvenli = kacir(kimlik.ad);
-  $('hMetin').innerHTML = kacir(s.metin).replaceAll(adGuvenli, `<b>${adGuvenli}</b>`);
+  // Ad vurgusu ve HTML kacisi hikayeUret'te, yer tutucu dolarken yapilir
+  // (bkz. hikayeler.js): burada metinde ad aranmaz, cunku "Su" adli cocukta
+  // "Suda", "Ay" adli cocukta gokteki "Ay" da vurgulanirdi.
+  $('hMetin').innerHTML = s.metinHtml;
 
   const kutu = $('boyamaKutu');
   const svg = $('sahne');
@@ -529,7 +529,10 @@ function sayfaCiz() {
   kitapligaKaydet();                  // kaldigi sayfa her gecisde guncellensin
   oneriCiz(son);                      // kitapliga yazildiktan sonra: bu tema okunmus sayilsin
   gecisAnimasyonu();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Yumusak kaydirma hareket duyarliligina saygi gostersin: CSS'te
+  // prefers-reduced-motion zaten animasyonlari kapatiyor.
+  const azHareket = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: azHareket ? 'auto' : 'smooth' });
 }
 
 function okuyucuyaGec() {

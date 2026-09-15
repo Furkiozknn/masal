@@ -242,6 +242,9 @@ export function dilSec(istenen) {
   return METINLER[kod] ? kod : 'en';
 }
 
+/** HTML kacisi: ad ve sehir kullanici girdisi, metinHtml'e ham gitmemeli. */
+const kacir = (x) => x.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
 /** Sablonu cocugun bilgileriyle doldurur. {alan} ve {alan:ek} destekler. */
 export function hikayeUret({ dil, tema, ad, yas, sehir }) {
   const paket = METINLER[dil] || METINLER.en;
@@ -257,19 +260,45 @@ export function hikayeUret({ dil, tema, ad, yas, sehir }) {
   // ayrilmaz ("kasabada", "Trabzon'da" degil).
   const ozelIsim = { ad: true, yas: false, sehir: sehirVar };
 
-  const doldur = (s) => {
-    const cikti = s.replace(/\{(\w+)(?::(\w+))?\}/g, (tam, alan, tip) => {
-      if (!(alan in deger)) return tam;
+  // Sablonu doldurup ciktiyi parcalara ayirir; hangi parcanin cocugun adindan
+  // geldigini yalnizca burasi bilir. Vurgu sonradan "metinde adi ara ve sar"
+  // diye konsaydi ad bir kelimenin icine dustugunde de vurgulanirdi: Turkcede
+  // ekler ada dogrudan yapistigi icin "Su" adli cocukta "Suda", "Ay" adli
+  // cocukta gokteki "Ay'a doğru" yanlislikla kalin yazilirdi.
+  const parcala = (s) => {
+    const parca = [];
+    const yerTutucu = /\{(\w+)(?::(\w+))?\}/g;
+    let son = 0;
+    let m;
+    while ((m = yerTutucu.exec(s)) !== null) {
+      const [tam, alan, tip] = m;
+      if (!(alan in deger)) continue;        // bilinmeyen yer tutucu oldugu gibi kalsin
+      if (m.index > son) parca.push({ metin: s.slice(son, m.index) });
       const v = String(deger[alan]);
-      if (!tip || dil !== 'tr') return v;
-      return v + ek(v, tip, ozelIsim[alan]);
-    });
+      parca.push({ metin: v, ad: alan === 'ad' });
+      // Hal eki adin disinda kalir: "<b>Ada</b>'ya", "<b>Ada</b>'nın".
+      if (tip && dil === 'tr') parca.push({ metin: ek(v, tip, ozelIsim[alan]) });
+      son = m.index + tam.length;
+    }
+    if (son < s.length) parca.push({ metin: s.slice(son) });
     // Cumle bir yer tutucuyla basliyorsa ("kasabanin...") ilk harf buyutulur.
-    return cikti.charAt(0).toLocaleUpperCase(dil) + cikti.slice(1);
+    if (parca.length) {
+      const ilk = parca[0];
+      parca[0] = { ...ilk, metin: ilk.metin.charAt(0).toLocaleUpperCase(dil) + ilk.metin.slice(1) };
+    }
+    return parca;
   };
 
+  const duz = (parca) => parca.map((x) => x.metin).join('');
+  const isaretli = (parca) =>
+    parca.map((x) => (x.ad ? `<b>${kacir(x.metin)}</b>` : kacir(x.metin))).join('');
+
   return {
-    baslik: doldur(sablon.baslik),
-    sayfalar: sablon.sayfalar.map((s) => ({ ...s, metin: doldur(s.metin) })),
+    baslik: duz(parcala(sablon.baslik)),
+    sayfalar: sablon.sayfalar.map((s) => {
+      const parca = parcala(s.metin);
+      // `metin` duz kalir (seslendirme, kitaplik); `metinHtml` ekrana basilir.
+      return { ...s, metin: duz(parca), metinHtml: isaretli(parca) };
+    }),
   };
 }
