@@ -53,8 +53,9 @@
   },
   "tests": {
     "count": 92,
-    "source": "`node --test`: `pass 92`",
-    "measured": "2026-09-15"
+    "framework": "node:test",
+    "command": "node --test",
+    "evidence": "92 pass, 0 fail"
   },
   "ci": {
     "workflows": [

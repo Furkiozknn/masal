@@ -314,5 +314,16 @@
 </main>
 
 <script type="module" src="./app.js"></script>
+<script>
+// Cevrimdisi calisma. Bu bir ag cagrisi degil: servis iscisini kaydediyor,
+// hicbir yere istek gondermiyor. Islerin ne yaptigi sw.js'te yazili ve
+// `arac/sw-dogrula.mjs` her push'ta onu denetliyor.
+// Destegi olmayan tarayicida sessizce atlanir; uygulama aynen calisir.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
 </body>
 </html>

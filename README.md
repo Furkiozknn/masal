@@ -104,6 +104,32 @@ koda gömülü ve testli.
    şu an kapalı, hiçbir istek gitmiyor; yayın çözülünce tek adres yazılacak.
    Çocuğa ait hiçbir bilgi (ad, şehir, boyama) gönderilmiyor, süzgeç testli.
 
+## Çevrimdışı
+
+`manifest.webmanifest` bu uygulamayı `display: standalone` diye tanıtıyordu —
+kurulabilir bir uygulama. Servis işçisi olmadan bu söz yarım kalıyordu:
+tarayıcı çoğu durumda kurulum teklifini hiç göstermiyor, gösterse bile ağ
+gidince boş bir sayfa açılıyordu. Uyku öncesi masalı anlatan bir uygulamanın
+uçakta, arabada ya da modem kapalıyken açılamaması küçük bir kusur değil;
+kullanımın en tipik olduğu an tam orası.
+
+`sw.js` kurulumda uygulama kabuğunun tamamını önbelleğe alıyor, sonrasında
+aynı kaynaktan gelen her isteği önce önbellekten karşılıyor. Manifest'e gerçek
+uygulama simgeleri de eklendi (192 ve 512 kare, ayrıca maskable); önceden tek
+simge 1200×630'luk paylaşım görseliydi ve hiçbir başlatıcı onu kullanamaz.
+
+**Gizlilik tarafı değişmedi.** `sw.js` içindeki tek `fetch` çağrısı yeni bir
+istek üretmiyor; sayfanın zaten yaptığı `event.request` nesnesini olduğu gibi
+geçiriyor. Aynı kaynaktan olmayan her istek — ölçüm ucu dahil — dokunulmadan
+ağa bırakılıyor ve önbelleğe hiç girmiyor.
+
+Bu iki kuralı bir kapı koruyor: `node arac/sw-dogrula.mjs` her push'ta
+`sw.js`'teki her `fetch` çağrısının argümanının sayfadan gelen istek olduğunu
+ve önbellek listesinin `index.html`'in gerçek import grafiğiyle birebir
+örtüştüğünü kontrol ediyor. İkincisi sessiz bozulmayı kapatıyor: listeye
+yazılmayan yeni bir modül, uygulamayı çevrimdışı **yarım** açardı ve hiçbir
+hata görünmezdi.
+
 ## Bilinen sınırlar
 
 - Şablon hikayeler LLM kadar çeşitli değil. Seçim noktası tema başına iki yol

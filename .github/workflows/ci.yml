@@ -123,6 +123,14 @@ jobs:
           fi
           echo "depoya yalnizca depo.js'ten erisiliyor"
 
+      # sw.js bilerek ustteki ag kapisinin DISINDA: bir servis iscisinin
+      # `fetch`i yeni bir istek uretmez, sayfanin zaten yaptigi istegi gecirir,
+      # ve o kapi dosyayi toptan reddederdi. Yerine daha dar bir kontrol:
+      # sw.js'teki her fetch'in argumani sayfadan gelen istek nesnesi olmali,
+      # ve onbellek listesi import grafigiyle birebir ortusmeli.
+      - name: Servis iscisi
+        run: node arac/sw-dogrula.mjs
+
       - name: Ag cagrisi yalnizca olcum.js icinde
         run: |
           set -e
