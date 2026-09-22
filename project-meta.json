@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "id": "masal",
+  "owner": "Furkiozknn",
+  "repository": "https://github.com/Furkiozknn/masal",
+  "homepage": "https://furkiozknn.github.io/masal/",
+  "releases": "https://github.com/Furkiozknn/masal/releases",
+  "status": "active",
+  "category": "web-app",
+  "platform": [
+    "web"
+  ],
+  "primary_language": "JavaScript",
+  "technologies": [
+    "vanilla JavaScript",
+    "SVG",
+    "no build step",
+    "GitHub Pages"
+  ],
+  "version": "1.0.0",
+  "license": "MIT",
+  "topics": [
+    "children",
+    "coloring-book",
+    "generative-text",
+    "github-pages",
+    "kids",
+    "nlp",
+    "no-build",
+    "privacy-first",
+    "storytelling",
+    "svg",
+    "turkce",
+    "turkish",
+    "vanilla-js",
+    "web-app"
+  ],
+  "summary": "A bedtime story written around one child's name, age and hometown, with the colouring page drawn into it as vectors that fill cleanly instead of raster art that smudges past the outline. Six themes and a branch on page three - twelve readings. Turkish suffix engine, no photo upload, no download, no API key.",
+  "key_features": [
+    "A bedtime story written around one child's name, age and hometown",
+    "The colouring page is drawn into the story as vectors, so it fills cleanly instead of smudging past the outline",
+    "Six themes and a branch on page three - twelve readings",
+    "Turkish suffix engine gets the name right where template substitution never could; no photo upload, no download, no API key"
+  ],
+  "media": {
+    "hero": "assets/sahneler.png",
+    "screenshots": [
+      "assets/sahneler.png",
+      "assets/ekran-goruntusu.png"
+    ],
+    "gifs": [],
+    "videos": []
+  },
+  "tests": {
+    "count": 92,
+    "source": "`node --test`: `pass 92`",
+    "measured": "2026-09-15"
+  },
+  "ci": {
+    "workflows": [
+      "ci.yml"
+    ],
+    "badge": "https://github.com/Furkiozknn/masal/actions/workflows/ci.yml/badge.svg"
+  },
+  "docs": {
+    "readme": "README.md",
+    "changelog": null,
+    "roadmap": null,
+    "security": "SECURITY.md",
+    "contributing": "CONTRIBUTING.md",
+    "license_file": "LICENSE"
+  },
+  "social": {
+    "headline": "A bedtime story written around your child's name - and a colouring page drawn into it.",
+    "hashtags": [
+      "javascript",
+      "svg",
+      "kids",
+      "turkce",
+      "webapp"
+    ],
+    "primary_link": "https://furkiozknn.github.io/masal/"
+  },
+  "provenance": {
+    "generated_at": "2026-09-22",
+    "generator": "ghcc/gen_meta.py",
+    "rule": "mechanical fields read from the repository and the GitHub API; editorial fields hand-written and reviewed; no field is generated from a guess"
+  }
+}
