@@ -74,6 +74,38 @@ jobs:
           done
           echo "sayfa ve alti modul sunuluyor"
 
+  # Erisilebilirlik, uygulamanin KULLANILDIGI ekranlarda olculur.
+  #
+  # README "Lighthouse mobil: erisilebilirlik ... 100" diyordu ve bu
+  # dogruydu -- Lighthouse'un olctugu ekranda. Lighthouse sayfayi acar ve
+  # acildigi haliyle denetler; acilan ekran FORM. Cocugun masali okudugu
+  # ekran hic denetlenmemisti, ve denetlenince iki WCAG AA ihlali cikti:
+  # biri figcaption, digeri cocugun KENDI ADI (.metin b, kagit uzerinde
+  # 4.37:1). index.html'in o satirindaki yorum zaten "kagit uzerinde
+  # 4.37:1" yaziyordu - olculmus, yazilmis, oyle birakilmis.
+  #
+  # Bu is, form + okuyucu + boyanmis sayfa + secim ekrani + son sayfa +
+  # kitaplik'i tek tek denetliyor. axe-core ve playwright bu deponun
+  # bagimliligi degil (masal'in hic bagimliligi yok, package-lock.json da
+  # yok); ekran-yakala.mjs ile ayni sekilde anlik kuruluyorlar.
+  erisim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: axe-core ve tarayici
+        run: |
+          set -e
+          npm install --no-save --no-package-lock axe-core playwright-core
+          npx --yes playwright@1 install --with-deps chromium
+
+      - name: WCAG 2.1 AA, her ekranda
+        run: node arac/erisim-denetle.mjs
+
   # "Indirme yok" bu urunun bir vaadi, suslemesi degil: cocugun cizimi
   # cihazdan cikmamali. Iki ayri kontrol, cunku iki ayri yol var.
   #

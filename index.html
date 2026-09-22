@@ -35,7 +35,15 @@
 <title>Masal</title>
 <style>
   :root{
-    --kagit:#fdfaf3; --murekkep:#2c2a26; --vurgu:#c0562f;   /* WCAG AA: beyaz uzerinde 4.55:1, kagit uzerinde 4.37:1 */ --kenar:#e6ded0;
+    --kagit:#fdfaf3; --murekkep:#2c2a26;
+    /* --vurgu, kagit (#fdfaf3) zemininde METIN olarak kullaniliyor: cocugun
+       adi her sayfada bu renkle kalin yaziliyor (.metin b). Onceki deger
+       #c0562f idi ve bu satirin kendisi "kagit uzerinde 4.37:1" yaziyordu --
+       yani AA'nin 4.5 esigini gecmedigi olculmus, yazilmis ve oyle
+       birakilmisti. Sayfadaki en cok okunan kelime.
+       #b5512c: kagit 4.82:1, beyaz 5.03:1, ve dugme zemini olarak beyaz
+       metin altinda 5.03:1. arac/erisim-denetle.mjs her push'ta olcuyor. */
+    --vurgu:#b5512c; --kenar:#e6ded0;
     --soluk:#7a7268; --golge:0 2px 14px rgba(0,0,0,.09);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -96,7 +104,10 @@
   .metin b{color:var(--vurgu); font-weight:600}
   figure.boyama{margin:0; border:2px dashed var(--kenar); border-radius:13px;
                 padding:.55rem; background:#fff}
-  figure.boyama figcaption{font-size:.75rem; color:#8a8178; text-align:center; margin-bottom:.35rem}
+  /* 12px gri metin: #8a8178 beyaz uzerinde 3.82:1 idi. Bu satir sahnenin
+     erisilebilir adi (svg aria-labelledby ile buna bakiyor), yani ekran
+     okuyucunun ve gozun ayni anda kullandigi tek ipucu. #7a726a: 4.73:1. */
+  figure.boyama figcaption{font-size:.75rem; color:#7a726a; text-align:center; margin-bottom:.35rem}
   svg.sahne{display:block; width:100%; height:auto; touch-action:manipulation}
   svg.sahne .b{fill:#fff; stroke:var(--murekkep); stroke-width:2.5; stroke-linejoin:round;
                cursor:pointer; transition:fill .12s}

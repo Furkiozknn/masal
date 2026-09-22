@@ -32,7 +32,7 @@ tek tek tıklayarak boyuyor — çocuğun yaptığının aynısı. Ekranda ne va
 | Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
 | Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
 | Sesli okuma | Tarayıcının konuşma motoru; cihazda o dilde ses yoksa düğme görünmez |
-| Erişilebilirlik | Lighthouse mobil: erişilebilirlik, en iyi uygulamalar, SEO ve agentic browsing dördü de 100 |
+| Erişilebilirlik | Lighthouse mobil: erişilebilirlik, en iyi uygulamalar, SEO ve agentic browsing dördü de 100 — **ve** altı ekranın her biri WCAG 2.1 AA'ya karşı axe-core ile, her push'ta (`arac/erisim-denetle.mjs`) |
 
 ## Çalıştırma
 
@@ -75,6 +75,7 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 | `olcum.js` | Ölçüm noktaları + gizlilik süzgeci (`olcum.test.js`) |
 | `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
 | `sunucu.py` | Geliştirme sunucusu, önbellek kapalı |
+| `arac/erisim-denetle.mjs` | Altı ekranı axe-core ile WCAG 2.1 AA'ya karşı denetler |
 | `LICENSE` | MIT |
 
 ### Şablonlarda Türkçe ek
@@ -103,6 +104,35 @@ koda gömülü ve testli.
    secim-yapildi, boyama-basladi, masal-bitti, kitapliktan-devam. Gönderim ucu
    şu an kapalı, hiçbir istek gitmiyor; yayın çözülünce tek adres yazılacak.
    Çocuğa ait hiçbir bilgi (ad, şehir, boyama) gönderilmiyor, süzgeç testli.
+
+## Erişilebilirlik nerede ölçülüyor
+
+Lighthouse'un verdiği 100 doğruydu — **ölçtüğü ekranda**. Lighthouse sayfayı
+açar ve açıldığı hâliyle denetler; burada açılan ekran formdur. Çocuğun
+masalı okuduğu ekran hiç denetlenmemişti.
+
+Denetlenince iki WCAG AA ihlali çıktı, ikisi de okuma ekranında: boyama
+ipucu (`figcaption`, beyaz üzerinde 3,82:1) ve **çocuğun kendi adı** —
+`.metin b`, kâğıt üzerinde 4,37:1, eşik 4,5. Sayfadaki en çok okunan kelime.
+`index.html`'in o satırındaki yorum da zaten "kâğıt üzerinde 4.37:1"
+yazıyordu: ölçülmüş, yazılmış ve öyle bırakılmış.
+
+İkisi de düzeltildi (`--vurgu` 4,82:1, ipucu 4,73:1 — marka rengi aynı
+sıcaklıkta kaldı) ve asıl mesele kapıya bağlandı:
+
+```
+node arac/erisim-denetle.mjs
+```
+
+Uygulamayı gerçekten açıyor, formu dolduruyor, sayfayı çeviriyor, bir
+bölgeyi boyuyor, seçim yapıyor ve sona gidiyor — **altı ekranı ayrı ayrı**
+axe-core ile denetliyor: form, okuyucu, boyanmış sayfa, seçim ekranı, son
+sayfa, kitaplık dolu form. CI her push'ta koşuyor. Eski renk geri konarak
+denendi: dört ekranda birden kırmızı yanıyor.
+
+axe-core ve Playwright bu deponun bağımlılığı **değil** — masal'ın hiç
+bağımlılığı yok. `arac/ekran-yakala.mjs` ile aynı şekilde, elle ya da CI'da
+anlık kuruluyorlar.
 
 ## Çevrimdışı
 
