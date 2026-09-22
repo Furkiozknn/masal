@@ -114,3 +114,13 @@ koda gömülü ve testli.
   cihazdan çıkmıyor, saklanmıyor, taranmıyor.
 - Sesli okuma cihazın yüklü seslerine bağlı: Türkçe sesi olmayan bir masaüstünde
   düğme hiç çıkmaz. Telefon ve tablette Türkçe ses standart.
+
+---
+
+## Bu ekosistemden başka projeler
+
+- **[nova-drift](https://github.com/Furkiozknn/nova-drift)** — derleme adımı olmayan sonsuz tarayıcı uzay koşusu
+- **[buradane](https://github.com/Furkiozknn/buradane)** — ihtiyaç odaklı 167.829 OpenStreetMap noktası
+- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)** — Türkçe düşünen 70 Claude Code alt-ajanı
+
+<sub>Hepsi tek bir aranabilir sayfada: **[furkiozknn.github.io](https://furkiozknn.github.io/)** — her kart, o deponun kendi <code>project-meta.json</code> dosyasından üretiliyor.</sub>
