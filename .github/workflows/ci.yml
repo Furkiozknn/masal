@@ -15,6 +15,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 12 sn
     strategy:
       fail-fast: false
       matrix:
@@ -65,6 +66,7 @@ jobs:
   # dogruluyor - test takimi saf mantigi sinar, sayfanin acildigini sinamaz.
   sayfa:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 9 sn
     steps:
       - uses: actions/checkout@v5
 
@@ -110,6 +112,7 @@ jobs:
   # yok); ekran-yakala.mjs ile ayni sekilde anlik kuruluyorlar.
   erisim:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 39 sn
     steps:
       - uses: actions/checkout@v5
 
@@ -136,6 +139,7 @@ jobs:
   # yakaliyor; ayrintisi betigin basinda.
   tarayici:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 36 sn
     steps:
       - uses: actions/checkout@v5
 
@@ -163,6 +167,7 @@ jobs:
   # YALNIZCA olcum.js icinde olmali.
   indirme-yok:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 4 sn
     steps:
       - uses: actions/checkout@v5
 
