@@ -35,13 +35,17 @@ jobs:
       # app.js ve karakter.js hicbir testin import etmedigi iki dosya:
       # testler onlara dokunmadigi icin bozuk bir sozdizimi yesil kosudan
       # gecebiliyordu. node --check hepsini ayri ayri ayristiriyor.
+      # Liste elle yazilmiyor: elle yazilmis liste sw.js'i hic kapsamamisti ve
+      # yeni bir modul eklenince yine sessizce disarida kalirdi.
       - name: Sozdizimi denetimi
         run: |
           set -e
-          for f in app.js karakter.js depo.js hikayeler.js olcum.js sahneler.js turkce.js; do
+          n=0
+          for f in *.js arac/*.mjs; do
             node --check "$f"
+            n=$((n+1))
           done
-          echo "yedi modulun sozdizimi saglam"
+          echo "$n dosyanin sozdizimi saglam"
 
   # Uygulama tek bir index.html ve yaninda birkac modul; build adimi yok.
   # Bu is, dosyalarin gercekten yuklenebildigini ve sayfanin bos gelmedigini
@@ -68,11 +72,14 @@ jobs:
           govde=$(curl -sf http://127.0.0.1:8123/index.html)
           test -n "$govde" || { echo "index.html bos dondu"; exit 1; }
           # Modullerin hepsi gercekten sunuluyor mu: birinin adi degisirse
-          # sayfa sessizce yarim acilir, konsola bakan olmaz.
-          for f in app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; do
-            curl -sf -o /dev/null "http://127.0.0.1:8123/$f" || { echo "eksik modul: $f"; exit 1; }
+          # sayfa sessizce yarim acilir, konsola bakan olmaz. Liste depodan
+          # turetiliyor (elle yazilmis hali depo.js'i atliyordu).
+          n=0
+          for f in $(ls *.js | grep -v '\.test\.js$') manifest.webmanifest; do
+            curl -sf -o /dev/null "http://127.0.0.1:8123/$f" || { echo "eksik dosya: $f"; exit 1; }
+            n=$((n+1))
           done
-          echo "sayfa ve alti modul sunuluyor"
+          echo "sayfa ve $n dosya sunuluyor"
 
   # Erisilebilirlik, uygulamanin KULLANILDIGI ekranlarda olculur.
   #
@@ -106,6 +113,29 @@ jobs:
       - name: WCAG 2.1 AA, her ekranda
         run: node arac/erisim-denetle.mjs
 
+  # Uygulamayi gercek bir tarayicida KULLANIR: iki ekran genisliginde tam akis
+  # (konsol hatasi ve yatay tasma kirmizi), "Temizle"nin geri alinabilmesi ve
+  # yeni bir dagitimin sayfayi onceden acmis kullaniciya ulasmasi (servis
+  # iscisi). Son kontrol, ilk sw.js'in herkesi eski surumde tuttugu hatayi
+  # yakaliyor; ayrintisi betigin basinda.
+  tarayici:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Tarayici
+        run: |
+          set -e
+          npm install --no-save --no-package-lock playwright-core
+          npx --yes playwright@1 install --with-deps chromium
+
+      - name: Akis, temizle/geri al, dagitim ve cevrimdisi
+        run: node arac/tarayici-dogrula.mjs
+
   # "Indirme yok" bu urunun bir vaadi, suslemesi degil: cocugun cizimi
   # cihazdan cikmamali. Iki ayri kontrol, cunku iki ayri yol var.
   #
@@ -123,8 +153,10 @@ jobs:
       - name: Cizimi dosyaya cevirip indiren bir yol yok
         run: |
           set -e
-          if grep -nE 'download=|toDataURL|toBlob|createObjectURL|showSaveFilePicker' \
-               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; then
+          # Uygulamanin butun dosyalari (testler haric). Elle yazilmis liste
+          # depo.js ve sw.js'i atliyordu; yeni bir modul de atlanirdi.
+          dosyalar="index.html $(ls *.js | grep -v '\.test\.js$')"
+          if grep -nE 'download=|toDataURL|toBlob|createObjectURL|showSaveFilePicker' $dosyalar; then
             echo
             echo "Yukaridaki satir cizimi bir dosyaya cevirip cihazdan cikarabilir."
             echo "Bilerek eklendiyse bu kontrolu guncelle; kazayla eklendiyse geri al."
@@ -146,7 +178,8 @@ jobs:
           # degildi. Sorun tek satir degil tutarsizlikti, o yuzden duzeltme de
           # tek satir degil: butun erisim depo.js'ten geciyor ve bu kontrol
           # baska bir dosyaya korumasiz cagri geri eklenmesini engelliyor.
-          if grep -n 'localStorage' index.html app.js hikayeler.js sahneler.js                turkce.js karakter.js olcum.js; then
+          dosyalar="index.html $(ls *.js | grep -v -e '\.test\.js$' -e '^depo\.js$')"
+          if grep -n 'localStorage' $dosyalar; then
             echo
             echo "depo.js disinda localStorage erisimi belirdi. Bunlar gizli"
             echo "sekmede firlatir ve sayfayi oldurur. depo.js'teki oku/yaz/sil/"
@@ -166,8 +199,10 @@ jobs:
       - name: Ag cagrisi yalnizca olcum.js icinde
         run: |
           set -e
-          if grep -nE 'fetch\(|XMLHttpRequest|sendBeacon|new WebSocket|EventSource' \
-               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js; then
+          # olcum.js (suzgecli olcum) ve sw.js (yalniz event.request'i gecirir,
+          # ustteki "Servis iscisi" adimi denetliyor) bilerek disarida.
+          dosyalar="index.html $(ls *.js | grep -v -e '\.test\.js$' -e '^olcum\.js$' -e '^sw\.js$')"
+          if grep -nE 'fetch\(|XMLHttpRequest|sendBeacon|new WebSocket|EventSource' $dosyalar; then
             echo
             echo "olcum.js disinda bir ag cagrisi belirdi. Gizlilik suzgeci yalnizca"
             echo "olcum.js'ten gecen veriyi temizliyor; baska bir dosyadan cikan istek"
