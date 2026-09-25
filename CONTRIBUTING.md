@@ -10,13 +10,17 @@ islenir.
 
 ## 1. Gelistirme ortami
 
-Ekosistem: **node**
+Bagimlilik ve derleme adimi yok: gereken tek sey Python 3 ve Node 20+.
+(`npm ci` calismaz; kurulacak bir sey olmadigi icin package-lock.json da yok.)
 
 ```
 git clone https://github.com/Furkiozknn/masal.git
 cd masal
-npm ci
+python3 sunucu.py        # http://127.0.0.1:8790/  (onbellek kapali)
 ```
+
+`python -m http.server` yerine `sunucu.py` kullan: tarayici ES modullerini
+onbellege aliyor ve degisikligin gorunmedigini sanirsin.
 
 ## 2. Degisikligi yapmadan once
 
@@ -49,20 +53,38 @@ donuluyor.
 ## 4. Testler
 
 ```
-npm test
+node --test                      # ya da: npm test
 ```
 
 Yeni davranis ekliyorsan **testini de ekle**. Hata duzeltiyorsan, once
 hatayi yakalayan testi yaz, sonra duzelt -- boylece testin gercekten o
-hatayi yakaladigindan emin olursun.
+hatayi yakaladigindan emin olursun. app.js DOM'a bagli oldugu icin saf
+mantigi ayri bir modulde tut (ornek: `boyama.js` + `boyama.test.js`).
 
-PR acildiginda su is akislari calisir: ci.yml. Hepsi yesil olmadan birlestirilmez.
+Arayuze dokunan bir degisiklikte gercek tarayici denetimlerini de kostur
+(Playwright ve axe-core bu deponun bagimliligi degil, anlik kuruluyor):
+
+```
+npm install --no-save --no-package-lock playwright-core axe-core
+npx --yes playwright@1 install chromium
+node arac/tarayici-dogrula.mjs
+node arac/erisim-denetle.mjs
+```
+
+Yeni bir modul eklersen `sw.js`'teki `KABUK` listesine de yaz; unutursan
+`node arac/sw-dogrula.mjs` (ve CI) soyler.
+
+PR acildiginda ci.yml calisir: testler (Node 20 ve 22), sozdizimi, sayfanin
+sunulmasi, tarayicida akis, erisilebilirlik ve gizlilik kapilari (indirme yok,
+depoya tek kapi, ag cagrisi yalnizca olcum.js'te). Hepsi yesil olmadan
+birlestirilmez.
 
 ## 5. Pull request
 
-PR sablonu doldurulmayi bekleyen alanlar iceriyor. Ozellikle
-**dogrulama** bolumu onemli: "testler gecti" yeterli degil, hangi komutu
-calistirdigin ve ne gordugun yazilmali.
+PR aciklamasinda uc sey olsun: **ne degisti, neden, nasil dogrulandi**.
+Dogrulama bolumu onemli: "testler gecti" yeterli degil, hangi komutu
+calistirdigin ve ne gordugun yazilmali. Gorunen bir degisiklikse ekran
+goruntusu ekle.
 
 Inceleme sirasinda degisiklik istenmesi normaldir ve isin kotu oldugu
 anlamina gelmez. Sorulari cevaplamak da katkinin bir parcasi.
@@ -73,6 +95,7 @@ anlamina gelmez. Sorulari cevaplamak da katkinin bir parcasi.
   (kod tabaninin gecmisini okunmaz hale getiriyor).
 - Gerekcesi yazilmamis yeni bagimliliklar.
 - Testi olmayan yeni ozellikler.
+- Cocuga ait bir veriyi (ad, sehir, boyama) cihazdan cikaran her degisiklik.
 
 ## Davranis kurallari
 

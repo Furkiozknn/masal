@@ -2,81 +2,155 @@
 
 # Masal
 
-Çocuğun adına, yaşına ve şehrine göre yazılan uyku öncesi masalı, **içine
-gömülü boyama alanlarıyla** birlikte tarayıcıda okutan web uygulaması.
+[![CI](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml/badge.svg)](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml)
 
-İndirme yok, PDF yok: hikaye de boyama da uygulamanın içinde kalır.
+Çocuğun **adına, yaşına ve şehrine göre** yazılan uyku öncesi masalı; sayfaların
+içine gömülü **boyama alanlarıyla** birlikte tarayıcıda.
 
-**Canlı:** <https://furkiozknn.github.io/masal/>
+Hazır boyama sayfaları çocuğun adını bilmez. Yapay zekânın ürettiği resimler
+ise piksel olduğu için boya konturdan taşar. Burada hikaye çocuğun adıyla ve
+Türkçe eklerle doğru çekimlenerek (`Trabzon'da`, `Ada'ya`) yazılıyor, resim de
+ayrı ayrı SVG bölgelerinden oluşuyor. Bölgeye dokununca yalnızca o bölge temiz
+biçimde doluyor.
+
+**Canlı:** <https://furkiozknn.github.io/masal/>. Kayıt, indirme, fotoğraf ve
+API anahtarı yok, ücret de yok.
+
+## Nasıl kullanılır
+
+1. Çocuğun adını, yaşını ve (isteğe bağlı) şehrini yazın, bir konu seçin.
+   İsterseniz kahramanın ten ve saç rengini de seçin.
+2. **Masalı oluştur**: altı sayfalık masal açılır. Resimli sayfalarda paletten
+   bir renk seçip resmin bir bölgesine dokunun.
+3. Üçüncü sayfada çocuk hikayenin nasıl devam edeceğini seçer. Masal bitince
+   okunmamış konular önerilir, okunanlar da **Kitaplık**'ta kaldığı yerden
+   devam eder.
 
 ![Üretilmiş bir masal sayfası: Elif için yazılmış metin, altında boyanmış deniz sahnesi, palet ve "Resmi bitirdin!" kutlaması](assets/ekran-goruntusu.png)
 
-<sub><i>Buradaki iki görsel de elle düzenlenmedi: `arac/ekran-yakala.mjs` uygulamayı
-açıyor, formu dolduruyor, sayfayı çeviriyor ve on iki bölgeyi paletten renk seçip
-tek tek tıklayarak boyuyor — çocuğun yaptığının aynısı. Ekranda ne varsa o.</i></sub>
+<sub><i>İki görsel de elle düzenlenmedi. `arac/ekran-yakala.mjs` uygulamayı açıyor,
+formu dolduruyor, sayfayı çeviriyor ve on iki bölgeyi paletten renk seçip tek tek
+tıklayarak boyuyor. Çocuk da aynısını yapıyor.</i></sub>
 
-## Ne çalışıyor (8 Eylül 2026)
+## Neler var
 
 | | |
 |---|---|
-| Hikaye üretimi | Şablon motoru — **API anahtarı gerektirmez**, maliyeti sıfır |
-| Diller | Türkçe, İngilizce. Açılışta tarayıcı dilinden seçilir, üstten değiştirilebilir |
+| Hikaye üretimi | Şablon motoru. **API anahtarı gerekmez**, maliyeti sıfır |
+| Diller | Türkçe ve İngilizce. Tarayıcı dilinden seçilir, üstten değiştirilebilir |
 | Temalar | Deniz, Orman, Yıldızlar, Kar, Yağmur, Bahçe. Her biri 6 sayfa |
-| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılıyor; altı tema × iki yol = on iki okuma |
-| Kitaplık | Okunan masallar birikiyor, kaldığı sayfadan devam ediliyor |
-| Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe |
-| Kapanış | Masal bitince aynı çocuk için okunmamış temalar öneriliyor |
-| Kahraman | Çocuk figürü her sahnede görünüyor; ten, saç rengi ve saç tipi seçilebiliyor. Kıyafeti boyanabilir |
-| Boyama | Sayfaya gömülü SVG sahne, bölgeye dokununca dolar |
-| Hareket | Kar yağıyor, yaprak düşüyor, yıldız parıldıyor, dalga kıpırdıyor — CSS ile, sıfır maliyet. Boyanabilir bölgeler sabit |
-| Kayıt | Boyama tarayıcıda saklanır, sayfa yenilense de durur |
-| Türkçe ekler | Ünlü uyumu ve sert ünsüz benzeşmesi otomatik (`turkce.js`) |
-| Sesli okuma | Tarayıcının konuşma motoru; cihazda o dilde ses yoksa düğme görünmez |
-| Erişilebilirlik | Lighthouse mobil: erişilebilirlik, en iyi uygulamalar, SEO ve agentic browsing dördü de 100 — **ve** altı ekranın her biri WCAG 2.1 AA'ya karşı axe-core ile, her push'ta (`arac/erisim-denetle.mjs`) |
+| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılır: altı tema × iki yol = on iki okuma |
+| Boyama | Sayfaya gömülü SVG sahne. Bölgeye dokununca dolar, **geri al** ve **temizle** var (temizle de geri alınabilir) |
+| Kahraman | Çocuk figürü her sahnede. Ten, saç rengi ve saç tipi seçilir, kıyafeti boyanabilir |
+| Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe (3–4, 5–6, 7–9) |
+| Kitaplık | Okunan masallar birikir, kaldığı sayfadan ve seçtiği yoldan devam edilir |
+| Sesli okuma | Tarayıcının kendi konuşma motoru. Cihazda o dilde ses yoksa düğme görünmez |
+| Türkçe ekler | Ünlü uyumu, sert ünsüz benzeşmesi ve kaynaştırma harfi otomatik (`turkce.js`) |
+| Çevrimdışı | Bir kez açıldıktan sonra ağ olmadan da açılır. Kurulabilir (PWA) |
+| Erişilebilirlik | Altı ekranın her biri her push'ta axe-core ile WCAG 2.1 AA'ya karşı denetleniyor |
 
-## Çalıştırma
+## Gizlilik
+
+Bu bir çocuk uygulaması. Aşağıdaki kurallar yalnızca yazılı değil, CI'da
+denetleniyor.
+
+- **Hiçbir şey cihazdan çıkmıyor.** Ad, şehir, kahramanın görünümü, boyamalar ve
+  kitaplık yalnızca tarayıcının `localStorage`'ında duruyor. Bu depoya
+  yalnızca `depo.js` erişebiliyor. Gizli sekmede depo kapalıysa uygulama
+  yine çalışıyor, yalnızca hatırlamıyor.
+- **Fotoğraf yok, indirme yok.** Çizimi dosyaya çeviren bir yol
+  (`toDataURL`, `download=` …) uygulama dosyalarının hiçbirinde bulunamaz.
+- **Ağ çağrısı tek bir dosyada.** `olcum.js` ölçüm noktalarını tutuyor ama
+  gönderim adresi boş (`UC = null`), yani **bugün hiçbir istek gitmiyor**.
+  Adres yazılırsa gidecek veri de bir süzgeçten geçiyor: yalnızca tema, yaş
+  grubu, sayfa numarası gibi alanlar. Ad, şehir ve boyama süzgeçte düşüyor
+  (`olcum.test.js`).
+- **Servis işçisi yeni istek üretmez.** `sw.js` yalnızca sayfanın zaten yaptığı
+  isteği geçirir ve yalnızca aynı kaynaktan gelen yanıtları önbelleğe alır
+  (`arac/sw-dogrula.mjs`).
+
+## Yerelde çalıştırma
+
+Derleme adımı ve bağımlılık yok. Gereken tek şey Python 3 ve Node 20+.
 
 ```
-python sunucu.py
+git clone https://github.com/Furkiozknn/masal.git
+cd masal
+python3 sunucu.py        # Windows: python sunucu.py
 ```
-Sonra `http://127.0.0.1:8790/`. Derleme adımı yok, bağımlılık yok.
 
-`python -m http.server` de çalışır ama **önerilmez**: tarayıcı ES modüllerini
-önbelleğe alıyor, dosyayı değiştirip yenileyince eski sürüm çalışıyor ve test
-sonuçları yanlış çıkıyor. `sunucu.py` önbelleği kapatıyor.
+Tarayıcıda `http://127.0.0.1:8790/` adresini açın. Port değiştirmek için
+`python3 sunucu.py 9000` kullanın.
 
-Test:
+`python -m http.server` de çalışır ama önerilmez. Tarayıcı ES modüllerini
+önbelleğe alıyor, bu yüzden dosyayı değiştirip yenileyince eski sürüm
+çalışıyor. `sunucu.py` önbelleği kapatıyor.
+
+## Test
 
 ```
 node --test
 ```
 
-Dört test dosyasını birden koşar (92 test). Ayrı ayrı çalıştırmaya gerek yok.
+Altı test dosyası, 108 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
 
-## Neden vektör (SVG) boyama
+| Dosya | Neyi kilitliyor |
+|---|---|
+| `turkce.test.js` | Hal ekleri: `Trabzon'da`, `Sinop'ta`, `Ada'ya`, `kasabada` |
+| `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu, HTML kaçışı |
+| `depo.test.js` | Depo kapalı ya da bozukken uygulama çökmüyor |
+| `olcum.test.js` | Gizlilik süzgeci: kişisel alanların hiçbiri geçmiyor |
+| `boyama.test.js` | Geri al geçmişi: temizle geri alınabiliyor, sayfalar karışmıyor |
+| `sw.test.js` | Servis işçisi: yeni dağıtım kullanıcıya ulaşıyor, ağ yokken önbellekten açılıyor |
 
-Rakipler raster (piksel) görsel üretiyor; o görseller ya boyanamıyor ya da
-taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
+Gerçek tarayıcıda çalışan iki denetim daha var. Bunlar CI'da her push'ta
+koşuyor. Playwright ve axe-core bu deponun bağımlılığı **değil**, anlık
+kuruluyorlar:
 
-- Dokunulan bölge **temiz** dolar, konturun dışına taşmaz.
-- Görsel üretim maliyeti **sıfır** — sahneler elle çizilmiş şablon.
-- Boyama durumu birkaç yüz bayt; resim değil, bölge→renk eşlemesi saklanıyor.
+```
+npm install --no-save --no-package-lock playwright-core axe-core
+npx --yes playwright@1 install chromium
+node arac/tarayici-dogrula.mjs   # 390 ve 1012 px'te tam akış, temizle/geri al, dağıtım + çevrimdışı
+node arac/erisim-denetle.mjs     # altı ekran, WCAG 2.1 AA
+```
 
-## Dosyalar
+## Nasıl çalışıyor
+
+```
+index.html ── app.js ─┬─ hikayeler.js ── turkce.js     şablon + ek motoru → metin
+                      ├─ sahneler.js                   boyanabilir SVG sahneler
+                      ├─ karakter.js                   kahraman SVG'si
+                      ├─ boyama.js                     geri al geçmişi
+                      ├─ depo.js                       localStorage'a tek kapı
+                      └─ olcum.js                      ölçüm noktaları (gönderim kapalı)
+sw.js                                                  çevrimdışı: önce ağ, ağ yoksa önbellek
+```
 
 | Dosya | İş |
 |---|---|
-| `index.html` | İki ekran: form ve okuyucu |
+| `index.html` | İki ekran (form ve okuyucu) ve bütün CSS |
 | `app.js` | Durum, sayfa geçişi, dallar, boyama, kitaplık, sesli okuma, dil |
-| `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru |
+| `hikayeler.js` | Şablon metinler (tr/en) ve doldurma motoru. Ad vurgusu ve HTML kaçışı burada |
+| `turkce.js` | Hal eki üretici |
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay, kış, yağmur, bahçe |
-| `turkce.js` | Hal eki üretici + `turkce.test.js` (28 durum) |
 | `karakter.js` | Kahraman SVG üreteci: ten/saç seçenekleri, saç tipleri |
-| `olcum.js` | Ölçüm noktaları + gizlilik süzgeci (`olcum.test.js`) |
-| `hikayeler.test.js` | Şablon yapısı: dil/tema eşliği, dal uzunlukları, sahne bütünlüğü, çözülmemiş yer tutucu |
+| `boyama.js` | Geri al geçmişi (tek dokunuş ya da bütün resim) |
+| `depo.js` | `localStorage`'a korumalı tek erişim |
+| `olcum.js` | Ölçüm noktaları ve gizlilik süzgeci |
+| `sw.js` | Servis işçisi: uygulama kabuğunu önbelleğe alır |
 | `sunucu.py` | Geliştirme sunucusu, önbellek kapalı |
+| `arac/tarayici-dogrula.mjs` | Gerçek tarayıcıda akış, temizle/geri al, dağıtım ve çevrimdışı denetimi |
 | `arac/erisim-denetle.mjs` | Altı ekranı axe-core ile WCAG 2.1 AA'ya karşı denetler |
-| `LICENSE` | MIT |
+| `arac/sw-dogrula.mjs` | `sw.js` önbellek listesi import grafiğiyle örtüşüyor mu, `fetch` yalnızca sayfanın isteği mi |
+| `arac/ekran-yakala.mjs` | README görsellerini uygulamayı gerçekten kullanarak üretir |
+
+### Neden vektör (SVG) boyama
+
+Her boyanabilir bölge ayrı bir SVG şekli:
+
+- Dokunulan bölge **temiz** dolar, konturun dışına taşmaz.
+- Görsel üretim maliyeti **sıfır**, çünkü sahneler elle çizilmiş şablonlar.
+- Kaydedilen şey resim değil, bölge→renk eşlemesi. Birkaç yüz bayt tutuyor.
 
 ### Şablonlarda Türkçe ek
 
@@ -86,97 +160,75 @@ taşarak boyanıyor. Burada her boyanabilir bölge ayrı bir SVG şekli:
 {sehir:de}  ->  Trabzon'da / Sinop'ta / İzmir'de
 {ad:e}      ->  Elif'e / Ada'ya
 {ad:i}      ->  Elif'i / Ada'yı
-{sehir:in}  ->  Uşak'ın / kasabanın
+{sehir:in}  ->  Uşak'ın / kasabanın      (şehir boşsa cins isim, kesme işareti yok)
 ```
 
-"Trabzon'de" gibi tek bir hata ürünü anında ucuz gösterdiği için bu kurallar
-koda gömülü ve testli.
+"Trabzon'de" gibi tek bir hata ürünü anında ucuz gösterir. Bu yüzden bu
+kurallar koda gömülü ve testli.
 
-## Sonraki adımlar
+### Çevrimdışı ve güncellemeler
 
-1. **LLM katmanı** — şablon yerine özgün hikaye. Anahtar sunucuda kalmalı,
-   tarayıcıya konmaz. Şablon motoru yedek olarak kalır: API düşerse ürün çalışır.
-2. **Sahne kütüphanesini büyütmek** — şu an 7 sahne. Hikaye çeşitliliği
-   sahne sayısına bağlı.
-3. **Ücretlendirme** — Türkiye'den tahsilat için Polar.sh / Lemon Squeezy
-   (Stripe ve PayPal Türkiye'de yok).
-4. **Ölçüm** — noktalar yerleştirildi (`olcum.js`): masal-uretildi,
-   secim-yapildi, boyama-basladi, masal-bitti, kitapliktan-devam. Gönderim ucu
-   şu an kapalı, hiçbir istek gitmiyor; yayın çözülünce tek adres yazılacak.
-   Çocuğa ait hiçbir bilgi (ad, şehir, boyama) gönderilmiyor, süzgeç testli.
+`sw.js` ilk açılışta uygulama kabuğunu önbelleğe alır. Sonraki her istekte
+**önce ağa** gider ve önbelleği tazeler. Ağ yoksa (uçak, araba, modem kapalı)
+aynı dosyayı önbellekten verir.
 
-## Erişilebilirlik nerede ölçülüyor
+İlk sürüm tersini yapıyordu: önce önbelleğe bakıyordu ve önbellek adı
+sabitti. Tarayıcı servis işçisini yalnızca `sw.js` değişince yenilediği için
+sayfayı bir kez açmış herkes sonraki dağıtımları **hiç görmüyordu**.
+Servis işçisinden iki saat sonra yayınlanan kontrast düzeltmesi de bu yüzden
+önceden ziyaret etmiş cihazlara ulaşmadı. `sw.test.js` ve
+`arac/tarayici-dogrula.mjs` artık bu durumu yakalıyor.
 
-Lighthouse'un verdiği 100 doğruydu — **ölçtüğü ekranda**. Lighthouse sayfayı
-açar ve açıldığı hâliyle denetler; burada açılan ekran formdur. Çocuğun
-masalı okuduğu ekran hiç denetlenmemişti.
+### Erişilebilirlik
 
-Denetlenince iki WCAG AA ihlali çıktı, ikisi de okuma ekranında: boyama
-ipucu (`figcaption`, beyaz üzerinde 3,82:1) ve **çocuğun kendi adı** —
-`.metin b`, kâğıt üzerinde 4,37:1, eşik 4,5. Sayfadaki en çok okunan kelime.
-`index.html`'in o satırındaki yorum da zaten "kâğıt üzerinde 4.37:1"
-yazıyordu: ölçülmüş, yazılmış ve öyle bırakılmış.
+Lighthouse gibi denetimler sayfayı açıldığı hâliyle, yani yalnızca formu
+ölçer. Çocuğun masalı
+okuduğu ekran ölçülünce iki WCAG AA ihlali çıktı: boyama ipucu (3,82:1) ve
+**çocuğun kendi adı** (`.metin b`, 4,37:1). İkisi de düzeltildi (4,73:1 ve
+4,82:1). `arac/erisim-denetle.mjs` artık altı ekranı ayrı ayrı denetliyor:
+form, okuyucu, boyanmış sayfa, seçim ekranı, son sayfa ve kitaplık.
 
-İkisi de düzeltildi (`--vurgu` 4,82:1, ipucu 4,73:1 — marka rengi aynı
-sıcaklıkta kaldı) ve asıl mesele kapıya bağlandı:
+## Sorun giderme
 
-```
-node arac/erisim-denetle.mjs
-```
-
-Uygulamayı gerçekten açıyor, formu dolduruyor, sayfayı çeviriyor, bir
-bölgeyi boyuyor, seçim yapıyor ve sona gidiyor — **altı ekranı ayrı ayrı**
-axe-core ile denetliyor: form, okuyucu, boyanmış sayfa, seçim ekranı, son
-sayfa, kitaplık dolu form. CI her push'ta koşuyor. Eski renk geri konarak
-denendi: dört ekranda birden kırmızı yanıyor.
-
-axe-core ve Playwright bu deponun bağımlılığı **değil** — masal'ın hiç
-bağımlılığı yok. `arac/ekran-yakala.mjs` ile aynı şekilde, elle ya da CI'da
-anlık kuruluyorlar.
-
-## Çevrimdışı
-
-`manifest.webmanifest` bu uygulamayı `display: standalone` diye tanıtıyordu —
-kurulabilir bir uygulama. Servis işçisi olmadan bu söz yarım kalıyordu:
-tarayıcı çoğu durumda kurulum teklifini hiç göstermiyor, gösterse bile ağ
-gidince boş bir sayfa açılıyordu. Uyku öncesi masalı anlatan bir uygulamanın
-uçakta, arabada ya da modem kapalıyken açılamaması küçük bir kusur değil;
-kullanımın en tipik olduğu an tam orası.
-
-`sw.js` kurulumda uygulama kabuğunun tamamını önbelleğe alıyor, sonrasında
-aynı kaynaktan gelen her isteği önce önbellekten karşılıyor. Manifest'e gerçek
-uygulama simgeleri de eklendi (192 ve 512 kare, ayrıca maskable); önceden tek
-simge 1200×630'luk paylaşım görseliydi ve hiçbir başlatıcı onu kullanamaz.
-
-**Gizlilik tarafı değişmedi.** `sw.js` içindeki tek `fetch` çağrısı yeni bir
-istek üretmiyor; sayfanın zaten yaptığı `event.request` nesnesini olduğu gibi
-geçiriyor. Aynı kaynaktan olmayan her istek — ölçüm ucu dahil — dokunulmadan
-ağa bırakılıyor ve önbelleğe hiç girmiyor.
-
-Bu iki kuralı bir kapı koruyor: `node arac/sw-dogrula.mjs` her push'ta
-`sw.js`'teki her `fetch` çağrısının argümanının sayfadan gelen istek olduğunu
-ve önbellek listesinin `index.html`'in gerçek import grafiğiyle birebir
-örtüştüğünü kontrol ediyor. İkincisi sessiz bozulmayı kapatıyor: listeye
-yazılmayan yeni bir modül, uygulamayı çevrimdışı **yarım** açardı ve hiçbir
-hata görünmezdi.
+| Belirti | Neden / çözüm |
+|---|---|
+| Canlı sitede eski sürümü görüyorum | Önceki `sw.js` önce önbelleğe bakıyordu. Yeni servis işçisi ilk açılışta kurulur, **bir kez yenileyin**. Ondan sonra her dağıtım ilk yenilemede gelir |
+| Yerelde değişiklik görünmüyor | `python -m http.server` yerine `python3 sunucu.py` kullanın (önbellek kapalı) |
+| "Dinle" düğmesi yok | Cihazda o dilde konuşma sesi yüklü değil. Türkçe sesi olmayan masaüstlerinde normal, telefon ve tablette standart |
+| Boyamalar ya da kitaplık kayboldu | Kayıt yalnızca o tarayıcıda. Gizli sekmede, site verisi silinince ya da başka cihazda yoktur |
+| Tarayıcı denetimi `playwright gerekiyor` diyor | Test bölümündeki `npm install --no-save …` ve `npx playwright install` adımları |
 
 ## Bilinen sınırlar
 
 - Şablon hikayeler LLM kadar çeşitli değil. Seçim noktası tema başına iki yol
   veriyor ama olay örgüsü yine sabit.
-- Ek motoru "saat'te / kalp'e" gibi ince okunan kalın yazımları bilmez.
-- Boyama ve kahramanın görünümü sadece o tarayıcıda durur; cihaz değişince gider.
+- Ek motoru "saat'te / kalp'e" gibi ince okunan kalın yazımları bilmiyor.
+- Boyama ve kahramanın görünümü yalnızca o tarayıcıda duruyor, cihaz değişince
+  gidiyor.
 - Kahramanın görünümü elle seçiliyor. **Fotoğraf yüklenmiyor**: hiçbir görsel
-  cihazdan çıkmıyor, saklanmıyor, taranmıyor.
-- Sesli okuma cihazın yüklü seslerine bağlı: Türkçe sesi olmayan bir masaüstünde
-  düğme hiç çıkmaz. Telefon ve tablette Türkçe ses standart.
+  cihazdan çıkmıyor, saklanmıyor ya da taranmıyor.
+
+## Sonraki adımlar
+
+1. **LLM katmanı**: şablon yerine özgün hikaye. Anahtar sunucuda kalmalı,
+   tarayıcıya konmamalı. Şablon motoru yedek olarak kalır, API düşerse ürün
+   çalışmaya devam eder.
+2. **Sahne kütüphanesini büyütmek**: şu an 7 sahne var ve hikaye çeşitliliği
+   sahne sayısına bağlı.
+3. **Ücretlendirme**: Türkiye'den tahsilat için Polar.sh / Lemon Squeezy
+   (Stripe ve PayPal Türkiye'de yok).
+4. **Ölçüm**: noktalar yerleştirildi (masal-uretildi, secim-yapildi,
+   boyama-basladi, masal-bitti, kitapliktan-devam). Gönderim ucu kapalı.
+
+Katkı için [`CONTRIBUTING.md`](CONTRIBUTING.md), güvenlik bildirimi için
+[`SECURITY.md`](SECURITY.md). Lisans: [MIT](LICENSE).
 
 ---
 
 ## Bu ekosistemden başka projeler
 
-- **[nova-drift](https://github.com/Furkiozknn/nova-drift)** — derleme adımı olmayan sonsuz tarayıcı uzay koşusu
-- **[buradane](https://github.com/Furkiozknn/buradane)** — ihtiyaç odaklı 167.829 OpenStreetMap noktası
-- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)** — Türkçe düşünen 70 Claude Code alt-ajanı
+- **[nova-drift](https://github.com/Furkiozknn/nova-drift)**: derleme adımı olmayan sonsuz tarayıcı uzay koşusu
+- **[buradane](https://github.com/Furkiozknn/buradane)**: ihtiyaç odaklı 167.829 OpenStreetMap noktası
+- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 70 Claude Code alt-ajanı
 
-<sub>Hepsi tek bir aranabilir sayfada: **[furkiozknn.github.io](https://furkiozknn.github.io/)** — her kart, o deponun kendi <code>project-meta.json</code> dosyasından üretiliyor.</sub>
+<sub>Hepsi tek bir aranabilir sayfada: **[furkiozknn.github.io](https://furkiozknn.github.io/)**. Her kart, o deponun kendi <code>project-meta.json</code> dosyasından üretiliyor.</sub>
