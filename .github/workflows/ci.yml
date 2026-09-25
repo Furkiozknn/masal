@@ -15,43 +15,62 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 12 sn
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["20", "22"]
+        node-version: ["20", "22", "24"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
 
       # Bagimlilik yok: uygulama da testler de duz ESM, node:test ile kosuyor.
       # `npm ci` adimi bilerek yok - kuracak bir sey olmadigi icin eklenirse
       # her kosuda "no package-lock.json" ile duser.
+      # `node --test` hic test bulamazsa "tests 0" yazip 0 ile cikiyor (Node 22'de
+      # denendi). Test dosyalarinin adi ya da yeri degisirse kosu yesil kalir ama
+      # hicbir sey sinanmamis olur. Taban o sessiz kaybi kirmiziya cevirir; test
+      # eklemek tabani degistirmeyi gerektirmez, test SILMEK gerektirir.
+      # Ozet satiri raporlayiciya gore degisiyor (Node 20/22 TAP "# tests N",
+      # Node 24 spec "i tests N"), o yuzden onege bakilmiyor.
       - name: Testler
-        run: node --test
+        env:
+          TEST_TABANI: "108"
+        run: |
+          set -euo pipefail
+          node --test 2>&1 | tee test-ciktisi.txt
+          sayi=$(grep -E "(^|[^a-zA-Z])tests [0-9]+" test-ciktisi.txt | tail -1 | grep -oE "[0-9]+$")
+          echo "kosan test: ${sayi:-0}, taban: $TEST_TABANI"
+          test "${sayi:-0}" -ge "$TEST_TABANI"
 
       # app.js ve karakter.js hicbir testin import etmedigi iki dosya:
       # testler onlara dokunmadigi icin bozuk bir sozdizimi yesil kosudan
       # gecebiliyordu. node --check hepsini ayri ayri ayristiriyor.
+      # Liste elle yazilmiyor: elle yazilmis liste sw.js'i hic kapsamamisti ve
+      # yeni bir modul eklenince yine sessizce disarida kalirdi.
       - name: Sozdizimi denetimi
         run: |
           set -e
-          for f in app.js karakter.js depo.js hikayeler.js olcum.js sahneler.js turkce.js; do
+          n=0
+          for f in *.js arac/*.mjs; do
             node --check "$f"
+            n=$((n+1))
           done
-          echo "yedi modulun sozdizimi saglam"
+          echo "$n dosyanin sozdizimi saglam"
 
   # Uygulama tek bir index.html ve yaninda birkac modul; build adimi yok.
   # Bu is, dosyalarin gercekten yuklenebildigini ve sayfanin bos gelmedigini
   # dogruluyor - test takimi saf mantigi sinar, sayfanin acildigini sinamaz.
   sayfa:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 9 sn
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
@@ -68,11 +87,14 @@ jobs:
           govde=$(curl -sf http://127.0.0.1:8123/index.html)
           test -n "$govde" || { echo "index.html bos dondu"; exit 1; }
           # Modullerin hepsi gercekten sunuluyor mu: birinin adi degisirse
-          # sayfa sessizce yarim acilir, konsola bakan olmaz.
-          for f in app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; do
-            curl -sf -o /dev/null "http://127.0.0.1:8123/$f" || { echo "eksik modul: $f"; exit 1; }
+          # sayfa sessizce yarim acilir, konsola bakan olmaz. Liste depodan
+          # turetiliyor (elle yazilmis hali depo.js'i atliyordu).
+          n=0
+          for f in $(ls *.js | grep -v '\.test\.js$') manifest.webmanifest; do
+            curl -sf -o /dev/null "http://127.0.0.1:8123/$f" || { echo "eksik dosya: $f"; exit 1; }
+            n=$((n+1))
           done
-          echo "sayfa ve alti modul sunuluyor"
+          echo "sayfa ve $n dosya sunuluyor"
 
   # Erisilebilirlik, uygulamanin KULLANILDIGI ekranlarda olculur.
   #
@@ -90,10 +112,11 @@ jobs:
   # yok); ekran-yakala.mjs ile ayni sekilde anlik kuruluyorlar.
   erisim:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 39 sn
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
@@ -101,10 +124,37 @@ jobs:
         run: |
           set -e
           npm install --no-save --no-package-lock axe-core playwright-core
-          npx --yes playwright@1 install --with-deps chromium
+          # Tarayici, az once kurulan playwright-core'un KENDI CLI'siyla:
+          # `npx playwright@1` ayri cozulen bir surumdu ve farkli bir tarayici
+          # yapisi indirebiliyordu (makinede baska bir playwright varsa o).
+          npx playwright-core install --with-deps chromium
 
       - name: WCAG 2.1 AA, her ekranda
         run: node arac/erisim-denetle.mjs
+
+  # Uygulamayi gercek bir tarayicida KULLANIR: iki ekran genisliginde tam akis
+  # (konsol hatasi ve yatay tasma kirmizi), "Temizle"nin geri alinabilmesi ve
+  # yeni bir dagitimin sayfayi onceden acmis kullaniciya ulasmasi (servis
+  # iscisi). Son kontrol, ilk sw.js'in herkesi eski surumde tuttugu hatayi
+  # yakaliyor; ayrintisi betigin basinda.
+  tarayici:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 36 sn
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Tarayici
+        run: |
+          set -e
+          npm install --no-save --no-package-lock playwright-core
+          npx playwright-core install --with-deps chromium
+
+      - name: Akis, temizle/geri al, dagitim ve cevrimdisi
+        run: node arac/tarayici-dogrula.mjs
 
   # "Indirme yok" bu urunun bir vaadi, suslemesi degil: cocugun cizimi
   # cihazdan cikmamali. Iki ayri kontrol, cunku iki ayri yol var.
@@ -117,14 +167,17 @@ jobs:
   # YALNIZCA olcum.js icinde olmali.
   indirme-yok:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # olculen en uzun kosu 4 sn
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Cizimi dosyaya cevirip indiren bir yol yok
         run: |
           set -e
-          if grep -nE 'download=|toDataURL|toBlob|createObjectURL|showSaveFilePicker' \
-               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js olcum.js; then
+          # Uygulamanin butun dosyalari (testler haric). Elle yazilmis liste
+          # depo.js ve sw.js'i atliyordu; yeni bir modul de atlanirdi.
+          dosyalar="index.html $(ls *.js | grep -v '\.test\.js$')"
+          if grep -nE 'download=|toDataURL|toBlob|createObjectURL|showSaveFilePicker' $dosyalar; then
             echo
             echo "Yukaridaki satir cizimi bir dosyaya cevirip cihazdan cikarabilir."
             echo "Bilerek eklendiyse bu kontrolu guncelle; kazayla eklendiyse geri al."
@@ -146,7 +199,8 @@ jobs:
           # degildi. Sorun tek satir degil tutarsizlikti, o yuzden duzeltme de
           # tek satir degil: butun erisim depo.js'ten geciyor ve bu kontrol
           # baska bir dosyaya korumasiz cagri geri eklenmesini engelliyor.
-          if grep -n 'localStorage' index.html app.js hikayeler.js sahneler.js                turkce.js karakter.js olcum.js; then
+          dosyalar="index.html $(ls *.js | grep -v -e '\.test\.js$' -e '^depo\.js$')"
+          if grep -n 'localStorage' $dosyalar; then
             echo
             echo "depo.js disinda localStorage erisimi belirdi. Bunlar gizli"
             echo "sekmede firlatir ve sayfayi oldurur. depo.js'teki oku/yaz/sil/"
@@ -166,8 +220,10 @@ jobs:
       - name: Ag cagrisi yalnizca olcum.js icinde
         run: |
           set -e
-          if grep -nE 'fetch\(|XMLHttpRequest|sendBeacon|new WebSocket|EventSource' \
-               index.html app.js hikayeler.js sahneler.js turkce.js karakter.js; then
+          # olcum.js (suzgecli olcum) ve sw.js (yalniz event.request'i gecirir,
+          # ustteki "Servis iscisi" adimi denetliyor) bilerek disarida.
+          dosyalar="index.html $(ls *.js | grep -v -e '\.test\.js$' -e '^olcum\.js$' -e '^sw\.js$')"
+          if grep -nE 'fetch\(|XMLHttpRequest|sendBeacon|new WebSocket|EventSource' $dosyalar; then
             echo
             echo "olcum.js disinda bir ag cagrisi belirdi. Gizlilik suzgeci yalnizca"
             echo "olcum.js'ten gecen veriyi temizliyor; baska bir dosyadan cikan istek"

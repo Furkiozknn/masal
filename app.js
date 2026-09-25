@@ -3,6 +3,7 @@ import { METINLER, dilSec, hikayeUret } from './hikayeler.js';
 import { olay, yasGrubu } from './olcum.js';
 import { karakterSVG, varsayilanGorunum, TEN_RENKLERI, SAC_RENKLERI, SAC_TIPLERI } from './karakter.js';
 import { oku, yaz, sil, okuJSON, yazJSON } from './depo.js';
+import { adimEkle, sonAdimiAl, boyaliBolgeler } from './boyama.js';
 
 const $ = (id) => document.getElementById(id);
 // Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
@@ -15,7 +16,7 @@ let sayfaNo = 0;            // gorunur sayfalar icindeki sira (dala gore degisir
 let dal = null;             // 'a' | 'b' | null — secim noktasinda belirlenir
 let renk = RENKLER[6];
 let gorunum = varsayilanGorunum();   // acilista kayittan okunuyor (bkz. en alt)
-const gecmis = [];          // { anahtar, i, onceki } — geri al
+const gecmis = [];          // { anahtar, degisim } — geri al (bkz. boyama.js)
 
 // ---------- dil ----------
 function ui() { return METINLER[dil].ui; }
@@ -160,21 +161,23 @@ function boyaYukle() {
 }
 
 function geriAl() {
-  const a = anahtar();
-  for (let i = gecmis.length - 1; i >= 0; i--) {
-    if (gecmis[i].anahtar !== a) continue;
-    const [s] = gecmis.splice(i, 1);
-    const el = bolgeler()[s.i];
-    if (el) el.style.fill = s.onceki;
-    boyaKaydet();
-    return;
-  }
+  const degisim = sonAdimiAl(gecmis, anahtar());
+  if (!degisim) return;
+  const bs = bolgeler();
+  for (const [i, c] of Object.entries(degisim)) if (bs[i]) bs[i].style.fill = c;
+  boyaKaydet();
 }
 
+/** Temizle de bir adim: "Geri al"in hemen yaninda duruyor ve yanlislikla
+ *  dokunulan bir temizle bitmis resmi geri donussuz silmemeli. */
 function temizle() {
-  bolgeler().forEach((el) => { el.style.fill = ''; });
+  const bs = bolgeler();
+  adimEkle(gecmis, anahtar(), boyaliBolgeler(bs.map((el) => el.style.fill)));
+  bs.forEach((el) => { el.style.fill = ''; });
   sil(anahtar());
-  $('durum').textContent = '';
+  // Yalnizca metni silmek yetmiyordu: bitmis resimde temizlenen sayfada
+  // kutlama kutusu ve kimildayan sahne ('canli') acik kaliyordu.
+  durumYaz(0, bs.length);
 }
 
 // ---------- yasa gore okuma ----------
@@ -383,6 +386,7 @@ function oneriCiz(sonSayfada) {
       hikaye = hikayeUret({ ...kimlik, dil });
       dal = null;
       sayfaNo = 0;
+      sayfaCiz.sonBildirildi = false;   // yeni masal: bitisi ayrica sayilir
       sayfaCiz();
     };
     kaplar.appendChild(b);
@@ -493,7 +497,7 @@ function sayfaCiz() {
       let ilkDokunus = true;
       bolgeler().forEach((el, i) => {
         el.addEventListener('click', () => {
-          gecmis.push({ anahtar: anahtar(), i, onceki: el.style.fill || '' });
+          adimEkle(gecmis, anahtar(), { [i]: el.style.fill || '' });
           el.style.fill = renk;
           // sayfa basina yalnizca ilk dokunus sayilir: "kac kisi boyuyor" sorusu
           // toplam dokunus sayisiyla degil, boyamaya baslayan kisiyle olculur
