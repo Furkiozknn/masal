@@ -60,6 +60,7 @@ const KABUK = [
   './turkce.js',
   './karakter.js',
   './depo.js',
+  './boyama.js',
   './olcum.js',
   './manifest.webmanifest',
 ];
