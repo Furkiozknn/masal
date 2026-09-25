@@ -66,7 +66,7 @@ Arayuze dokunan bir degisiklikte gercek tarayici denetimlerini de kostur
 
 ```
 npm install --no-save --no-package-lock playwright-core axe-core
-npx --yes playwright@1 install chromium
+npx playwright-core install chromium
 node arac/tarayici-dogrula.mjs
 node arac/erisim-denetle.mjs
 ```

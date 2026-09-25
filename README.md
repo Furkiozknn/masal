@@ -109,7 +109,7 @@ kuruluyorlar:
 
 ```
 npm install --no-save --no-package-lock playwright-core axe-core
-npx --yes playwright@1 install chromium
+npx playwright-core install chromium
 node arac/tarayici-dogrula.mjs   # 390 ve 1012 px'te tam akış, temizle/geri al, dağıtım + çevrimdışı
 node arac/erisim-denetle.mjs     # altı ekran, WCAG 2.1 AA
 ```
@@ -196,7 +196,8 @@ form, okuyucu, boyanmış sayfa, seçim ekranı, son sayfa ve kitaplık.
 | Yerelde değişiklik görünmüyor | `python -m http.server` yerine `python3 sunucu.py` kullanın (önbellek kapalı) |
 | "Dinle" düğmesi yok | Cihazda o dilde konuşma sesi yüklü değil. Türkçe sesi olmayan masaüstlerinde normal, telefon ve tablette standart |
 | Boyamalar ya da kitaplık kayboldu | Kayıt yalnızca o tarayıcıda. Gizli sekmede, site verisi silinince ya da başka cihazda yoktur |
-| Tarayıcı denetimi `playwright gerekiyor` diyor | Test bölümündeki `npm install --no-save …` ve `npx playwright install` adımları |
+| Tarayıcı denetimi `playwright gerekiyor` diyor | Test bölümündeki `npm install --no-save …` ve `npx playwright-core install chromium` adımları |
+| Tarayıcı denetimi `Executable doesn't exist` diyor | Tarayıcı, kurulu `playwright-core` sürümüne ait değil. `npx playwright-core install chromium` komutunu tekrar çalıştırın ya da hazır bir Chromium verin: `PW_CHROMIUM_PATH=/yol/chrome node arac/tarayici-dogrula.mjs` |
 
 ## Bilinen sınırlar
 

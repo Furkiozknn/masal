@@ -1,7 +1,7 @@
 // Uygulamayi gercek bir tarayicida kullanir ve bir cocugun/ebeveynin
 // karsilasacagi uc seyi denetler:
 //
-//     npx --yes playwright@1 install chromium     (bir kez)
+//     npx playwright-core install chromium     (bir kez)
 //     node arac/tarayici-dogrula.mjs
 //
 // 1. AKIS, IKI EKRAN GENISLIGINDE (390 telefon, 1012 tablet/masaustu)
@@ -193,7 +193,7 @@ async function main() {
   if (!pw) {
     console.log('playwright gerekiyor; bu deponun bagimliligi degil:');
     console.log('  npm install --no-save --no-package-lock playwright-core');
-    console.log('  npx --yes playwright@1 install chromium');
+    console.log('  npx playwright-core install chromium');
     return 2;
   }
   const tarayici = await pw.chromium.launch(

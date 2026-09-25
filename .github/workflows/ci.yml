@@ -108,7 +108,10 @@ jobs:
         run: |
           set -e
           npm install --no-save --no-package-lock axe-core playwright-core
-          npx --yes playwright@1 install --with-deps chromium
+          # Tarayici, az once kurulan playwright-core'un KENDI CLI'siyla:
+          # `npx playwright@1` ayri cozulen bir surumdu ve farkli bir tarayici
+          # yapisi indirebiliyordu (makinede baska bir playwright varsa o).
+          npx playwright-core install --with-deps chromium
 
       - name: WCAG 2.1 AA, her ekranda
         run: node arac/erisim-denetle.mjs
@@ -131,7 +134,7 @@ jobs:
         run: |
           set -e
           npm install --no-save --no-package-lock playwright-core
-          npx --yes playwright@1 install --with-deps chromium
+          npx playwright-core install --with-deps chromium
 
       - name: Akis, temizle/geri al, dagitim ve cevrimdisi
         run: node arac/tarayici-dogrula.mjs
