@@ -29,8 +29,21 @@ jobs:
       # Bagimlilik yok: uygulama da testler de duz ESM, node:test ile kosuyor.
       # `npm ci` adimi bilerek yok - kuracak bir sey olmadigi icin eklenirse
       # her kosuda "no package-lock.json" ile duser.
+      # `node --test` hic test bulamazsa "tests 0" yazip 0 ile cikiyor (Node 22'de
+      # denendi). Test dosyalarinin adi ya da yeri degisirse kosu yesil kalir ama
+      # hicbir sey sinanmamis olur. Taban o sessiz kaybi kirmiziya cevirir; test
+      # eklemek tabani degistirmeyi gerektirmez, test SILMEK gerektirir.
+      # Ozet satiri raporlayiciya gore degisiyor (Node 20/22 TAP "# tests N",
+      # Node 24 spec "i tests N"), o yuzden onege bakilmiyor.
       - name: Testler
-        run: node --test
+        env:
+          TEST_TABANI: "108"
+        run: |
+          set -euo pipefail
+          node --test 2>&1 | tee test-ciktisi.txt
+          sayi=$(grep -E "(^|[^a-zA-Z])tests [0-9]+" test-ciktisi.txt | tail -1 | grep -oE "[0-9]+$")
+          echo "kosan test: ${sayi:-0}, taban: $TEST_TABANI"
+          test "${sayi:-0}" -ge "$TEST_TABANI"
 
       # app.js ve karakter.js hicbir testin import etmedigi iki dosya:
       # testler onlara dokunmadigi icin bozuk bir sozdizimi yesil kosudan
