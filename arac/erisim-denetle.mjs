@@ -1,6 +1,6 @@
 // Erisilebilirligi, uygulamanin KULLANILDIGI ekranlarda olcer.
 //
-//     npx --yes playwright@1 install chromium     (bir kez)
+//     npx playwright-core install chromium     (bir kez)
 //     node arac/erisim-denetle.mjs
 //
 // NEDEN VAR. README "Lighthouse mobil: erisilebilirlik ... 100" diyordu ve
@@ -89,7 +89,7 @@ async function main() {
   if (!axeYol || !pw) {
     console.log('axe-core ve playwright gerekiyor; bu deponun bagimliligi degiller:');
     console.log('  npm install --no-save axe-core playwright');
-    console.log('  npx --yes playwright@1 install chromium');
+    console.log('  npx playwright-core install chromium');
     return 2;
   }
   const axeKaynak = fs.readFileSync(axeYol, 'utf8');

@@ -8,11 +8,24 @@
  * uygulamanın uçakta, arabada, modem kapalıyken açılamaması küçük bir kusur
  * değil; kullanımın tam olduğu an orası.
  *
- * TASARIM
- * -------
+ * TASARIM: önce ağ, ağ yoksa önbellek
+ * ------------------------------------
  * Uygulama kabuğu (index.html ve bütün modüller) kurulumda önbelleğe alınıyor.
- * Sonrasında aynı kaynaktan gelen her istek önce önbellekten, bulunamazsa
- * ağdan karşılanıyor.
+ * Sonrasında aynı kaynaktan gelen her istek ÖNCE AĞDAN isteniyor; başarılı
+ * yanıt önbelleği de tazeliyor. Ağ yoksa (uçak modu, modem kapalı) aynı istek
+ * önbellekten karşılanıyor.
+ *
+ * İlk sürüm tersini yapıyordu: önce önbellek. Önbellek adı da sabitti. Tarayıcı
+ * servis işçisini yalnızca sw.js'in KENDİSİ değişince yeniliyor; app.js ya da
+ * index.html değişince değil. Sonuç: sayfayı bir kez açmış herkes sonraki her
+ * dağıtımda eski uygulamayı görmeye devam ediyordu, ve bu gerçekten oldu --
+ * servis işçisinden iki saat sonra index.html'e giren kontrast düzeltmesi
+ * (a8aeef9) önceden ziyaret etmiş hiçbir cihaza ulaşmadı. `sw.test.js` bunu
+ * kilitliyor: ağ yeni sürümü verirken yanıt önbellekteki eski sürüm olamaz.
+ *
+ * Önce-ağ, sürüm numarasını elle artırmayı hatırlamaya da dayanmıyor. SURUM
+ * yalnızca önbellekteki dosyaların BİÇİMİ değişirse artırılır; her dağıtımda
+ * değil.
  *
  * GİZLİLİK — bu dosyanın en önemli kuralı
  * ---------------------------------------
@@ -28,7 +41,9 @@
  * uygulamada bile yanlış olurdu.
  */
 
-const SURUM = 'masal-v1';
+// v2: önce-önbellek -> önce-ağ. Artırılması, v1'in içinde takılı kalmış eski
+// dosyaları etkinleşmede siliyor (bkz. 'activate').
+const SURUM = 'masal-v2';
 
 /*
  * Kabuğun tamamı. Elle yazılmış bir liste sessizce eskiyor -- bir modül eklenip
@@ -45,6 +60,7 @@ const KABUK = [
   './turkce.js',
   './karakter.js',
   './depo.js',
+  './boyama.js',
   './olcum.js',
   './manifest.webmanifest',
 ];
@@ -81,22 +97,26 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(istek).then((vurgun) => {
-      if (vurgun) return vurgun;
-      // `istek` sayfanın kendi nesnesi; burada yeni bir adres kurulmuyor.
-      return fetch(istek).then((yanit) => {
-        // Yalnızca gerçekten başarılı, aynı kaynaklı yanıtlar saklanır.
+    // `istek` sayfanın kendi nesnesi; burada yeni bir adres kurulmuyor.
+    fetch(istek)
+      .then((yanit) => {
+        // Yalnızca gerçekten başarılı, aynı kaynaklı yanıtlar saklanır. 404 ya
+        // da 500 sayfaya olduğu gibi gider ama önbellekteki sağlam kopyayı ezmez.
         if (yanit && yanit.status === 200 && yanit.type === 'basic') {
           const kopya = yanit.clone();
-          caches.open(SURUM).then((c) => c.put(istek, kopya));
+          caches.open(SURUM).then((c) => c.put(istek, kopya)).catch(() => {});
         }
         return yanit;
-      }).catch(() => {
-        // Ağ yok ve önbellekte de yok: gezinme isteklerinde kabuğu ver,
-        // böylece uygulama boş sayfa yerine kendisini açar.
-        if (istek.mode === 'navigate') return caches.match('./index.html');
-        return Response.error();
-      });
-    })
+      })
+      .catch(() =>
+        // Ağ yok: önbellekteki sürüm. O da yoksa ve bu bir gezinmeyse kabuğu
+        // ver (ör. `?utm_source=...` ile gelen link), böylece uygulama boş
+        // sayfa yerine kendisini açar.
+        caches.match(istek).then((vurgun) => {
+          if (vurgun) return vurgun;
+          if (istek.mode === 'navigate') return caches.match('./index.html');
+          return Response.error();
+        })
+      )
   );
 });

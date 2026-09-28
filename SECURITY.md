@@ -2,9 +2,18 @@
 
 ## Desteklenen surumler
 
-Bu proje icin yalnizca **varsayilan dalin ($ana) son hali** desteklenir.
-Eski etiketlere geriye donuk yama uygulanmaz; guvenlik duzeltmesi her
-zaman ileriye dogru, yeni bir surumle yayinlanir.
+Bu proje GitHub Pages'te `master` dalindan yayinlanan bir web uygulamasi;
+yalnizca **`master`'in son hali** (yani canli site) desteklenir. Duzeltme
+`master`'a girdigi anda yayina cikar.
+
+## Kapsam icinde ozellikle
+
+Bu bir cocuk uygulamasi ve verdigi sozler guvenlik konusu sayilir:
+
+- Cocuga ait bir verinin (ad, sehir, kahramanin gorunumu, boyama) cihazdan
+  cikmasi -- ag istegi, servis iscisi, indirme ya da baska bir yolla.
+- Kullanici girdisinin (ad, sehir) sayfaya HTML olarak girmesi (XSS).
+- `olcum.js` gizlilik suzgecini atlatan bir alan.
 
 ## Acik bildirimi
 
@@ -28,7 +37,7 @@ Faydali bir bildirim su dordunu icerir:
 - **Yeniden uretme adimlari.** Mumkunse en kucuk calisan ornek.
 - **Etki.** Saldirgan bu acikla ne yapabiliyor -- veri okuma, kod
   calistirma, servis disi birakma?
-- **Ortam.** Isletim sistemi, calisma zamani surumu.
+- **Ortam.** Tarayici ve surumu, isletim sistemi.
 
 ## Sureclerin takvimi
 
