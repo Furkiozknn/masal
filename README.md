@@ -4,6 +4,9 @@
 
 [![CI](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml/badge.svg)](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml)
 
+<p align="center"><img src="docs/reel/reel.gif" alt="masal - 15 saniyelik tanıtım videosu" width="720"></p>
+<p align="center"><sub><a href="docs/reel/reel.mp4">Sesli MP4 sürümü</a></sub></p>
+
 Çocuğun **adına, yaşına ve şehrine göre** yazılan uyku öncesi masalı; sayfaların
 içine gömülü **boyama alanlarıyla** birlikte tarayıcıda.
 
