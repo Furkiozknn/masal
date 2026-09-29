@@ -82,10 +82,17 @@ function renkSec(ad, sayaclar) {
   return R.acikMavi;                       // yeni bolge eklenirse gorunur kalsin
 }
 
+// Govde tuketilmezse Node 24'te undici HTTP/1.0 baglanti kapanisinda AssertionError ile dusuyor.
+async function hazirMi(adres) {
+  const r = await fetch(adres);
+  await r.arrayBuffer();
+  return r.ok;
+}
+
 async function sunucuBaslat() {
   const p = spawn('python3', ['sunucu.py', String(PORT)], { cwd: KOK, stdio: 'ignore' });
   for (let i = 0; i < 40; i++) {
-    try { if ((await fetch(ADRES)).ok) return p; } catch {}
+    try { if (await hazirMi(ADRES)) return p; } catch {}
     await bekle(250);
   }
   p.kill(); throw new Error(`sunucu ${PORT} portunda acilmadi`);
@@ -135,7 +142,7 @@ try {
   const sayfa = await baglam.newPage();
   await boyanabilirSayfayaGit(sayfa, { ad: 'Elif', sehir: 'İzmir', yas: 6, tema: 'deniz' });
   const n = await boya(sayfa);
-  await bekle(500);
+  await bekle(2000)   // resim bitince oynayan renk akisi bitsin;
   await sayfa.locator('#okuyucuEkran').screenshot({
     path: path.join(KOK, 'assets', 'ekran-goruntusu.png'),
   });

@@ -149,3 +149,32 @@ test('metinHtml kullanici girdisini kaciriyor, metin duz kaliyor', () => {
     assert.ok(!/<b>|<\/b>|&lt;/.test(s.metin), `duz metne isaret sizmis: ${s.metin}`);
   }
 });
+
+// ---- Yenileme: dil kabugu ----
+// Arayuz dili tarayicidan gelir: tr* Turkce, gerisi Ingilizce (masal metinlerinin
+// iki dilde de sablonu var). Kayitli tercih tarayici dilinden once gelir; bunu
+// app.js'te `dilSec(oku('masal:dil'))` yapiyor, burada dilSec'in kendi kurali sinaniyor.
+test('dilSec: tr-TR, TR ve tr Turkce; diger her sey Ingilizce', () => {
+  for (const kod of ['tr', 'tr-TR', 'TR', 'tr_TR']) assert.equal(dilSec(kod), 'tr', kod);
+  for (const kod of ['en', 'en-US', 'de-DE', 'ar', 'zz']) assert.equal(dilSec(kod), 'en', kod);
+});
+
+test('dilSec: istenen dil yoksa da cokmuyor (Node 20 navigator tasimaz)', () => {
+  assert.ok(['tr', 'en'].includes(dilSec()));
+  assert.ok(['tr', 'en'].includes(dilSec(null)));
+  assert.ok(['tr', 'en'].includes(dilSec('')));
+});
+
+for (const d of diller) {
+  test(`${d}: kabuk metinleri (ilk ekran, masal sonu, altbilgi) dolu`, () => {
+    const u = METINLER[d].ui;
+    assert.equal(u.guven.length, 3, `${d}: guven satiri uc madde olmali`);
+    for (const m of u.guven) assert.ok(m.trim(), `${d}: bos guven maddesi`);
+    for (const k of ['atla', 'dilEtiket', 'kahramanOzel', 'kahramanIstege', 'ilerlemeEtiket',
+      'boyandiKisa', 'sonBaslik', 'sonAlt', 'bastanOku', 'altYazi']) {
+      assert.ok(typeof u[k] === 'string' && u[k].trim(), `${d}: ui.${k} bos`);
+    }
+    // masal sonu karti cocugun adiyla kapanir; yer tutucu kaybolursa ad gorunmez
+    assert.ok(u.sonBaslik.includes('{ad}'), `${d}: sonBaslik {ad} tasimali`);
+  });
+}

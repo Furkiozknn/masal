@@ -44,10 +44,17 @@ function yukle(ad) {
   try { return require(ad); } catch { return null; }
 }
 
+// Govde tuketilmezse Node 24'te undici HTTP/1.0 baglanti kapanisinda AssertionError ile dusuyor.
+async function hazirMi(adres) {
+  const r = await fetch(adres);
+  await r.arrayBuffer();
+  return r.ok;
+}
+
 async function sunucuBaslat() {
   const p = spawn('python3', ['sunucu.py', String(PORT)], { cwd: KOK, stdio: 'ignore' });
   for (let i = 0; i < 40; i++) {
-    try { if ((await fetch(ADRES)).ok) return p; } catch {}
+    try { if (await hazirMi(ADRES)) return p; } catch {}
     await bekle(250);
   }
   p.kill();
@@ -106,6 +113,14 @@ async function main() {
 
     await sayfa.goto(ADRES, { waitUntil: 'networkidle' });
     await denetle(sayfa, axeKaynak, 'form ekrani');
+
+    // Yenileme: kahraman ayarlari acikken ve Ingilizce arayuzde de denetle
+    await sayfa.click('details.ozel summary');
+    await denetle(sayfa, axeKaynak, 'form, kahraman ayarlari acik');
+    await sayfa.click('details.ozel summary');
+    await sayfa.selectOption('#dilSec', 'en');
+    await denetle(sayfa, axeKaynak, 'form, Ingilizce arayuz');
+    await sayfa.selectOption('#dilSec', 'tr');
 
     await sayfa.fill('#ad', 'Elif');
     await sayfa.fill('#sehir', 'Trabzon');

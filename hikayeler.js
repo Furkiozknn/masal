@@ -31,6 +31,13 @@ export const METINLER = {
       tenSec: 'ten tonu', sacSec: 'saç rengi',
       renkAdlari: ['kırmızı','turuncu','sarı','açık yeşil','yeşil','açık mavi','mavi','mor','kahverengi','pembe','krem','siyah'],
       adGerekli: 'Lütfen çocuğun adını yaz.',
+      // kabuk (yenileme): ilk ekran, ilerleme, masal sonu, altbilgi
+      atla: 'Ana içeriğe geç', dilEtiket: 'Dil',
+      guven: ['Kayıt yok', 'İndirme yok', 'Veri cihazdan çıkmaz'],
+      kahramanOzel: 'Kahramanı özelleştir', kahramanIstege: 'isteğe bağlı',
+      ilerlemeEtiket: 'Boyama ilerlemesi', boyandiKisa: 'bölge boyandı',
+      sonBaslik: 'İyi geceler, {ad}!', sonAlt: 'Masal bitti. Yarın seni yeni bir masal bekliyor.',
+      bastanOku: 'Baştan oku', altYazi: 'yapımı',
     },
     temalar: { deniz: 'Deniz', orman: 'Orman', yildizlar: 'Yıldızlar', kar: 'Kar',
                yagmur: 'Yağmur', bahce: 'Bahçe' },
@@ -144,6 +151,13 @@ export const METINLER = {
       tenSec: 'skin tone', sacSec: 'hair colour',
       renkAdlari: ['red','orange','yellow','light green','green','light blue','blue','purple','brown','pink','cream','black'],
       adGerekli: 'Please enter the child\'s name.',
+      // shell (redesign): first screen, progress, story end, footer
+      atla: 'Skip to main content', dilEtiket: 'Language',
+      guven: ['No sign-up', 'No downloads', 'Nothing leaves the device'],
+      kahramanOzel: 'Customise the hero', kahramanIstege: 'optional',
+      ilerlemeEtiket: 'Colouring progress', boyandiKisa: 'areas coloured',
+      sonBaslik: 'Sleep well, {ad}!', sonAlt: 'The end. Another story is waiting for you tomorrow.',
+      bastanOku: 'Read again', altYazi: 'project',
     },
     temalar: { deniz: 'The sea', orman: 'The forest', yildizlar: 'The stars', kar: 'The snow',
                yagmur: 'The rain', bahce: 'The garden' },
@@ -238,7 +252,9 @@ export const METINLER = {
 
 /** Tarayici dilinden desteklenen dili sec. */
 export function dilSec(istenen) {
-  const kod = (istenen || navigator.language || 'en').slice(0, 2).toLowerCase();
+  // Node 20'de `navigator` yok; ad verilmeden cagrilirsa ReferenceError olmasin.
+  const tarayici = typeof navigator !== 'undefined' ? navigator.language : '';
+  const kod = (istenen || tarayici || 'en').slice(0, 2).toLowerCase();
   return METINLER[kod] ? kod : 'en';
 }
 

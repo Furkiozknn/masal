@@ -188,8 +188,6 @@
                                   transform-box:fill-box; transform-origin:center}
 
   /* Sayfa gecisi: metin ve resim yumusak girsin */
-  @keyframes sayfa-gir{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
-  .sayfa-gecis{animation:sayfa-gir .34s ease}
 
   @media (prefers-reduced-motion:reduce){
     svg.sahne .kar-tanesi, svg.sahne .dusen-yaprak,
@@ -225,23 +223,122 @@
     figure.boyama{margin-left:-1.1rem; margin-right:-1.1rem;
                   border-left:0; border-right:0; border-radius:0}
   }
+  /* ================= YENILEME (29.09.2026) =================
+     Urunun kimligi (sicak kagit, Georgia, terracotta) aynen duruyor. Eklenenler:
+     dokunma hedefleri >= 44px, odak halkasi, boyama geri bildirimi, sayfa
+     itmesi, masal sonu ekrani. Video sisteminden (sosyal/uret) alinanlar:
+     sahne.js `iris` (dairesel acilis, 0.45 sn) ve `yatay`/`itme` (yumusak itme,
+     expo cikis); tema.mjs "kagit" temasinin sakin renk akisi (#ffd9cf #fff0b3
+     #d9f2dc #d6e4ff). glitch/flas/blok gibi sert gecisler bilerek alinmadi. */
+  :focus-visible{outline:3px solid #1f45c9; outline-offset:2px}
+  .atla{position:absolute; left:.6rem; top:-4rem; background:var(--murekkep); color:#fff;
+        min-height:44px; display:inline-flex; align-items:center; padding:.4rem 1rem; border-radius:9px; z-index:10; text-decoration:none; font-size:.9rem}
+  .atla:focus{top:.6rem}
+  main:focus,h2[tabindex]:focus{outline:none}
+  .dugme,.renk,.arac,.sac-tipi,.gorunum-nokta,.kitap-sil{transition:transform .12s ease, filter .12s ease}
+  .dugme:active,.renk:active,.arac:active,.sac-tipi:active,.gorunum-nokta:active{transform:scale(.95)}
+  .dugme{min-height:48px}
+  .dugme.buyuk{width:100%; min-height:58px; font-size:1.15rem; border-radius:14px;
+               box-shadow:0 3px 0 #8f3f1f}
+  .dugme.buyuk:active{box-shadow:0 1px 0 #8f3f1f; transform:translateY(2px)}
+  select#dilSec{min-height:44px; padding:.4rem .6rem}
+  input,select{min-height:48px}
+
+  .guven{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.4rem}
+  .guven li{font-size:.78rem; color:#5f574d; background:#f4efe4; border-radius:999px; padding:.3rem .75rem}
+  details.ozel{border:1px solid var(--kenar); border-radius:12px; background:#fff}
+  details.ozel summary{display:flex; align-items:center; gap:.7rem; cursor:pointer; min-height:56px;
+                       padding:.4rem .8rem; list-style:none; font-size:.92rem}
+  details.ozel summary::-webkit-details-marker{display:none}
+  details.ozel summary::after{content:"+"; margin-left:auto; font-size:1.4rem; color:var(--soluk); line-height:1}
+  details.ozel[open] summary::after{content:"\2212"}
+  details.ozel summary .onizleme{width:34px; order:-1}
+  details.ozel .gorunum{border:0; border-top:1px solid var(--kenar); border-radius:0 0 12px 12px}
+
+  /* 27px/32px yuvarlaklar cocuk parmagi icin kucuktu: gorunen nokta ayni,
+     dokunma alani 44px. Halka noktanin hemen etrafinda (outline-offset negatif). */
+  .gorunum-nokta{width:44px; height:44px; padding:8px; background-clip:content-box; border:0;
+                 box-shadow:none; margin:-4px; outline:1px solid var(--soluk); outline-offset:-8px}
+  .gorunum-nokta[aria-pressed="true"]{box-shadow:none; transform:none;
+                 outline:3px solid var(--murekkep); outline-offset:-6px}
+  .sac-tipi{min-height:44px; padding:.4rem .9rem}
+  .renk{width:44px; height:44px}
+  .arac{min-height:44px; padding:.4rem .9rem; font-size:.85rem}
+  .kitap-sil{min-height:44px}
+  .gezinti .dugme{white-space:nowrap; padding:.75rem 1rem}
+
+  /* boyama: dokunulan bolge kisa bir "pop" yapar, ilerleme cubugu dolar */
+  svg.sahne .b.pop{animation:pop .24s ease-out; transform-box:fill-box; transform-origin:center}
+  @keyframes pop{0%{transform:scale(.97)} 55%{transform:scale(1.035)} 100%{transform:scale(1)}}
+  .ilerleme{height:10px; background:var(--kenar); border-radius:6px; overflow:hidden; margin:.7rem .2rem .1rem}
+  .ilerleme i{display:block; height:100%; width:0; background:var(--vurgu); border-radius:6px;
+              transition:width .3s ease}
+  figure.boyama.bitti .ilerleme i{background:linear-gradient(90deg,#e8574a,#f2a03d,#f5d547,#5aa469,#3d7ea6,#8e6bbf)}
+  /* resim bitince kagit renk akisi: cerceve sirayla mercan, sari, yesil, mavi yanip soner */
+  figure.boyama.bitti{animation:odul 1.6s ease-out}
+  @keyframes odul{
+    0%{box-shadow:0 0 0 0 #ffd9cf}
+    25%{box-shadow:0 0 0 9px #fff0b3}
+    50%{box-shadow:0 0 0 12px #d9f2dc}
+    75%{box-shadow:0 0 0 9px #d6e4ff}
+    100%{box-shadow:0 0 0 0 rgba(214,228,255,0)}
+  }
+
+  /* sayfa cevirme: iris'in yumusak kardesi, yatay itme + belirme (yon --kay ile) */
+  @keyframes sayfa-gir{
+    from{opacity:0; transform:translate(var(--kay,0px),10px)}
+    to{opacity:1; transform:none}
+  }
+  .sayfa-gecis{animation:sayfa-gir .4s cubic-bezier(.16,1,.3,1)}
+  /* itme sirasinda icerik kartin disina tasmasin: yatay kaydirma cubugu cikmasin */
+  .kart{overflow-x:clip}
+
+  /* masal sonu: ay ve yildizlar, dairesel acilis (sahne.js iris) */
+  .son-kart{display:flex; align-items:center; gap:1rem; padding:1rem 1.1rem; border-radius:16px;
+            background:linear-gradient(135deg,#d6e4ff 0%,#fff0b3 100%);
+            animation:iris-ac .9s cubic-bezier(.45,0,.2,1) backwards}
+  @keyframes iris-ac{from{clip-path:circle(0% at 15% 50%)} to{clip-path:circle(150% at 15% 50%)}}
+  .son-ay{width:78px; height:78px; flex:none}
+  .son-ay .yildiz{animation:parilti 3s ease-in-out infinite var(--gecikme,0s)}
+  .son-yazi{flex:1; min-width:0}
+  .son-yazi h3{margin:0; font-family:Georgia,serif; font-weight:normal; font-size:1.3rem; color:var(--murekkep)}
+  .son-yazi p{margin:.25rem 0 .7rem; font-size:.88rem; color:#4a453e; line-height:1.5}
+  .son-yazi .dugme{min-height:44px; padding:.5rem 1.1rem; font-size:.92rem}
+
+  footer.alt{background:#0e0d0b; color:#f1ece2; text-align:center; font-size:.78rem; padding:.9rem 1rem;
+             font-family:ui-monospace,Consolas,"Courier New",monospace; letter-spacing:.02em}
+  footer.alt a{color:#ffc21a; text-underline-offset:3px}
+
+  @media (max-width:520px){
+    .son-kart{flex-direction:column; text-align:center}
+    .gezinti{gap:.4rem}
+    .gezinti .orta{font-size:.74rem; text-align:center}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .dugme,.renk,.arac,.sac-tipi,.gorunum-nokta{transition:none}
+    .dugme:active,.renk:active,.arac:active,.sac-tipi:active,.gorunum-nokta:active{transform:none}
+    svg.sahne .b.pop, figure.boyama.bitti, .son-kart, .son-ay .yildiz, .sayfa-gecis{animation:none}
+    .ilerleme i{transition:none}
+  }
 </style>
 </head>
 <body>
 
+<a class="atla" id="atla" href="#ana">Ana içeriğe geç</a>
 <header>
   <h1 id="ustBaslik">Masal</h1>
   <span class="kucuk" id="ustBilgi"></span>
-  <select id="dilSec" aria-label="dil"></select>
+  <select id="dilSec" aria-label="Dil"></select>
 </header>
 
-<main>
+<main id="ana" tabindex="-1">
   <!-- 1. ekran: form. Metinler Turkce statik yazili: JS yuklenene kadar sayfa
        bos gorunmesin (duzen kaymasi) ve arama motoru JS calistirmadan icerik gorsun.
        app.js acilista secili dile gore hepsini yeniden yaziyor. -->
   <section class="kart" id="formEkran">
-    <h2 id="fBaslik">Çocuğunuza özel masal</h2>
+    <h2 id="fBaslik" tabindex="-1">Çocuğunuza özel masal</h2>
     <p class="aciklama" id="fAciklama">Adını, yaşını ve şehrini yaz. Masal ona göre yazılsın.</p>
+    <ul class="guven" id="guven"><li>Kayıt yok</li><li>İndirme yok</li><li>Veri cihazdan çıkmaz</li></ul>
     <form class="alanlar" id="form">
       <label class="genis">
         <span id="lAd">Çocuğun adı</span>
@@ -261,18 +358,23 @@
       </label>
       <!-- Kahramanin gorunumu. Fotograf istenmiyor: secim elle yapiliyor,
            hicbir gorsel cihazdan cikmiyor. -->
-      <div class="genis gorunum">
-        <div class="gorunum-secimler">
-          <span class="gorunum-baslik" id="gorunumBaslik">Kahramanın görünümü</span>
-          <div class="gorunum-satir" id="tenSecim" role="group" aria-label="ten rengi"></div>
-          <div class="gorunum-satir" id="sacSecim" role="group" aria-label="saç rengi"></div>
-          <div class="gorunum-satir" id="sacTipiSecim" role="group" aria-label="saç"></div>
+      <details class="genis ozel">
+        <summary>
+          <svg class="onizleme" id="kahramanOnizleme" viewBox="-32 -92 64 98" aria-hidden="true"></svg>
+          <span><span id="gorunumBaslik">Kahramanı özelleştir</span>
+            <span class="kucuk" id="gorunumIstege">isteğe bağlı</span></span>
+        </summary>
+        <div class="gorunum">
+          <div class="gorunum-secimler">
+            <div class="gorunum-satir" id="tenSecim" role="group" aria-label="ten rengi"></div>
+            <div class="gorunum-satir" id="sacSecim" role="group" aria-label="saç rengi"></div>
+            <div class="gorunum-satir" id="sacTipiSecim" role="group" aria-label="saç"></div>
+          </div>
         </div>
-        <svg class="onizleme" id="kahramanOnizleme" viewBox="-32 -92 64 98" aria-hidden="true"></svg>
-      </div>
+      </details>
 
       <div class="genis hata" id="hata"></div>
-      <div class="genis"><button class="dugme" id="olustur" type="submit">Masalı oluştur</button></div>
+      <div class="genis"><button class="dugme buyuk" id="olustur" type="submit">Masalı oluştur</button></div>
     </form>
 
     <!-- Kitaplik: okunan masallar birikir, kaldigi sayfadan devam edilir.
@@ -285,11 +387,25 @@
 
   <!-- 2. ekran: okuyucu -->
   <section class="kart" id="okuyucuEkran" hidden>
-    <h2 id="hBaslik"></h2>
-    <p class="metin" id="hMetin"></p>
+    <h2 id="hBaslik" tabindex="-1"></h2>
+    <p class="metin" id="hMetin" aria-live="polite"></p>
     <!-- Sesli okuma: tarayicinin kendi konusma motoru. O dilde ses yuklu degilse
          (ornegin Turkce sesi olmayan bir Windows) dugme hic gorunmez. -->
     <div><button class="dugme sade sesli" id="sesli" type="button" hidden></button></div>
+
+    <!-- Masal sonu: iyi geceler karti. Yalnizca son sayfada gorunur. -->
+    <div class="son-kart" id="sonKart" hidden>
+      <svg class="son-ay" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M62 14a38 38 0 1 0 24 62 31 31 0 0 1-24-62z" fill="#f2c94c" stroke="#2c2a26" stroke-width="3" stroke-linejoin="round"/>
+        <path class="yildiz" style="--gecikme:0s" d="M78 20l2.6 6.4 6.4 2.6-6.4 2.6L78 38l-2.6-6.4-6.4-2.6 6.4-2.6z" fill="#fff" stroke="#2c2a26" stroke-width="2" stroke-linejoin="round"/>
+        <path class="yildiz" style="--gecikme:1.1s" d="M86 52l1.7 4.3 4.3 1.7-4.3 1.7L86 64l-1.7-4.3-4.3-1.7 4.3-1.7z" fill="#fff" stroke="#2c2a26" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <div class="son-yazi">
+        <h3 id="sonBaslik"></h3>
+        <p id="sonAlt"></p>
+        <button class="dugme sade" id="bastan" type="button">Baştan oku</button>
+      </div>
+    </div>
 
     <!-- Secim noktasi: cocuk hikayeyi yonlendirir. Secilmeden ileri gidilemez. -->
     <div class="secim" id="secim" hidden>
@@ -304,7 +420,8 @@
       <figcaption id="boyaIpucu"></figcaption>
       <svg class="sahne" id="sahne" viewBox="0 0 400 260" role="img" aria-labelledby="boyaIpucu"></svg>
       <div class="palet" id="palet"></div>
-      <div class="durum" id="durum"></div>
+      <div class="ilerleme" id="ilerleme" role="progressbar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><i></i></div>
+      <div class="durum" id="durum" role="status"></div>
     </figure>
 
     <div class="noktalar" id="noktalar"></div>
@@ -323,6 +440,8 @@
     <div style="text-align:center"><button class="dugme sade" id="yeniden"></button></div>
   </section>
 </main>
+
+<footer class="alt"><a href="https://github.com/Furkiozknn" rel="noopener noreferrer">FRK-OS</a> <span id="altYazi">yapımı</span></footer>
 
 <script type="module" src="./app.js"></script>
 <script>

@@ -38,7 +38,7 @@ jobs:
       # Node 24 spec "i tests N"), o yuzden onege bakilmiyor.
       - name: Testler
         env:
-          TEST_TABANI: "108"
+          TEST_TABANI: "125"
         run: |
           set -euo pipefail
           node --test 2>&1 | tee test-ciktisi.txt
