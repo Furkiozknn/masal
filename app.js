@@ -15,6 +15,7 @@ let kimlik = null;          // { ad, yas, sehir, tema } — kayit anahtarinin pa
 let sayfaNo = 0;            // gorunur sayfalar icindeki sira (dala gore degisir)
 let dal = null;             // 'a' | 'b' | null — secim noktasinda belirlenir
 let renk = RENKLER[6];
+let yon = 0;                // sayfa cevirme yonu: 1 ileri, -1 geri, 0 diger (bkz. gecisAnimasyonu)
 let gorunum = varsayilanGorunum();   // acilista kayittan okunuyor (bkz. en alt)
 const gecmis = [];          // { anahtar, degisim } — geri al (bkz. boyama.js)
 
@@ -55,6 +56,13 @@ function metinleriYaz() {
   $('ileri').textContent = t.ileri + ' ›';
   $('yeniden').textContent = t.yeniden;
   $('boyaIpucu').textContent = t.boyaIpucu;
+  $('atla').textContent = t.atla;
+  $('dilSec').setAttribute('aria-label', t.dilEtiket);
+  $('guven').innerHTML = t.guven.map((x) => `<li>${x}</li>`).join('');
+  $('gorunumIstege').textContent = `· ${t.kahramanIstege}`;
+  $('ilerleme').setAttribute('aria-label', t.ilerlemeEtiket);
+  $('bastan').textContent = t.bastanOku;
+  $('altYazi').textContent = t.altYazi;
 
   // yas listesi (3-9)
   const y = $('yas'), secili = y.value || '5';
@@ -140,6 +148,11 @@ function durumYaz(n, toplam) {
   const bitti = toplam > 0 && n === toplam;
   el.classList.toggle('kutlama', bitti);
   $('sahne').classList.toggle('canli', bitti);
+  $('boyamaKutu').classList.toggle('bitti', bitti);
+  const cubuk = $('ilerleme');
+  cubuk.setAttribute('aria-valuemax', String(Math.max(toplam, 1)));
+  cubuk.setAttribute('aria-valuenow', String(n));
+  cubuk.firstElementChild.style.width = toplam ? `${Math.round((n / toplam) * 100)}%` : '0%';
   el.textContent = bitti ? `${ui().kutlama} 🎉`
                  : n ? `${ui().kaydedildi} · ${n}/${toplam}` : '';
 }
@@ -412,7 +425,7 @@ function onizlemeyiTazele() {
 
 function gorunumSecimiKur() {
   const t = ui();
-  $('gorunumBaslik').textContent = t.gorunumBaslik;
+  $('gorunumBaslik').textContent = t.kahramanOzel;
 
   const nokta = (kap, degerler, alan, etiket) => {
     kap.innerHTML = '';
@@ -466,6 +479,7 @@ function kahramaniYerlestir(sahne) {
  *  tetiklenmeden yeniden eklenirse animasyon ikinci sayfada calismaz. */
 function gecisAnimasyonu() {
   for (const el of [$('hMetin'), $('boyamaKutu')]) {
+    el.style.setProperty('--kay', `${yon * 24}px`);
     el.classList.remove('sayfa-gecis');
     void el.offsetWidth;
     el.classList.add('sayfa-gecis');
@@ -499,6 +513,9 @@ function sayfaCiz() {
         el.addEventListener('click', () => {
           adimEkle(gecmis, anahtar(), { [i]: el.style.fill || '' });
           el.style.fill = renk;
+          // dokunma geri bildirimi: bolge hafifce "pop" yapar, destekleyen telefonlar titrer
+          el.classList.remove('pop'); void el.getBoundingClientRect(); el.classList.add('pop');
+          try { navigator.vibrate?.(8); } catch {}
           // sayfa basina yalnizca ilk dokunus sayilir: "kac kisi boyuyor" sorusu
           // toplam dokunus sayisiyla degil, boyamaya baslayan kisiyle olculur
           if (ilkDokunus) { ilkDokunus = false; olay('boyama-basladi', { tema: kimlik.tema, sayfa: sayfaNo }); }
@@ -507,6 +524,7 @@ function sayfaCiz() {
       });
       boyaYukle();
     }
+    $('ilerleme').hidden = !s.boya;
   } else {
     kutu.hidden = true;
   }
@@ -524,7 +542,12 @@ function sayfaCiz() {
   const secimBekliyor = Boolean(s.secim) && !dal;
   $('geri').disabled = sayfaNo === 0;
   $('ileri').disabled = son || secimBekliyor;
-  $('sayfaBilgi').textContent = son ? t.son : `${t.sayfa} ${sayfaNo + 1} / ${toplam}`;
+  $('sayfaBilgi').textContent = `${t.sayfa} ${sayfaNo + 1} / ${toplam}`;
+  $('sonKart').hidden = !son;
+  if (son) {
+    $('sonBaslik').textContent = t.sonBaslik.replaceAll('{ad}', kimlik.ad);
+    $('sonAlt').textContent = t.sonAlt;
+  }
   $('noktalar').innerHTML = Array.from({ length: toplam })
     .map((_, i) => `<span class="nokta${i === sayfaNo ? ' aktif' : ''}"></span>`).join('');
   $('ustBilgi').textContent = `${kimlik.ad} · ${kimlik.yas} · ${kimlik.sehir || '—'}`;
@@ -545,6 +568,7 @@ function okuyucuyaGec() {
   paletiKur();
   puntoyuAyarla();
   sayfaCiz();
+  $('hBaslik').focus({ preventScroll: true });   // ekran okuyucu yeni ekrani duysun
 }
 
 // ---------- olaylar ----------
@@ -564,10 +588,11 @@ $('form').addEventListener('submit', (e) => {
   okuyucuyaGec();
 });
 
-$('geri').onclick = () => { if (sayfaNo > 0) { sayfaNo--; sayfaCiz(); } };
+$('geri').onclick = () => { if (sayfaNo > 0) { sayfaNo--; yon = -1; sayfaCiz(); yon = 0; } };
+$('bastan').onclick = () => { sayfaNo = 0; yon = -1; sayfaCiz(); yon = 0; };
 $('ileri').onclick = () => {
   if ($('ileri').disabled) return;                    // secim bekliyor olabilir
-  if (sayfaNo < aktifSayfalar().length - 1) { sayfaNo++; sayfaCiz(); }
+  if (sayfaNo < aktifSayfalar().length - 1) { sayfaNo++; yon = 1; sayfaCiz(); yon = 0; }
 };
 $('yeniden').onclick = () => {
   sesiDurdur();                       // okuyucudan cikarken ses arkada devam etmesin
@@ -575,6 +600,7 @@ $('yeniden').onclick = () => {
   $('formEkran').hidden = false;
   $('ustBilgi').textContent = '';
   kitapligiCiz();
+  $('fBaslik').focus({ preventScroll: true });
 };
 document.addEventListener('keydown', (e) => {
   if ($('okuyucuEkran').hidden) return;

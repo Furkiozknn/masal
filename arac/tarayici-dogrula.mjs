@@ -38,11 +38,18 @@ let sorunSayisi = 0;
 const sorun = (m) => { sorunSayisi++; console.log('HATA  ' + m); };
 const tamam = (m) => console.log('ok    ' + m);
 
+// Govde tuketilmezse Node 24'te undici HTTP/1.0 baglanti kapanisinda AssertionError ile dusuyor.
+async function hazirMi(adres) {
+  const r = await fetch(adres);
+  await r.arrayBuffer();
+  return r.ok;
+}
+
 async function sunucuBaslat(kok, port) {
   const p = spawn('python3', [path.join(KOK, 'sunucu.py'), String(port)], { cwd: kok, stdio: 'ignore' });
   const adres = `http://127.0.0.1:${port}/`;
   for (let i = 0; i < 40; i++) {
-    try { if ((await fetch(adres)).ok) return { p, adres }; } catch {}
+    try { if (await hazirMi(adres)) return { p, adres }; } catch {}
     await bekle(250);
   }
   p.kill();
@@ -184,7 +191,126 @@ async function dagitim(tarayici) {
   } finally {
     await baglam.close();
     p.kill();
-    fs.rmSync(kopya, { recursive: true, force: true });
+    // Windows: sunucu sureci klasoru henuz birakmamis olabilir; gecici kopya, kalirsa sorun degil.
+    try { fs.rmSync(kopya, { recursive: true, force: true }); } catch {}
+  }
+}
+
+// 4. YENILEME: DIL KABUGU, DOKUNMA HEDEFLERI, MASAL SONU, ILERLEME, HAREKET
+//    Tarayici dili en-US ise arayuz Ingilizce, tr-TR ise Turkce olmali; secilen
+//    dil yenilemeden sonra da kalmali (localStorage). Butun dokunulabilir
+//    ogeler >= 44 px (cocuk parmagi). Son sayfada "iyi geceler" karti cocugun
+//    adiyla gorunmeli, boyama ilerleme cubugu gercek sayiyi tasimali ve
+//    prefers-reduced-motion'da yeni animasyonlarin hicbiri calismamali.
+async function yenileme(tarayici, adres) {
+  const yeni = async (ayar) => {
+    const baglam = await tarayici.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block', ...ayar });
+    const sayfa = await baglam.newPage();
+    const hatalar = [];
+    dinle(sayfa, hatalar, { swUyarisi: true });
+    return { baglam, sayfa, hatalar };
+  };
+  const yazi = (sayfa, sec) => sayfa.textContent(sec);
+
+  // --- dil kabugu
+  {
+    const { baglam, sayfa, hatalar } = await yeni({ locale: 'en-US' });
+    try {
+      await sayfa.goto(adres, { waitUntil: 'networkidle' });
+      const lang = await sayfa.evaluate(() => document.documentElement.lang);
+      if (lang !== 'en') sorun(`en-US tarayicida html lang=${lang}`);
+      if ((await yazi(sayfa, '#olustur')).trim() !== 'Create the story') sorun('en-US: dugme Ingilizce degil');
+      if (await sayfa.locator('#guven li').count() !== 3) sorun('en-US: guven satiri uc madde degil');
+      if ((await sayfa.getAttribute('#dilSec', 'aria-label')) !== 'Language') sorun('en-US: dil secicinin etiketi Ingilizce degil');
+      if (!/Skip/.test(await yazi(sayfa, '#atla'))) sorun('en-US: atlama baglantisi Ingilizce degil');
+      await sayfa.selectOption('#dilSec', 'tr');
+      if ((await yazi(sayfa, '#olustur')).trim() !== 'Masalı oluştur') sorun('dil Turkceye cevrilince dugme guncellenmedi');
+      await sayfa.reload({ waitUntil: 'networkidle' });
+      if ((await yazi(sayfa, '#olustur')).trim() !== 'Masalı oluştur') sorun('secilen dil yenilemeden sonra kayboldu');
+      else tamam('dil kabugu: en-US -> Ingilizce, secim kalici, TR/EN degisiyor');
+    } finally { await baglam.close(); }
+    for (const h of hatalar) sorun(`dil kabugu ${h}`);
+  }
+
+  // --- tr-TR: varsayilan Turkce; dokunma hedefleri; masal sonu; ilerleme
+  {
+    const { baglam, sayfa, hatalar } = await yeni({ locale: 'tr-TR', hasTouch: true });
+    const kucukler = () => sayfa.evaluate(() => {
+      const sec = 'button, select, input, summary, a.atla';
+      return [...document.querySelectorAll(sec)].filter((e) => {
+        const r = e.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden'
+          && (r.width < 44 - 0.5 || r.height < 44 - 0.5);
+      }).map((e) => `${e.tagName.toLowerCase()}#${e.id || ''}.${e.className || ''} ${Math.round(e.getBoundingClientRect().width)}x${Math.round(e.getBoundingClientRect().height)}`);
+    });
+    try {
+      await sayfa.goto(adres, { waitUntil: 'networkidle' });
+      if ((await yazi(sayfa, '#olustur')).trim() !== 'Masalı oluştur') sorun('tr-TR: varsayilan dil Turkce degil');
+      await sayfa.click('details.ozel summary');                    // gorunum secimleri acik olsun
+      let k = await kucukler();
+      if (k.length) sorun(`form: 44px'ten kucuk dokunma hedefi: ${k.join(' | ')}`);
+      await sayfa.click('details.ozel summary');
+
+      await sayfa.fill('#ad', 'Ada');
+      await sayfa.selectOption('#tema', 'deniz');
+      await sayfa.click('#olustur');
+      await sayfa.waitForSelector('#okuyucuEkran:not([hidden])');
+      const odak = await sayfa.evaluate(() => document.activeElement.id);
+      if (odak !== 'hBaslik') sorun(`yeni ekranda odak basliga gitmedi: ${odak}`);
+      await sayfa.click('#ileri');                                  // 2. sayfa: boyanabilir sahne
+      k = await kucukler();
+      if (k.length) sorun(`okuyucu: 44px'ten kucuk dokunma hedefi: ${k.join(' | ')}`);
+
+      const n = await sayfa.locator('#sahne .b').count();
+      await sayfa.locator('#palet .renk').nth(1).click();
+      for (let i = 0; i < 3; i++) await sayfa.locator('#sahne .b').nth(i).dispatchEvent('click');
+      const now = await sayfa.getAttribute('#ilerleme', 'aria-valuenow');
+      const max = await sayfa.getAttribute('#ilerleme', 'aria-valuemax');
+      if (now !== '3' || max !== String(n)) sorun(`ilerleme cubugu ${now}/${max}, beklenen 3/${n}`);
+      else tamam(`boyama ilerlemesi: aria-valuenow ${now}/${max}`);
+      if (!(await sayfa.locator('#sahne .b.pop').count())) sorun('boyanan bolgede geri bildirim (pop) yok');
+
+      // son sayfaya kadar: masal sonu karti
+      for (let i = 0; i < 12; i++) {
+        if (await sayfa.isVisible('#secim')) await sayfa.click('#secimA');
+        if (await sayfa.isDisabled('#ileri')) break;
+        await sayfa.click('#ileri');
+      }
+      if (!(await sayfa.isVisible('#sonKart'))) sorun('son sayfada masal sonu karti gorunmuyor');
+      else if (!(await yazi(sayfa, '#sonBaslik')).includes('Ada')) sorun('masal sonu karti cocugun adini tasimiyor');
+      else tamam('masal sonu karti: "' + (await yazi(sayfa, '#sonBaslik')).trim() + '"');
+      await sayfa.click('#bastan');
+      if (!(await sayfa.isDisabled('#geri'))) sorun('"Baştan oku" ilk sayfaya donmedi');
+      if (await sayfa.isVisible('#sonKart')) sorun('ilk sayfada masal sonu karti acik kaldi');
+    } finally { await baglam.close(); }
+    for (const h of hatalar) sorun(`kabuk ${h}`);
+  }
+
+  // --- prefers-reduced-motion: yeni animasyonlarin hicbiri calismamali
+  {
+    const { baglam, sayfa, hatalar } = await yeni({ locale: 'tr-TR', reducedMotion: 'reduce' });
+    try {
+      await sayfa.goto(adres, { waitUntil: 'networkidle' });
+      await sayfa.fill('#ad', 'Ada');
+      await sayfa.click('#olustur');
+      await sayfa.waitForSelector('#okuyucuEkran:not([hidden])');
+      await sayfa.click('#ileri');
+      await sayfa.locator('#sahne .b').first().dispatchEvent('click');
+      const hareket = await sayfa.evaluate(() => {
+        const ad = (e) => (e ? getComputedStyle(e).animationName : 'yok');
+        return { gecis: ad(document.querySelector('#hMetin')), pop: ad(document.querySelector('#sahne .b.pop')) };
+      });
+      if (hareket.gecis !== 'none' || hareket.pop !== 'none') sorun(`reduced-motion: animasyon calisiyor ${JSON.stringify(hareket)}`);
+      for (let i = 0; i < 12; i++) {
+        if (await sayfa.isVisible('#secim')) await sayfa.click('#secimA');
+        if (await sayfa.isDisabled('#ileri')) break;
+        await sayfa.click('#ileri');
+      }
+      const son = await sayfa.evaluate(() => getComputedStyle(document.querySelector('#sonKart')).animationName);
+      if (son !== 'none') sorun(`reduced-motion: masal sonu animasyonu calisiyor (${son})`);
+      else tamam('prefers-reduced-motion: sayfa gecisi, pop ve masal sonu animasyonu kapali');
+    } finally { await baglam.close(); }
+    for (const h of hatalar) sorun(`reduced-motion ${h}`);
   }
 }
 
@@ -202,6 +328,7 @@ async function main() {
   const { p, adres } = await sunucuBaslat(KOK, 8797);
   try {
     for (const g of [390, 1012]) await akis(tarayici, adres, g);
+    await yenileme(tarayici, adres);
     await dagitim(tarayici);
   } finally {
     await tarayici.close();

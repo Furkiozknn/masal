@@ -52,9 +52,9 @@
     "videos": []
   },
   "tests": {
-    "count": 108,
-    "source": "CI log (`node --test`): `pass 108`",
-    "measured": "2026-09-28"
+    "count": 125,
+    "source": "CI log (`node --test`): `pass 125`",
+    "measured": "2026-09-29"
   },
   "ci": {
     "workflows": [

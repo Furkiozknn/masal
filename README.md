@@ -4,8 +4,8 @@
 
 [![CI](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml/badge.svg)](https://github.com/Furkiozknn/masal/actions/workflows/ci.yml)
 
-<p align="center"><img src="docs/reel/reel.gif" alt="masal - 15 saniyelik tanıtım videosu" width="720"></p>
-<p align="center"><sub><a href="docs/reel/reel.mp4">Sesli MP4 sürümü</a></sub></p>
+<p align="center"><img src="docs/reel/reel.gif" alt="Gerçek kullanım kaydı: ad yazılır, masal açılır, resim boyanır, masal sonunda iyi geceler kartı çıkar" width="300"></p>
+<p align="center"><sub>Sessiz ekran kaydı: uygulama gerçekten kullanılırken alındı (<code>Ada</code> örnek addır).</sub></p>
 
 Çocuğun **adına, yaşına ve şehrine göre** yazılan uyku öncesi masalı; sayfaların
 içine gömülü **boyama alanlarıyla** birlikte tarayıcıda.
@@ -50,7 +50,7 @@ tıklayarak boyuyor. Çocuk da aynısını yapıyor.</i></sub>
 | Sesli okuma | Tarayıcının kendi konuşma motoru. Cihazda o dilde ses yoksa düğme görünmez |
 | Türkçe ekler | Ünlü uyumu, sert ünsüz benzeşmesi ve kaynaştırma harfi otomatik (`turkce.js`) |
 | Çevrimdışı | Bir kez açıldıktan sonra ağ olmadan da açılır. Kurulabilir (PWA) |
-| Erişilebilirlik | Altı ekranın her biri her push'ta axe-core ile WCAG 2.1 AA'ya karşı denetleniyor |
+| Erişilebilirlik | Sekiz ekranın her biri her push'ta axe-core ile WCAG 2.1 AA'ya karşı denetleniyor |
 
 ## Gizlilik
 
@@ -95,7 +95,7 @@ Tarayıcıda `http://127.0.0.1:8790/` adresini açın. Port değiştirmek için
 node --test
 ```
 
-Altı test dosyası, 108 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
+Yedi test dosyası, 125 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
 
 | Dosya | Neyi kilitliyor |
 |---|---|
@@ -104,6 +104,7 @@ Altı test dosyası, 108 test. Hepsi saf mantık üzerinde ve tarayıcı istemiy
 | `depo.test.js` | Depo kapalı ya da bozukken uygulama çökmüyor |
 | `olcum.test.js` | Gizlilik süzgeci: kişisel alanların hiçbiri geçmiyor |
 | `boyama.test.js` | Geri al geçmişi: temizle geri alınabiliyor, sayfalar karışmıyor |
+| `kontrast.test.js` | Yenilemede eklenen renk çiftlerinin okunurluğu (metin 4,5:1, metin dışı 3:1) |
 | `sw.test.js` | Servis işçisi: yeni dağıtım kullanıcıya ulaşıyor, ağ yokken önbellekten açılıyor |
 
 Gerçek tarayıcıda çalışan iki denetim daha var. Bunlar CI'da her push'ta
@@ -114,7 +115,7 @@ kuruluyorlar:
 npm install --no-save --no-package-lock playwright-core axe-core
 npx playwright-core install chromium
 node arac/tarayici-dogrula.mjs   # 390 ve 1012 px'te tam akış, temizle/geri al, dağıtım + çevrimdışı
-node arac/erisim-denetle.mjs     # altı ekran, WCAG 2.1 AA
+node arac/erisim-denetle.mjs     # sekiz ekran (TR/EN, kahraman ayarı açık dahil), WCAG 2.1 AA
 ```
 
 ## Nasıl çalışıyor
@@ -143,7 +144,7 @@ sw.js                                                  çevrimdışı: önce ağ
 | `sw.js` | Servis işçisi: uygulama kabuğunu önbelleğe alır |
 | `sunucu.py` | Geliştirme sunucusu, önbellek kapalı |
 | `arac/tarayici-dogrula.mjs` | Gerçek tarayıcıda akış, temizle/geri al, dağıtım ve çevrimdışı denetimi |
-| `arac/erisim-denetle.mjs` | Altı ekranı axe-core ile WCAG 2.1 AA'ya karşı denetler |
+| `arac/erisim-denetle.mjs` | Sekiz ekranı axe-core ile WCAG 2.1 AA'ya karşı denetler |
 | `arac/sw-dogrula.mjs` | `sw.js` önbellek listesi import grafiğiyle örtüşüyor mu, `fetch` yalnızca sayfanın isteği mi |
 | `arac/ekran-yakala.mjs` | README görsellerini uygulamayı gerçekten kullanarak üretir |
 
