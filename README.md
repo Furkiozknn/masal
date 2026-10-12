@@ -235,6 +235,6 @@ Katkı için [`CONTRIBUTING.md`](CONTRIBUTING.md), güvenlik bildirimi için
 
 - **[nova-drift](https://github.com/Furkiozknn/nova-drift)**: derleme adımı olmayan sonsuz tarayıcı uzay koşusu
 - **[buradane](https://github.com/Furkiozknn/buradane)**: ihtiyaç odaklı 167.829 OpenStreetMap noktası
-- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 70 Claude Code alt-ajanı
+- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 71 Claude Code alt-ajanı
 
 <sub>Hepsi tek bir aranabilir sayfada: **[furkiozknn.github.io](https://furkiozknn.github.io/)**. Her kart, o deponun kendi <code>project-meta.json</code> dosyasından üretiliyor.</sub>
