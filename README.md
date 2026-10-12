@@ -189,8 +189,9 @@ Lighthouse gibi denetimler sayfayı açıldığı hâliyle, yani yalnızca formu
 ölçer. Çocuğun masalı
 okuduğu ekran ölçülünce iki WCAG AA ihlali çıktı: boyama ipucu (3,82:1) ve
 **çocuğun kendi adı** (`.metin b`, 4,37:1). İkisi de düzeltildi (4,73:1 ve
-4,82:1). `arac/erisim-denetle.mjs` artık altı ekranı ayrı ayrı denetliyor:
-form, okuyucu, boyanmış sayfa, seçim ekranı, son sayfa ve kitaplık.
+4,82:1). `arac/erisim-denetle.mjs` artık sekiz ekranı ayrı ayrı denetliyor:
+form (Türkçe, İngilizce ve kahraman ayarları açık), okuyucu, boyanmış sayfa,
+seçim ekranı, son sayfa ve kitaplığı dolu form.
 
 ## Sorun giderme
 
