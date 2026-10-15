@@ -189,8 +189,9 @@ Lighthouse gibi denetimler sayfayı açıldığı hâliyle, yani yalnızca formu
 ölçer. Çocuğun masalı
 okuduğu ekran ölçülünce iki WCAG AA ihlali çıktı: boyama ipucu (3,82:1) ve
 **çocuğun kendi adı** (`.metin b`, 4,37:1). İkisi de düzeltildi (4,73:1 ve
-4,82:1). `arac/erisim-denetle.mjs` artık altı ekranı ayrı ayrı denetliyor:
-form, okuyucu, boyanmış sayfa, seçim ekranı, son sayfa ve kitaplık.
+4,82:1). `arac/erisim-denetle.mjs` artık sekiz ekranı ayrı ayrı denetliyor:
+form (Türkçe, İngilizce ve kahraman ayarları açık), okuyucu, boyanmış sayfa,
+seçim ekranı, son sayfa ve kitaplığı dolu form.
 
 ## Sorun giderme
 
@@ -234,6 +235,6 @@ Katkı için [`CONTRIBUTING.md`](CONTRIBUTING.md), güvenlik bildirimi için
 
 - **[nova-drift](https://github.com/Furkiozknn/nova-drift)**: derleme adımı olmayan sonsuz tarayıcı uzay koşusu
 - **[buradane](https://github.com/Furkiozknn/buradane)**: ihtiyaç odaklı 167.829 OpenStreetMap noktası
-- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 70 Claude Code alt-ajanı
+- **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 71 Claude Code alt-ajanı
 
 <sub>Hepsi tek bir aranabilir sayfada: **[furkiozknn.github.io](https://furkiozknn.github.io/)**. Her kart, o deponun kendi <code>project-meta.json</code> dosyasından üretiliyor.</sub>
