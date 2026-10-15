@@ -320,7 +320,19 @@
     svg.sahne .b.pop, figure.boyama.bitti, .son-kart, .son-ay .yildiz, .sayfa-gecis{animation:none}
     .ilerleme i{transition:none}
   }
-</style>
+  /* --- printable colouring page (yazdir.js) --- */
+  .yazdir{display:none}
+  @media print{
+    body.yazdiriliyor > *:not(#yazdirAlan){display:none !important}
+    body.yazdiriliyor{background:#fff !important}
+    body.yazdiriliyor .yazdir{display:block;color:#000;background:#fff}
+    .yazdir h1{font-size:22pt;margin:0 0 6mm;text-align:center}
+    .yazdir svg{display:block;width:100%;height:auto;margin:0 auto 6mm}
+    .yazdir svg *{fill:#fff !important;stroke:#222 !important;stroke-width:1.6px !important}
+    .yazdir p{font-size:14pt;line-height:1.5;margin:0 0 4mm}
+    .yazdir .alt{font-size:9pt;color:#555;text-align:center}
+    @page{margin:12mm}
+  }</style>
 </head>
 <body>
 
@@ -440,6 +452,8 @@
     <div style="text-align:center"><button class="dugme sade" id="yeniden"></button></div>
   </section>
 </main>
+<!-- Print-only colouring sheet (yazdir.js); empty and hidden on screen. -->
+<div id="yazdirAlan" class="yazdir"></div>
 
 <footer class="alt"><a href="https://github.com/Furkiozknn" rel="noopener noreferrer">FRK-OS</a> <span id="altYazi">yapımı</span></footer>
 

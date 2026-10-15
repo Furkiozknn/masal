@@ -44,6 +44,7 @@ tıklayarak boyuyor. Çocuk da aynısını yapıyor.</i></sub>
 | Temalar | Deniz, Orman, Yıldızlar, Kar, Yağmur, Bahçe, Gece lambası, Uçurtma. Her biri 6 sayfa |
 | Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılır: sekiz tema × iki yol = on altı okuma |
 | Boyama | Sayfaya gömülü SVG sahne. Bölgeye dokununca dolar, **geri al** ve **temizle** var (temizle de geri alınabilir) |
+| Kağıda boyama | Boyanabilir sayfada **yazdır** düğmesi o sahneyi boş çizgi resim olarak, çocuğun adıyla (`Ada'nın boyama sayfası`) ve sayfanın metniyle tarayıcının kendi baskı penceresine gönderir. Ekranda ne boyandıysa boyansın kâğıda boş çıkar |
 | Kahraman | Çocuk figürü her sahnede. Ten, saç rengi ve saç tipi seçilir, kıyafeti boyanabilir |
 | Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe (3–4, 5–6, 7–9) |
 | Kitaplık | Okunan masallar birikir, kaldığı sayfadan ve seçtiği yoldan devam edilir |
@@ -61,6 +62,7 @@ denetleniyor.
   kitaplık yalnızca tarayıcının `localStorage`'ında duruyor. Bu depoya
   yalnızca `depo.js` erişebiliyor. Gizli sekmede depo kapalıysa uygulama
   yine çalışıyor, yalnızca hatırlamıyor.
+- **Yazdırmak dosya üretmez.** Yazdır düğmesi yalnızca tarayıcının kendi baskı penceresini (`window.print`) açar. Uygulama hiçbir dosya oluşturmaz; baskıya giden sayfa da boyamadan değil, sahnenin boş şablonundan kurulur.
 - **Fotoğraf yok, indirme yok.** Çizimi dosyaya çeviren bir yol
   (`toDataURL`, `download=` …) uygulama dosyalarının hiçbirinde bulunamaz.
 - **Ağ çağrısı tek bir dosyada.** `olcum.js` ölçüm noktalarını tutuyor ama
@@ -95,7 +97,7 @@ Tarayıcıda `http://127.0.0.1:8790/` adresini açın. Port değiştirmek için
 node --test
 ```
 
-Yedi test dosyası, 138 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
+Sekiz test dosyası, 144 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
 
 | Dosya | Neyi kilitliyor |
 |---|---|
@@ -104,6 +106,7 @@ Yedi test dosyası, 138 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyo
 | `depo.test.js` | Depo kapalı ya da bozukken uygulama çökmüyor |
 | `olcum.test.js` | Gizlilik süzgeci: kişisel alanların hiçbiri geçmiyor |
 | `boyama.test.js` | Geri al geçmişi: temizle geri alınabiliyor, sayfalar karışmıyor |
+| `yazdir.test.js` | Yazdırılabilir boyama sayfası: iyelik eki (`Ada'nın`, `Su'nun`), her sahne boş çizgi resim, boya baskıya sızmıyor, girdi kaçırılıyor, dosya üreten API yok |
 | `kontrast.test.js` | Yenilemede eklenen renk çiftlerinin okunurluğu (metin 4,5:1, metin dışı 3:1) |
 | `sw.test.js` | Servis işçisi: yeni dağıtım kullanıcıya ulaşıyor, ağ yokken önbellekten açılıyor |
 
@@ -139,6 +142,7 @@ sw.js                                                  çevrimdışı: önce ağ
 | `sahneler.js` | Boyanabilir SVG sahneler: oda, kumsal, orman, uzay, kış, yağmur, bahçe |
 | `karakter.js` | Kahraman SVG üreteci: ten/saç seçenekleri, saç tipleri |
 | `boyama.js` | Geri al geçmişi (tek dokunuş ya da bütün resim) |
+| `yazdir.js` | Yazdırılabilir boyama sayfası (saf: işaretleme döndürür) |
 | `depo.js` | `localStorage`'a korumalı tek erişim |
 | `olcum.js` | Ölçüm noktaları ve gizlilik süzgeci |
 | `sw.js` | Servis işçisi: uygulama kabuğunu önbelleğe alır |

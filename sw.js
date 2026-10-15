@@ -61,6 +61,7 @@ const KABUK = [
   './karakter.js',
   './depo.js',
   './boyama.js',
+  './yazdir.js',
   './olcum.js',
   './manifest.webmanifest',
 ];
