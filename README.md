@@ -41,8 +41,8 @@ tıklayarak boyuyor. Çocuk da aynısını yapıyor.</i></sub>
 |---|---|
 | Hikaye üretimi | Şablon motoru. **API anahtarı gerekmez**, maliyeti sıfır |
 | Diller | Türkçe ve İngilizce. Tarayıcı dilinden seçilir, üstten değiştirilebilir |
-| Temalar | Deniz, Orman, Yıldızlar, Kar, Yağmur, Bahçe. Her biri 6 sayfa |
-| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılır: altı tema × iki yol = on iki okuma |
+| Temalar | Deniz, Orman, Yıldızlar, Kar, Yağmur, Bahçe, Gece lambası, Uçurtma. Her biri 6 sayfa |
+| Seçim noktası | Üçüncü sayfada hikaye ikiye ayrılır: sekiz tema × iki yol = on altı okuma |
 | Boyama | Sayfaya gömülü SVG sahne. Bölgeye dokununca dolar, **geri al** ve **temizle** var (temizle de geri alınabilir) |
 | Kahraman | Çocuk figürü her sahnede. Ten, saç rengi ve saç tipi seçilir, kıyafeti boyanabilir |
 | Yaş | Punto ve sesli okuma hızı yaşa göre üç kademe (3–4, 5–6, 7–9) |
@@ -95,7 +95,7 @@ Tarayıcıda `http://127.0.0.1:8790/` adresini açın. Port değiştirmek için
 node --test
 ```
 
-Yedi test dosyası, 125 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
+Yedi test dosyası, 138 test. Hepsi saf mantık üzerinde ve tarayıcı istemiyor:
 
 | Dosya | Neyi kilitliyor |
 |---|---|

@@ -178,3 +178,19 @@ for (const d of diller) {
     assert.ok(u.sonBaslik.includes('{ad}'), `${d}: sonBaslik {ad} tasimali`);
   });
 }
+
+// README promises a number of themes and readings; the table must not drift
+// from the data when a theme is added (it did once: "altı tema" stayed after
+// a seventh was planned).
+test('README tema ve okuma sayisi veriyle ayni', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const readme = await readFile(new URL('./README.md', import.meta.url), 'utf8');
+  const sayilar = ['sıfır', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz', 'on',
+    'on bir', 'on iki', 'on üç', 'on dört', 'on beş', 'on altı', 'on yedi', 'on sekiz', 'on dokuz', 'yirmi'];
+  const n = temalar.length;
+  assert.ok(readme.includes(`${sayilar[n]} tema × iki yol = ${sayilar[n * 2]} okuma`),
+    `README "${sayilar[n]} tema × iki yol = ${sayilar[n * 2]} okuma" demeli`);
+  for (const ad of Object.values(METINLER.tr.temalar)) {
+    assert.ok(readme.includes(ad), `README tema listesinde "${ad}" yok`);
+  }
+});
