@@ -4,6 +4,7 @@ import { olay, yasGrubu } from './olcum.js';
 import { karakterSVG, varsayilanGorunum, TEN_RENKLERI, SAC_RENKLERI, SAC_TIPLERI } from './karakter.js';
 import { oku, yaz, sil, okuJSON, yazJSON } from './depo.js';
 import { adimEkle, sonAdimiAl, boyaliBolgeler } from './boyama.js';
+import { yazdirmaHtml } from './yazdir.js';
 
 const $ = (id) => document.getElementById(id);
 // Acik ve koyu tonlar birlikte: gokyuzu ile deniz, cimen ile yaprak ayirt edilebilsin.
@@ -121,13 +122,31 @@ function paletiKur() {
     };
     p.appendChild(b);
   });
-  [['geriAl', geriAl], ['temizle', temizle]].forEach(([ad, fn]) => {
+  [['geriAl', geriAl], ['temizle', temizle], ['yazdir', yazdir]].forEach(([ad, fn]) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'arac'; b.dataset.rol = ad;
     b.onclick = fn;
     p.appendChild(b);
   });
 }
+
+// Printable colouring page (yazdir.js): the current scene as empty line art
+// with the child's name and the page text, sent to the browser's own print
+// dialog. The body class limits printing to that sheet; without it (Ctrl+P
+// on any page) the browser prints the page as before.
+function yazdir() {
+  const s = aktifSayfalar()[sayfaNo];
+  if (!s || !s.sahne) return;
+  yazdirAlan.innerHTML = yazdirmaHtml({
+    sahneSvg: kahramaniYerlestir(SAHNELER[s.sahne] || ''), ad: kimlik.ad, dil, metin: s.metin,
+  });
+  document.body.classList.add('yazdiriliyor');
+  window.print();
+}
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('yazdiriliyor');
+  yazdirAlan.innerHTML = '';
+});
 
 function araclariAdlandir() {
   const t = ui();

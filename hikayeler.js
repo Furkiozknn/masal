@@ -6,7 +6,7 @@ import { ek } from './turkce.js';
 //   -> ek motoru unlu uyumunu kendi hesaplar, sablonda elle ek yazilmaz.
 // Sablon motoru API anahtari gerektirmez: bugun calisir, maliyeti sifir.
 // LLM katmani sonradan bunun uzerine biner (bkz. README).
-// ponytail: iki tema x iki dil. Tema eklemek = bu nesneye bir anahtar eklemek.
+// Eight themes x two languages. Adding a theme = adding a key to this object.
 
 export const METINLER = {
   tr: {
@@ -18,7 +18,7 @@ export const METINLER = {
       olustur: 'Masalı oluştur', geri: 'Önceki', ileri: 'Sonraki',
       yeniden: 'Yeni masal', sayfa: 'sayfa',
       boyaIpucu: 'Bir renk seç, sonra resmin içine dokun',
-      kaydedildi: 'boyaman kaydedildi', temizle: 'temizle', geriAl: 'geri al',
+      kaydedildi: 'boyaman kaydedildi', temizle: 'temizle', geriAl: 'geri al', yazdir: 'yazdır',
       son: 'Masal bitti. İyi geceler!',
       dinle: '▶ Dinle', durdur: '■ Durdur',
       kitaplik: 'Kitaplık', devamEt: 'devam et', sil: 'sil',
@@ -40,7 +40,7 @@ export const METINLER = {
       bastanOku: 'Baştan oku', altYazi: 'yapımı',
     },
     temalar: { deniz: 'Deniz', orman: 'Orman', yildizlar: 'Yıldızlar', kar: 'Kar',
-               yagmur: 'Yağmur', bahce: 'Bahçe' },
+               yagmur: 'Yağmur', bahce: 'Bahçe', gece: 'Gece lambası', ucurtma: 'Uçurtma' },
     hikayeler: {
       deniz: {
         baslik: '{ad} ve Denizin Fısıltısı',
@@ -126,6 +126,36 @@ export const METINLER = {
           { sahne: 'oda', boya: true, metin: 'O gece {ad} yatağına girdi. Gözlerini kapatınca turuncu kanatları gördü. Bahçe yarın da orada olacaktı.' },
         ],
       },
+      // Bedtime's most common worry, the dark, told without a single scary
+      // moment: the shadows turn out to be the day's things asleep.
+      gece: {
+        baslik: '{ad} ve Gece Lambası',
+        sayfalar: [
+          { sahne: 'oda', metin: '{sehir:de} akşam olmuştu. {ad} dişlerini fırçaladı, pijamalarını giydi ve yatağına girdi. Odanın köşesinde küçük gece lambası yanıyordu.' },
+          { sahne: 'oda', boya: true, metin: 'Büyük ışık sönünce oda başka türlü göründü. Dolabın gölgesi uzadı, perde usulca kıpırdadı. {ad} yorganı çenesine kadar çekti.' },
+          { metin: 'Tam o sırada gece lambası bir kere göz kırptı ve ince bir sesle konuştu: "Korkma {ad}. Ben buradayım. İstersen sana karanlığı tanıtayım."',
+            secim: { soru: '{ad} ne yapsın?', a: 'Lambayla odayı gez', b: 'Lambadan masal iste' } },
+          { dal: 'a', metin: 'Lamba ışığını biraz büyüttü. Dolabın gölgesi bir anda küçüldü: uzun bir dev değil, katlanmış bir hırkaydı.' },
+          { dal: 'a', metin: 'Perdeye baktılar. Onu kıpırdatan rüzgârdı, pencerenin aralığından giren serin bir esinti. {ad} gülümsedi. Karanlıkta yeni hiçbir şey yoktu; gündüzün eşyaları uyuyordu, o kadar.' },
+          { dal: 'b', metin: 'Lamba ışığını tavana yansıttı. Tavanda küçük bir tekne belirdi, sonra bir ay, sonra bir sürü yıldız.' },
+          { dal: 'b', metin: 'Lamba anlattı: o tekne her gece {sehir:in} üstünden geçer, uyuyan çocukların rüyalarını toplayıp yıldızlara taşırmış. Bu gece {ad:in} rüyası da o teknede olacaktı.' },
+          { sahne: 'oda', boya: true, metin: '{ad} gözlerini kapattı. Gece lambası usulca parlamaya devam etti. Oda artık tanıdıktı, karanlık da öyle. İyi geceler.' },
+        ],
+      },
+      ucurtma: {
+        baslik: '{ad} ve Uçurtma',
+        sayfalar: [
+          { sahne: 'oda', metin: '{sehir:de} rüzgârlı bir sabahtı. {ad} dolabın üstünde unutulmuş kırmızı bir uçurtma buldu. Kuyruğu rengârenk kurdelelerden yapılmıştı.' },
+          { sahne: 'kumsal', boya: true, metin: 'Kumsala gittiler. Rüzgâr denizden esiyordu. {ad} ipi sıkıca tuttu ve koşmaya başladı. Uçurtma bir sallandı, sonra göğe yükseldi.' },
+          { metin: 'Uçurtma o kadar yükseldi ki martıların yanına vardı. İp {ad:in} avucunda usulca çekiyordu, sanki uçurtma bir şey söylemek istiyordu.',
+            secim: { soru: '{ad} ne yapsın?', a: 'İpi biraz daha sal', b: 'Uçurtmayı yere indir' } },
+          { dal: 'a', metin: '{ad} ipi biraz daha saldı. Uçurtma bulutların kenarına kadar çıktı ve oradan aşağıyı seyretti: dalgaları, kumu ve küçücük görünen {ad:i}.' },
+          { dal: 'a', metin: 'Bir martı uçurtmanın yanında süzüldü, sanki onunla yarışıyordu. {ad} el salladı. Rüzgâr ikisini de taşıyordu.' },
+          { dal: 'b', metin: '{ad} ipi yavaş yavaş sardı. Uçurtma süzülerek indi ve kumun üstüne yumuşacık kondu. Kurdelelerinden biri gevşemişti.' },
+          { dal: 'b', metin: '{ad} kurdeleyi sıkıca bağladı. Uçurtma artık daha sağlamdı; bir dahaki rüzgârda daha da yükseğe çıkabilirdi.' },
+          { sahne: 'oda', boya: true, metin: 'Akşam eve döndüklerinde {ad} uçurtmayı yatağının yanına astı. Pencereden giren rüzgâr kurdeleleri usulca oynatıyordu. O gece rüyasında gökyüzündeydi.' },
+        ],
+      },
     },
   },
 
@@ -138,7 +168,7 @@ export const METINLER = {
       olustur: 'Create the story', geri: 'Back', ileri: 'Next',
       yeniden: 'New story', sayfa: 'page',
       boyaIpucu: 'Pick a colour, then tap inside the picture',
-      kaydedildi: 'your colouring is saved', temizle: 'clear', geriAl: 'undo',
+      kaydedildi: 'your colouring is saved', temizle: 'clear', geriAl: 'undo', yazdir: 'print',
       son: 'The end. Sleep well!',
       dinle: '▶ Listen', durdur: '■ Stop',
       kitaplik: 'Library', devamEt: 'continue', sil: 'remove',
@@ -160,7 +190,7 @@ export const METINLER = {
       bastanOku: 'Read again', altYazi: 'project',
     },
     temalar: { deniz: 'The sea', orman: 'The forest', yildizlar: 'The stars', kar: 'The snow',
-               yagmur: 'The rain', bahce: 'The garden' },
+               yagmur: 'The rain', bahce: 'The garden', gece: 'The night light', ucurtma: 'The kite' },
     hikayeler: {
       deniz: {
         baslik: '{ad} and the Whisper of the Sea',
@@ -244,6 +274,34 @@ export const METINLER = {
           { dal: 'b', metin: '{ad} stood still and only watched. The butterfly moved from flower to flower, never in any hurry.' },
           { dal: 'b', metin: 'Before long it settled on the tulip right beside {ad}. It seemed to know it was being watched, and not to mind at all.' },
           { sahne: 'oda', boya: true, metin: 'That night {ad} climbed into bed. Closing both eyes brought back the orange wings. The garden would still be there tomorrow.' },
+        ],
+      },
+      gece: {
+        baslik: '{ad} and the Night Light',
+        sayfalar: [
+          { sahne: 'oda', metin: 'Evening had come to {sehir}. {ad} brushed, put on pyjamas and climbed into bed. In the corner of the room a small night light was glowing.' },
+          { sahne: 'oda', boya: true, metin: 'With the big light off, the room looked different. The wardrobe\'s shadow grew long and the curtain moved softly. {ad} pulled the blanket right up to the chin.' },
+          { metin: 'Just then the night light blinked once and spoke in a thin voice: "Don\'t be afraid, {ad}. I am here. Shall I show you the dark?"',
+            secim: { soru: 'What should {ad} do?', a: 'Explore the room with the light', b: 'Ask the light for a story' } },
+          { dal: 'a', metin: 'The light grew a little brighter. The wardrobe\'s shadow shrank at once: not a tall giant, just a folded cardigan.' },
+          { dal: 'a', metin: 'They looked at the curtain. What moved it was the wind, a cool breeze slipping in at the window. {ad} smiled. Nothing new lived in the dark; the day\'s things were simply asleep.' },
+          { dal: 'b', metin: 'The light threw its glow onto the ceiling. A little boat appeared there, then a moon, then a crowd of stars.' },
+          { dal: 'b', metin: 'The light told the story: every night that boat sails over {sehir}, gathering the dreams of sleeping children and carrying them to the stars. Tonight a dream of {ad}\'s would ride on it too.' },
+          { sahne: 'oda', boya: true, metin: '{ad} closed both eyes. The night light kept glowing softly. The room was familiar now, and so was the dark. Goodnight.' },
+        ],
+      },
+      ucurtma: {
+        baslik: '{ad} and the Kite',
+        sayfalar: [
+          { sahne: 'oda', metin: 'It was a windy morning in {sehir}. On top of the wardrobe {ad} found a forgotten red kite. Its tail was made of bright ribbons.' },
+          { sahne: 'kumsal', boya: true, metin: 'They went down to the beach. The wind was blowing in from the sea. {ad} held the string tight and started to run. The kite wobbled once, then rose into the sky.' },
+          { metin: 'The kite climbed so high it reached the gulls. The string tugged gently in {ad}\'s hand, as if the kite wanted to say something.',
+            secim: { soru: 'What should {ad} do?', a: 'Let out more string', b: 'Bring the kite down' } },
+          { dal: 'a', metin: '{ad} let out a little more string. The kite climbed to the edge of the clouds and looked down: the waves, the sand, and a very small {ad}.' },
+          { dal: 'a', metin: 'A gull glided beside the kite as if racing it. {ad} waved. The wind carried them both.' },
+          { dal: 'b', metin: '{ad} wound the string in slowly. The kite glided down and landed softly on the sand. One of its ribbons had come loose.' },
+          { dal: 'b', metin: '{ad} tied the ribbon tight again. The kite was sturdier now; the next time the wind came, it could climb even higher.' },
+          { sahne: 'oda', boya: true, metin: 'Back home that evening, {ad} hung the kite beside the bed. The breeze from the window played with its ribbons. That night, in a dream, {ad} was up in the sky.' },
         ],
       },
     },
