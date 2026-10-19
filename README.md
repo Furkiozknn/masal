@@ -236,7 +236,7 @@ Katkı için [`CONTRIBUTING.md`](CONTRIBUTING.md), güvenlik bildirimi için
 
 ## Bu ekosistemden başka projeler
 
-- **[nova-drift](https://github.com/Furkiozknn/nova-drift)**: derleme adımı olmayan sonsuz tarayıcı uzay koşusu
+- **[Işık Tüneli](https://github.com/Furkiozknn/isik-tuneli)**: derleme adımı olmayan sonsuz tarayıcı uzay koşusu
 - **[buradane](https://github.com/Furkiozknn/buradane)**: ihtiyaç odaklı 167.829 OpenStreetMap noktası
 - **[turkce-ajanlar](https://github.com/Furkiozknn/turkce-ajanlar)**: Türkçe düşünen 70 Claude Code alt-ajanı
 
